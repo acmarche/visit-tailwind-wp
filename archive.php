@@ -63,7 +63,7 @@ if ([] !== $filtres) {
     if (count($filtres) > 1) {
         $filtreTout = new TypeOffre("Tout", 0, 0, "ALL", "", "Type", null);
         $filtreTout->id = 0;
-        $filtres[] = $filtreTout;
+        $filtres = [$filtreTout,...$filtres];
     }
     $filtres = RouterPivot::setRoutesToFilters($filtres, $cat_ID);
     $pivotRepository = PivotContainer::getPivotRepository(WP_DEBUG);

@@ -1,12 +1,14 @@
 {% if filtres|length > 1 %}
-    <select name="category"
-            class="xl:hidden flex border border-cta-primary p-2 mt-3 font-montserrat-semi-bold bg-white mx-auto">
-        {% for item in filtres %}
-            <option value="{{ item.id }}">
-                {{ item.nom }}
-            </option>
-        {% endfor %}
-    </select>
+    <label>
+        <select name="category"
+                class="xl:hidden flex border border-cta-primary p-2 mt-3 font-montserrat-semi-bold bg-white mx-auto">
+            {% for item in filtres %}
+                <option value="{{ item.id }}">
+                    {{ item.nom }}
+                </option>
+            {% endfor %}
+        </select>
+    </label>
 
     <ul class="hidden xl:flex pt-6 flex-1 flex-wrap gap-2 w-1/2 my-2 mx-auto">
         {% for item in filtres %}
