@@ -1,0 +1,11 @@
+<main class="container mx-auto mt-28 h-full" style="margin-top: 15rem;">
+    <h2 class="text-2xl">
+        {{ title ? title : 'Page non trouvée' }}
+    </h2>
+    <p class="text-cta-dark">
+        Cette page n'existe plus ou un lien est brisé
+        <br/>{{ url }}
+    </p>
+
+    {% include '@VisitTail/map/_carte.html.twig' %}
+</main>

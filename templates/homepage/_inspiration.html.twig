@@ -1,0 +1,41 @@
+<h2
+        class="py-2 px-4 text-center font-montserrat-bold text-2xl text-grey-dark lg:text-left xl:p-4"
+>
+    Inspirations
+</h2>
+<div class="grid grid-cols-1 px-4 xl:grid-cols-3 xl:grid-rows-2 gap-2">
+
+    {% for key,item in inspirations %}
+        {% if key == 0 or key == 3 %}
+            {% set colspan =  'xl:col-span-2' %}
+        {% else %}
+            {% set colspan =  '' %}
+        {% endif %}
+        <div
+                class="{{ colspan }} bg-cta-dark hover:bg-cta-hover relative rounded-md h-48 max-w-full overflow-hidden transition-all duration-500">
+            <a href="{{ item.permalink }}">
+                <div
+                        class="bg-cover bg-center y grid place-items-center h-full"
+                        style="background-repeat: no-repeat;
+                                background-size: cover;
+                                background-position: center;
+                                background-image: linear-gradient(180deg, rgba(77, 77, 77, 0.35), rgba(231, 218, 203, 0.35)),
+                                url('{{ item.thumbnail_url }}')">
+                    <h3 class="m-0 p-2 text-white text-xl ">
+                        {{ item.post_title }}</h3>
+                </div>
+            </a>
+        </div>
+    {% endfor %}
+</div>
+<a
+        class="ml-auto mr-2 flex block w-72 items-center justify-center pt-4 font-montserrat-semi-bold text-cta-light transition-all duration-700 hover:mr-8"
+        href="/"
+        title="Toutes les inspirations"
+>
+    Toutes les inspirations
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+         class="w-6 h-6">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/>
+    </svg>
+</a>

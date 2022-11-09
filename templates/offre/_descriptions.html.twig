@@ -1,0 +1,5 @@
+{% for descripion in offre.descriptionsByLanguage(locale) %}
+    {% if description.urn == 'urn:fld:descmarket' %}
+        {{ descripion.value|raw }}
+    {% endif %}
+{% endfor %}

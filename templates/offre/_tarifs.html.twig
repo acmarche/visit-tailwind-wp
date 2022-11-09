@@ -1,0 +1,6 @@
+{% if offre.tarifs|length > 0 %}
+    <h4 class="mb-2 mt-2">Tarif(s)</h4>
+    {% for tarif in offre.tarifs %}
+        {{ tarif.value|raw }}<br/>
+    {% endfor %}
+{% endif %}

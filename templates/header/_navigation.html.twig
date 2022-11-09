@@ -1,0 +1,24 @@
+<nav class="xl:h-8 musshadow fixed bottom-0 top-auto right-0 left-0 xl:static xl:shadow-none">
+    <ul class="grid grid-cols-5 items-center font-montserrat-semi-bold justify-evenly bg-caractere xl:bg-transparent text-white xl:flex xl:items-start xl:gap-6 xl:font-montserrat-semi-bold"
+        id="navigationTop"
+        x-data="menuMobile">
+        {% include '@VisitTail/header/mobile/_nav_icon_home_mobile.html.twig' %}
+        {% include '@VisitTail/header/mobile/_nav_icon_search_mobile.html.twig' %}
+        <li
+                class="xl:hidden btn-vivre">
+            <label for="checkboxMenu" class="xl:hidden icon-menu-mobile cursor-pointer">
+                <button name="menu" @click="menuMobileIsOpen=true">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                         stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                              d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/>
+                    </svg>
+                </button>
+                <span class="text-menu-mobile">Organise</span>
+            </label>
+            {% include '@VisitTail/header/mobile/_nav_items_mobile.html.twig' %}
+        </li>
+        {% include '@VisitTail/header/mobile/_nav_shortcut_mobile.html.twig' %}
+        {% include '@VisitTail/header/xl/_nav_items_xl.html.twig' %}
+    </ul>
+</nav>

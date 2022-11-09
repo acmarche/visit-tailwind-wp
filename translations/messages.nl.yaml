@@ -1,0 +1,59 @@
+agenda:
+  title: 'Agenda'
+  moreevents: 'Laad meer evenementen'
+decouvrez:
+  marche: 'Ontdek'
+suggestions: 'Suggestions'
+inspiration:
+  home: 'Inspiraties'
+all:
+  experiences: 'Alle inspiraties'
+events:
+  notfound: 'Gebeurtenissen niet gevonden'
+  all: 'Alle evenementen'
+discover_them: 'Ontdek ze'
+discover: 'Ontdekken'
+different:
+  festivities: 'Kent u onze verschillende festiviteiten ?'
+menu:
+  home: 'Start pagina'
+  title: 'Menu'
+  contact: 'Contact'
+town_hall: 'Office Communal du Tourisme'
+hours:
+  week: 'Van maandag tot en met donderdag'
+  week_time: '8.00 - 12.00 uur en 13.00 - 17.00 uur'
+  friday: 'Vrijdag'
+  friday_time: '8.00 - 12.00 uur en 13.00 - 15.00 uur'
+  unite: 'u'
+private:
+  life: 'Prive leven'
+  notice: 'Juridische kennisgeving'
+  right: 'Alle rechten voorbehouden'
+search:
+  placeholder: 'Wat zoek je ?'
+filter:
+  all: 'Alle'
+url:
+  back_home: 'Terug naar huis'
+  back: 'Terug naar'
+article:
+  share: 'Deel het artikel'
+  recommandation: 'Aanbevelingen'
+  readmore: 'Lees verder'
+  readless: 'Verminderen'
+  website: 'Website'
+  email: 'E-mail adres'
+  phone: 'Telefoon'
+  where: 'Waar'
+  contact: 'Contact'
+  notfound: 'Geen artikelen'
+  sample: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Libero provident veritatis eius, nostrum eos, explicabo repudiandae laborum rerum magni, nesciunt nemo quod tenetur omnis dolorum facilis illum. Obcaecati, nobis, a...'
+  address: 'Adres'
+offre:
+  information: 'Informatie'
+homepage:
+  title: 'Startpagina'
+page:
+  tourisme: 'Toerisme'
+Découvrir: 'Ontdekken'

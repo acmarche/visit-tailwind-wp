@@ -1,0 +1,18 @@
+<noscript>
+    {% if keyword|length > 2 %}
+        <div class="mx-auto xl:w-[22rem] my-4">{{ count }} RÉSULTATS POUR {{ keyword|remove_html }}</div>
+
+        {% if count > 0 %}
+            <ul class="pt-6 grid grid-cols-1 gap-2 xl:gap-4 xl:grid-cols-2">
+                {% for result in results %}
+                    <li class="rounded-lg p-2 xl:p-4 h16 shadow-md">
+                        <a href="{{ result.url }}" class="group flex flex-col gap-2">
+                            <h3 class="hover:text-cta-light font-montserrat-semi-bold">{{ result.name }}</h3>
+                            <span class="text-caractere">{{ result.excerpt|u.truncate(170, '...') }}</span>
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endif %}
+</noscript>

@@ -1,0 +1,7 @@
+<div class="grid grid-col4s-3 justify-center gap-2 gallery-offre">
+    {% for media in offre.images %}
+        <a href="{{ media }}" class="">
+            <img src="{{ media }}" alt="alt" class="shadow-lg"/>
+        </a>
+    {% endfor %}
+</div>

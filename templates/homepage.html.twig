@@ -1,0 +1,27 @@
+<!-- bg image sizes https://web.dev/learn/design/responsive-images/#background-images
+ajour aussi dans le head prefetch de l'url d'img de fond
+<link rel="prefetch" href="hero.jpg" as="image">
+-->
+<main>
+    <div class="bg-home-img bg-no-repeat bg-cover bg-center h-[50rem]">
+        <div class="relative bg-home-color pt-4 xl:py-24 h-full">
+            <div class="flex flex-col justify-center items-center w-full pt-60">
+                {% include '@VisitTail/homepage/_search_home.html.twig' %}
+                {% include '@VisitTail/homepage/_icones_home.html.twig' %}
+            </div>
+        </div>
+    </div>
+    <div class="flex flex-col justify-center items-center w-full">
+        {% include '@VisitTail/homepage/_home_caractere.html.twig' %}
+        <section class="bg-white w-full mx-2 mx-auto grid grid-cols-1 xl:px-40 xl:grid-cols-[60%,40%] xl:gap-4">
+            <div>
+                {% include '@VisitTail/homepage/_inspiration.html.twig' %}
+            </div>
+            <div class="px-4">
+                {% include '@VisitTail/homepage/_agenda.html.twig' %}
+            </div>
+        </section>
+    </div>
+    {% include '@VisitTail/homepage/_banner_party.html.twig' %}
+</main>
+{% include '@VisitTail/homepage/_partenaires.html.twig' %}

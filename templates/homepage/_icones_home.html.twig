@@ -1,0 +1,11 @@
+<ul class="mx-auto xl:w-full flex flex-wrap xl:flex-nowrap justify-center xl:max-w-[36rem] pt-10 gap-y-2">
+    {% for icone in icones %}
+        <li class="flex justify-center items-center w-[33%] basis-1/3 xl:w-[20%] xl:basis-1/5 text-center">
+            <a href="{{ icone.url }}">
+                <img class="bg-cta-light h-14 w-14 rounded-full mx-auto hover:bg-patrimony"
+                     src="{{ template_uri() }}/assets/tartine/{{ icone.imageWhite }}" alt="{{ icone.slug }}"/>
+                <span class="text-white mx-auto font-montserrat-regular">{{ icone.name }}</span>
+            </a>
+        </li>
+    {% endfor %}
+</ul>

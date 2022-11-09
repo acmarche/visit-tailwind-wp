@@ -1,0 +1,9 @@
+<h4>Communications</h4>
+{% for communication in offre.communications %}
+    <div class="">
+        <div class="grid grid-cols-[5rem,1fr]">
+            <span class="font-montserrat-semi-bold text-cta-dark">{{ communication.type }}</span>
+            <span>{{ communication.value }}</span>
+        </div>
+    </div>
+{% endfor %}

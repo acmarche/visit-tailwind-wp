@@ -1,0 +1,11 @@
+{% for specInfo in event.specsDetailed %}
+    <strong>{{ specInfo.specDefinition.labelByLanguage('fr') }}</strong><br/>
+    {{ specInfo.specData.value }}
+    <span class="text-muted">
+    {{ specInfo.specData.urn }} /
+        {% if specInfo.specData.urnCat is defined %}
+            cat: {{ specInfo.specData.urnCat }}
+        {% endif %}
+    </span>
+    <br/><br/>
+{% endfor %}

@@ -1,0 +1,7 @@
+{% if offre.dates|length > 0 %}
+    <h4 class="mb-2 mt-2">Date(s)</h4>
+    {% for date in offre.dates %}
+        {{ date.date_begin|format_date('full') }} {% if loop.last != true %}, {% endif %}
+    {% endfor %}
+{% endif %}
+

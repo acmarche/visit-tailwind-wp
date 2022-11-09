@@ -1,0 +1,22 @@
+{% include '@VisitTail/article/_header_article.html.twig' %}
+{% include '@VisitTail/article/_cadre.html.twig' %}
+<main class="container mx-auto">
+    <article
+            class="grid grid-cols-1 xl:grid-cols-[60%,40%] items-start mt-2 xl:mt-4 mx-auto px-4">
+        <div class="p-4 prose lg:prose-xl">
+            <h1 class="font-bold text-2xl text-caractere">{{ offre.nom }}</h1>
+            {% include '@VisitTail/offre/_dates.html.twig' %}
+            {% include '@VisitTail/offre/_address_contact.html.twig' %}
+            {% include '@VisitTail/offre/_tarifs.html.twig' %}
+            {% include '@VisitTail/offre/_descriptions.html.twig' %}
+            {% include '@VisitTail/offre/_communications.html.twig' %}
+            {% include '@VisitTail/offre/_images.html.twig' %}
+        </div>
+        <aside class="p-4">
+            {% include '@VisitTail/article/_share.html.twig' %}
+            {% include '@VisitTail/article/_tags.html.twig' %}
+            {% include '@VisitTail/article/_see_also.html.twig' %}
+        </aside>
+    </article>
+    {% include '@VisitTail/map/_carte.html.twig' %}
+</main>

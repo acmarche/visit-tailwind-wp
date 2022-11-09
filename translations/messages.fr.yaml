@@ -1,0 +1,59 @@
+agenda:
+  title: 'Agenda'
+  moreevents: 'Charger plus d''évènements'
+decouvrez:
+  marche: 'Découvrez'
+suggestions: 'Suggestions'
+inspiration:
+  home: 'Inspirations'
+all:
+  experiences: 'Toutes les inspirations'
+events:
+  notfound: 'Aucun évènements trouvés'
+  all: 'Tous les évènements'
+discover_them: 'Découvrez-les'
+discover: 'Découvrez'
+different:
+  festivities: 'Connaissez-vous nos différentes festivités ?'
+menu:
+  home: 'Accueil'
+  title: 'Menu'
+  contact: 'Contact'
+town_hall: 'Office Communal du Tourisme'
+hours:
+  week: 'Du lundi au jeudi'
+  week_time: 'de 8h à 12h et de 13h à 17h'
+  friday: 'Vendredi'
+  friday_time: 'de 8h à 12h et de 13h à 15h'
+  unite: 'h'
+private:
+  life: 'Vie privée'
+  notice: 'Mentions légales'
+  right: 'Tous droits réservés'
+search:
+  placeholder: 'Que cherchez-vous ?'
+filter:
+  all: 'Tout'
+url:
+  back_home: 'Retour à l''accueil'
+  back: 'Retour à'
+article:
+  share: 'Partagez l''article via'
+  recommandation: 'Recommandations'
+  readmore: 'Lire plus'
+  readless: 'Réduire'
+  website: 'Site web'
+  email: 'Adresse e-mail'
+  phone: 'Téléphone'
+  where: 'Où'
+  contact: 'Contact'
+  notfound: 'Aucun article'
+  sample: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Libero provident veritatis eius, nostrum eos, explicabo repudiandae laborum rerum magni, nesciunt nemo quod tenetur omnis dolorum facilis illum. Obcaecati, nobis, a...'
+  address: 'Adresse'
+offre:
+  information: 'Renseignements'
+homepage:
+  title: 'Page d''accueil'
+page:
+  tourisme: 'Tourisme'
+Découvrir: 'Découvrir'

@@ -1,0 +1,20 @@
+{% if children|length > 0 %}
+    <select name="category"
+            class="xl:hidden flex border text-cta-light border-cta-light p-2 mt-3 font-montserrat-semi-bold bg-white mx-auto">
+        {% for item in children %}
+            <option value="{{ item.cat_ID }}">
+                {{ item.name }}
+            </option>
+        {% endfor %}
+    </select>
+
+    <ul class="hidden xl:flex pt-6 flex-1 flex-wrap gap-2 w-1/2 my-2 mx-auto">
+        {% for item in children %}
+            <li class="border border-cta-dark p-3 font-montserrat-light  hover:bg-cta-dark hover:text-white">
+                <a href="{{ item.url }}" class="">
+                    {{ item.name }}
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+{% endif %}

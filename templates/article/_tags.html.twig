@@ -1,0 +1,9 @@
+<ul class="flex">
+    {% for item in tags %}
+        <li
+                class="text-sm mx-2 flex items-center border border-caractere px-2 py-2 text-caractere transition-all duration-500 ease-in-out hover:bg-cta-light hover:text-white"
+        >
+            <a href="{{ item.url }}">{{ item.name }}</a>
+        </li>
+    {% endfor %}
+</ul>
