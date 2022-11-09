@@ -401,6 +401,10 @@ class WpRepository
 
     public function recommandationsByOffre(Offre $offerRefer, WP_Term $category, string $language): array
     {
+        $cacheKey = Cache::generateKey(Cache::SEE_ALSO_OFFRES.'-'.$offerRefer->codeCgt.'-'.$category->term_id);
+        if ($items = Cache::getItem($cacheKey)) {
+            return $items;
+        }
         $recommandations = [];
         if (count($offerRefer->voir_aussis)) {
             $offres = $offerRefer->voir_aussis;
@@ -426,6 +430,10 @@ class WpRepository
                 'image' => $offre->firstImage(),
                 'tags' => $tags,
             ];
+        }
+
+        if (count($recommandations) > 1 && count($recommandations) < 150) {
+            Cache::setItem($cacheKey, $recommandations);
         }
 
         return $recommandations;
@@ -478,10 +486,27 @@ class WpRepository
         $pivotRepository = PivotContainer::getPivotRepository(WP_DEBUG);
         $offres = $pivotRepository->getOffres($typesOffre, $parse);
 
-        if (count($offres) > 1 && count($offres) < 150 ) {
+        if (count($offres) > 1 && count($offres) < 150) {
             Cache::setItem($cacheKey, $offres);
         }
 
         return $offres;
+    }
+
+    public function getOffreByCgtAndParse(string $codeCgt, string $class, ?string $cacheKeyPlus = null): ?Offre
+    {
+        $cacheKey = Cache::generateKey(Cache::OFFRE.'-'.$codeCgt.'-'.$class);
+
+        if ($items = Cache::getItem($cacheKey)) {
+            return $items;
+        }
+
+        $pivotRepository = PivotContainer::getPivotRepository(WP_DEBUG);
+        $offre = $pivotRepository->getOffreByCgtAndParse($codeCgt, $class, $cacheKeyPlus);
+        if ($offre) {
+            Cache::setItem($cacheKey, $offre);
+        }
+
+        return $offre;
     }
 }

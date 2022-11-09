@@ -103,8 +103,7 @@ class ApiData
         }
 
         if ([] !== $filtres) {
-            $pivotRepository = PivotContainer::getPivotRepository(WP_DEBUG);
-            $offres = $pivotRepository->getOffres($filtres);
+            $offres = $wpRepository->getOffres($filtres);
             $offres = $postUtils->convertOffresToArray($offres, $currentCategoryId, $language);
         }
 

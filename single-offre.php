@@ -2,7 +2,6 @@
 
 namespace VisitMarche\ThemeTail;
 
-use AcMarche\Pivot\DependencyInjection\PivotContainer;
 use AcMarche\Pivot\Entities\Offre\Offre;
 use Exception;
 use VisitMarche\ThemeTail\Lib\GpxViewer;
@@ -12,10 +11,11 @@ use VisitMarche\ThemeTail\Lib\Twig;
 use VisitMarche\ThemeTail\Lib\WpRepository;
 
 $codeCgt = get_query_var(RouterPivot::PARAM_OFFRE);
-$pivotRepository = PivotContainer::getPivotRepository(WP_DEBUG);
+
+$wpRepository = new WpRepository();
 
 try {
-    $offre = $pivotRepository->getOffreByCgtAndParse($codeCgt, Offre::class);
+    $offre = $wpRepository->getOffreByCgtAndParse($codeCgt, Offre::class);
 } catch (Exception $e) {
     get_header();
     Twig::rendPage(
@@ -64,7 +64,6 @@ foreach ($offre->categories as $category) {
     ];
 }
 
-$wpRepository = new WpRepository();
 $recommandations = $wpRepository->recommandationsByOffre($offre, $currentCategory, $language);
 $recommandations = array_slice($recommandations, 0, 3);
 
