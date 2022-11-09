@@ -8,6 +8,7 @@ use AcMarche\Pivot\Entity\TypeOffre;
 use AcMarche\Pivot\Spec\UrnList;
 use AcMarche\Pivot\Spec\UrnTypeList;
 use Doctrine\ORM\NonUniqueResultException;
+use Symfony\Contracts\Cache\CacheInterface;
 use VisitMarche\ThemeTail\Inc\PivotMetaBox;
 use VisitMarche\ThemeTail\Inc\Theme;
 use VisitMarche\ThemeTail\Lib\Elasticsearch\Searcher;
@@ -17,6 +18,13 @@ use WP_Term;
 
 class WpRepository
 {
+    private CacheInterface $cache;
+
+    public function __construct()
+    {
+        $this->cache = Cache::instance();
+    }
+
     public function getCategoryBySlug(string $slug)
     {
         return get_category_by_slug($slug);
@@ -402,67 +410,59 @@ class WpRepository
     public function recommandationsByOffre(Offre $offerRefer, WP_Term $category, string $language): array
     {
         $cacheKey = Cache::generateKey(Cache::SEE_ALSO_OFFRES.'-'.$offerRefer->codeCgt.'-'.$category->term_id);
-        if ($items = Cache::getItem($cacheKey)) {
-            return $items;
-        }
-        $recommandations = [];
-        if (count($offerRefer->voir_aussis)) {
-            $offres = $offerRefer->voir_aussis;
-        } else {
-            $pivotRepository = PivotContainer::getPivotRepository();
-            $offres = $pivotRepository->getSameOffres($offerRefer);
-        }
-        $urlCat = get_category_link($category);
-        foreach ($offres as $offre) {
-            $url = RouterPivot::getUrlOffre($offre, $category->cat_ID);
-            $tags[] = [];
-            foreach ($offre->categories as $categoryItem) {
-                $tags[] = [
-                    'name' => $categoryItem->labelByLanguage($language),
-                    'url' => $urlCat.'?'.RouterPivot::PARAM_FILTRE.'='.$category->urn,
+
+        return $this->cache->get($cacheKey, function ($item) use ($offerRefer, $category, $language) {
+
+            $recommandations = [];
+            if (count($offerRefer->voir_aussis)) {
+                $offres = $offerRefer->voir_aussis;
+            } else {
+                $pivotRepository = PivotContainer::getPivotRepository();
+                $offres = $pivotRepository->getSameOffres($offerRefer);
+            }
+            $urlCat = get_category_link($category);
+            foreach ($offres as $offre) {
+                $url = RouterPivot::getUrlOffre($offre, $category->cat_ID);
+                $tags[] = [];
+                foreach ($offre->categories as $categoryItem) {
+                    $tags[] = [
+                        'name' => $categoryItem->labelByLanguage($language),
+                        'url' => $urlCat.'?'.RouterPivot::PARAM_FILTRE.'='.$category->urn,
+                    ];
+                }
+
+                $recommandations[] = [
+                    'title' => $offre->nomByLanguage($language),
+                    'url' => $url,
+                    'excerpt' => '',
+                    'image' => $offre->firstImage(),
+                    'tags' => $tags,
                 ];
             }
 
-            $recommandations[] = [
-                'title' => $offre->nomByLanguage($language),
-                'url' => $url,
-                'excerpt' => '',
-                'image' => $offre->firstImage(),
-                'tags' => $tags,
-            ];
-        }
-
-        if (count($recommandations) > 1 && count($recommandations) < 150) {
-            Cache::setItem($cacheKey, $recommandations);
-        }
-
-        return $recommandations;
+            return $recommandations;
+        });
     }
 
     public function getEvents(bool $removeObsolete = false, array $urnsSelected = []): array
     {
         $cacheKey = Cache::generateKey(Cache::EVENTS.'-'.$removeObsolete.'-'.join($urnsSelected));
-        if ($items = Cache::getItem($cacheKey)) {
-            return $items;
-        }
 
-        $pivotRepository = PivotContainer::getPivotRepository(WP_DEBUG);
-        $events = $pivotRepository->getEvents($removeObsolete, $urnsSelected);
+        return $this->cache->get($cacheKey, function ($item) use ($removeObsolete, $urnsSelected) {
+            $pivotRepository = PivotContainer::getPivotRepository(WP_DEBUG);
+            $events = $pivotRepository->getEvents($removeObsolete, $urnsSelected);
 
-        foreach ($events as $event) {
-            $event->locality = $event->getAdresse()->localite[0]->get('fr');
-            $event->dateEvent = [
-                'year' => $event->dateEnd->format('Y'),
-                'month' => $event->dateEnd->format('m'),
-                'day' => $event->dateEnd->format('d'),
-            ];
-        }
+            foreach ($events as $event) {
+                $event->locality = $event->getAdresse()->localite[0]->get('fr');
+                $event->dateEvent = [
+                    'year' => $event->dateEnd->format('Y'),
+                    'month' => $event->dateEnd->format('m'),
+                    'day' => $event->dateEnd->format('d'),
+                ];
+            }
 
-        if (count($events) > 2) {
-            Cache::setItem($cacheKey, $events);
-        }
-
-        return $events;
+            return [];
+        });
     }
 
     /**
@@ -479,34 +479,24 @@ class WpRepository
         }
         $cacheKey = Cache::generateKey(Cache::OFFRES.'-'.$keyName.'-'.$parse);
 
-        if ($items = Cache::getItem($cacheKey)) {
-            return $items;
-        }
+        return $this->cache->get($cacheKey, function ($item) use ($typesOffre, $parse) {
+            $pivotRepository = PivotContainer::getPivotRepository(WP_DEBUG);
+            $offres = $pivotRepository->getOffres($typesOffre, $parse);
 
-        $pivotRepository = PivotContainer::getPivotRepository(WP_DEBUG);
-        $offres = $pivotRepository->getOffres($typesOffre, $parse);
-
-        if (count($offres) > 1 && count($offres) < 150) {
-            Cache::setItem($cacheKey, $offres);
-        }
-
-        return $offres;
+            return $offres;
+        });
     }
 
     public function getOffreByCgtAndParse(string $codeCgt, string $class, ?string $cacheKeyPlus = null): ?Offre
     {
         $cacheKey = Cache::generateKey(Cache::OFFRE.'-'.$codeCgt.'-'.$class);
 
-        if ($items = Cache::getItem($cacheKey)) {
-            return $items;
-        }
+        return $this->cache->get($cacheKey, function ($item) use ($codeCgt, $class, $cacheKeyPlus) {
 
-        $pivotRepository = PivotContainer::getPivotRepository(WP_DEBUG);
-        $offre = $pivotRepository->getOffreByCgtAndParse($codeCgt, $class, $cacheKeyPlus);
-        if ($offre) {
-            Cache::setItem($cacheKey, $offre);
-        }
+            $pivotRepository = PivotContainer::getPivotRepository(WP_DEBUG);
+            $offre = $pivotRepository->getOffreByCgtAndParse($codeCgt, $class, $cacheKeyPlus);
 
-        return $offre;
+            return $offre;
+        });
     }
 }
