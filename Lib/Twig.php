@@ -37,7 +37,7 @@ class Twig
             ]
         );
 
-        $loader->addPath(ABSPATH.'wp-content/themes/visittail/templates/', 'VisitTail');
+        $loader->addPath(ABSPATH.get_template_directory().'/templates/', 'VisitTail');
         $environment->addExtension(new DebugExtension());
 
         $translator = LocaleHelper::iniTranslator();
