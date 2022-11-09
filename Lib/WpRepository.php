@@ -461,7 +461,7 @@ class WpRepository
                 ];
             }
 
-            return [];
+            return $events;
         });
     }
 
