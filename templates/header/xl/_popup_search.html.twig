@@ -44,17 +44,20 @@
         <div
                 class="mx-auto max-w-xl transform rounded-xl bg-white p-2 shadow-2xl ring-1 ring-black ring-opacity-5 transition-all"
         >
-            <div class="flex flex-row items-start justify-between">
-                <input
-                        type="text"
-                        x-model="query"
-                        @input.debounce.250="launchSearch()"
-                        class="w-full rounded-md border-0 bg-gray-100 px-4 py-2.5 text-gray-900 placeholder-gray-500 focus:ring-0 sm:text-sm"
-                        placeholder="Rechercher..."
-                        role="combobox"
-                        aria-expanded="false"
-                        aria-controls="options"
-                />
+            <form class="flex flex-row items-start justify-between" action="/{{ locale }}">
+                <label class="w-full">
+                    <input
+                            type="text"
+                            name="s"
+                            x-model="query"
+                            @input.debounce.250="launchSearch()"
+                            class="w-full rounded-md border-0 bg-gray-100 px-4 py-2.5 text-gray-900 placeholder-gray-500 focus:ring-0 sm:text-sm"
+                            placeholder="Rechercher..."
+                            role="combobox"
+                            aria-expanded="false"
+                            aria-controls="options"
+                    />
+                </label>
                 <button class="w-32 " @click="searchIsOpen=false">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                          stroke="currentColor"
@@ -63,7 +66,7 @@
                     </svg>
                     <span class="font-montserrat-semi-bold text-cta-dark">Fermer</span>
                 </button>
-            </div>
+            </form>
 
             <!-- Results, show/hide based on command palette state. -->
             <ul
