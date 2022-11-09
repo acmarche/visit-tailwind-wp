@@ -26,7 +26,7 @@ class Cache
             new FilesystemAdapter(
                 '_visit',
                 86400,
-                $_ENV['APP_CACHE_DIR']
+                $_ENV['APP_CACHE_DIR'] ?? ABSPATH.'var/cache'
             );
 
         return self::$instanceObject;
