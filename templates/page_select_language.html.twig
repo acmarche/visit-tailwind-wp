@@ -1,0 +1,9 @@
+<main class="container mx-auto mt-6">
+    <article
+            class="grid grid-cols-1 xl:grid-cols-[60%,40%] items-start mt-2 xl:mt-4 mx-auto px-4">
+        <div class="p-2 xl:p-4">
+            <h1 class="font-montserrat-semi-bold text-lg xl:text-2xl text-caractere">{{ post.post_title }}</h1>
+            {% include '@VisitTail/article/_body.html.twig' %}
+        </div>
+    </article>
+</main>

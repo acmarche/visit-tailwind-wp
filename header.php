@@ -25,7 +25,7 @@ $locale = LocaleHelper::getSelectedLanguage();
         ?>
     </head>
 
-<body <?php body_class(); ?>>
+<body <?php body_class(); ?> id="app">
     <?php wp_body_open();
 $menu = new Menu();
 $items = $menu->getMenuTop();
