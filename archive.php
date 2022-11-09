@@ -60,16 +60,10 @@ if ($filterSelected) {
 }
 
 if ([] !== $filtres) {
-    if (count($filtres) > 1) {
-        $filtreTout = new TypeOffre("Tout", 0, 0, "ALL", "", "Type", null);
-        $filtreTout->id = 0;
-        $filtres = [$filtreTout,...$filtres];
-    }
     $filtres = RouterPivot::setRoutesToFilters($filtres, $cat_ID);
-    $pivotRepository = PivotContainer::getPivotRepository(WP_DEBUG);
 
     try {
-        $offres = $pivotRepository->getOffres($filtres);
+        $offres = $wpRepository->getOffres($filtres);
         array_map(
             function ($offre) use ($cat_ID, $language) {
                 $offre->url = RouterPivot::getUrlOffre($offre, $cat_ID);
@@ -78,6 +72,12 @@ if ([] !== $filtres) {
         );
     } catch (InvalidArgumentException $e) {
         dump($e->getMessage());
+    }
+    if (count($filtres) > 1) {
+        $labelAll = $translator->trans('filter.all');
+        $filtreTout = new TypeOffre($labelAll, 0, 0, "ALL", "", "Type", null);
+        $filtreTout->id = 0;
+        $filtres = [$filtreTout, ...$filtres];
     }
     //fusion offres et articles
     $postUtils = new PostUtils();

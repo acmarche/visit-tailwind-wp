@@ -9,6 +9,7 @@ class Cache
     public const MENU_NAME = 'menu-top';
     public const ICONES_NAME = 'icones-home';
     public const EVENTS = 'events';
+    const OFFRES = 'offres';
 
     public static function setItem(string $keyname, string|array $data, int $expiration = 86400): bool
     {

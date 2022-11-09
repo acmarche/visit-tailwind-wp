@@ -456,4 +456,32 @@ class WpRepository
 
         return $events;
     }
+
+    /**
+     * @param TypeOffre[] $typesOffre
+     * @param bool $parse
+     * @return Offre[]
+     * @throws \Psr\Cache\InvalidArgumentException
+     */
+    public function getOffres(array $typesOffre, bool $parse = true): array
+    {
+        $keyName = '';
+        foreach ($typesOffre as $typeOffre) {
+            $keyName .= $typeOffre->urn.'-';
+        }
+        $cacheKey = Cache::generateKey(Cache::OFFRES.'-'.$keyName.'-'.$parse);
+
+        if ($items = Cache::getItem($cacheKey)) {
+            return $items;
+        }
+
+        $pivotRepository = PivotContainer::getPivotRepository(WP_DEBUG);
+        $offres = $pivotRepository->getOffres($typesOffre, $parse);
+
+        if (count($offres) > 1 && count($offres) < 150 ) {
+            Cache::setItem($cacheKey, $offres);
+        }
+
+        return $offres;
+    }
 }
