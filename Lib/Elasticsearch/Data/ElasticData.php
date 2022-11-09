@@ -137,7 +137,7 @@ class ElasticData
                 array_map(
                     function ($offre) use ($category, $language) {
                         $offre->url = RouterPivot::getUrlOffre($offre, $category->cat_ID);
-                        $offre->titre = $offre->nomByLanguage($language);
+                        $offre->nom = $offre->nomByLanguage($language);
                     },
                     $offres
                 );
@@ -160,20 +160,6 @@ class ElasticData
         }
 
         return null;
-    }
-
-    public function createDocumentElasticFromX(stdClass $post): DocumentElastic
-    {
-        $document = new DocumentElastic();
-        $document->id = $post->id;
-        $document->name = $post->name;
-        $document->excerpt = $post->excerpt;
-        $document->content = $post->content;
-        $document->tags = $post->tags;
-        $document->date = $post->date;
-        $document->url = $post->url;
-
-        return $document;
     }
 
     private function createDocumentElasticFromWpPost(WP_Post $post): DocumentElastic
