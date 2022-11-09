@@ -2,7 +2,6 @@
 
 namespace VisitMarche\ThemeTail;
 
-use AcMarche\Pivot\DependencyInjection\PivotContainer;
 use AcSort;
 use Exception;
 use VisitMarche\ThemeTail\Inc\CategoryMetaBox;
@@ -15,8 +14,6 @@ get_header();
 
 $wpRepository = new WpRepository();
 
-$pivotRepository = PivotContainer::getPivotRepository(WP_DEBUG);
-
 $intro = $wpRepository->getIntro();
 $inspirationCat = $wpRepository->getCategoryBySlug('inspirations');
 $inspirations = $wpRepository->getPostsByCatId($inspirationCat->cat_ID);
@@ -26,7 +23,7 @@ if ('manual' === $category_order) {
 }
 $categoryAgenda = get_category_by_slug('agenda');
 $urlAgenda = '/';
-
+$urlInspiration = get_category_link($inspirationCat);
 try {
     $events = $wpRepository->getEvents(true);
     if ($categoryAgenda) {
@@ -53,6 +50,7 @@ Twig::rendPage(
         'events' => $events,
         'inspirations' => $inspirations,
         'urlAgenda' => $urlAgenda,
+        'urlInspiration' => $urlInspiration,
         'intro' => $intro,
         'icones' => $icones,
     ]
