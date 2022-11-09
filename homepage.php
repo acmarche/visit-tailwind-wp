@@ -28,7 +28,7 @@ $categoryAgenda = get_category_by_slug('agenda');
 $urlAgenda = '/';
 
 try {
-    $events = $pivotRepository->getEvents(true);
+    $events = $wpRepository->getEvents(true);
     if ($categoryAgenda) {
         $urlAgenda = get_category_link($categoryAgenda);
         array_map(
@@ -44,16 +44,9 @@ try {
 
 $inspirations = array_slice($inspirations, 0, 4);
 $events = array_slice($events, 0, 4);
-foreach ($events as $event) {
-    $event->locality = $event->getAdresse()->localite[0]->get('fr');
-    $event->dateEvent = [
-        'year' => $event->dateEnd->format('Y'),
-        'month' => $event->dateEnd->format('m'),
-        'day' => $event->dateEnd->format('d'),
-    ];
-}
 $menu = new Menu();
 $icones = $menu->getIcones();
+
 Twig::rendPage(
     '@VisitTail/homepage.html.twig',
     [

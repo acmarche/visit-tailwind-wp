@@ -2,22 +2,19 @@
 
 namespace VisitMarche\ThemeTail\Inc;
 
+use VisitMarche\ThemeTail\Lib\Cache;
 use VisitMarche\ThemeTail\Lib\IconeEnum;
 use VisitMarche\ThemeTail\Lib\LocaleHelper;
 
 class Menu
 {
-    public const MENU_NAME = 'menu-top';
-    public const ICONES_NAME = 'icones-home22';
-    public const EXPIRATION = 86400;
-
     /**
      * @return \WP_Term[]
      */
     public function getIcones(): array
     {
         $language = LocaleHelper::getSelectedLanguage();
-        if ($items = get_transient(self::ICONES_NAME.$language)) {
+        if ($items = Cache::getItem(Cache::ICONES_NAME.$language)) {
             return $items;
         }
         $icones = [
@@ -40,7 +37,7 @@ class Menu
             $icones
         );
 
-        set_transient(self::ICONES_NAME.$language, $icones, self::EXPIRATION);
+        Cache::setItem(Cache::ICONES_NAME.$language, $icones);
 
         return $icones;
     }
@@ -48,7 +45,7 @@ class Menu
     public function getMenuTop(): array
     {
         $language = LocaleHelper::getSelectedLanguage();
-        if ($items = get_transient(self::MENU_NAME.$language)) {
+        if ($items = get_transient(Cache::MENU_NAME.$language)) {
             return $items;
         }
 
@@ -78,7 +75,7 @@ class Menu
         $decouvrir->url = get_permalink($decouvrir);
         $menu['decouvrir'] = $decouvrir;
 
-        set_transient(self::MENU_NAME.$language, $menu, self::EXPIRATION);
+        Cache::setItem(Cache::MENU_NAME.$language, $menu);
 
         return $menu;
     }

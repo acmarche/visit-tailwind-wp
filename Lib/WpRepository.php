@@ -430,4 +430,30 @@ class WpRepository
 
         return $recommandations;
     }
+
+    public function getEvents(bool $removeObsolete = false, array $urnsSelected = []): array
+    {
+        $cacheKey = Cache::generateKey(Cache::EVENTS.'-'.$removeObsolete.'-'.join($urnsSelected));
+        if ($items = Cache::getItem($cacheKey)) {
+            return $items;
+        }
+
+        $pivotRepository = PivotContainer::getPivotRepository(WP_DEBUG);
+        $events = $pivotRepository->getEvents($removeObsolete, $urnsSelected);
+
+        foreach ($events as $event) {
+            $event->locality = $event->getAdresse()->localite[0]->get('fr');
+            $event->dateEvent = [
+                'year' => $event->dateEnd->format('Y'),
+                'month' => $event->dateEnd->format('m'),
+                'day' => $event->dateEnd->format('d'),
+            ];
+        }
+
+        if (count($events) > 2) {
+            Cache::setItem($cacheKey, $events);
+        }
+
+        return $events;
+    }
 }

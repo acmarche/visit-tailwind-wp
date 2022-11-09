@@ -30,7 +30,7 @@ if ($filterSelected) {
     }
 }
 try {
-    $events = $pivotRepository->getEvents(true, [$filterSelected]);
+    $events = $wpRepository->getEvents(true, [$filterSelected]);
     array_map(
         function ($event) use ($cat_ID, $language) {
             $event->url = RouterPivot::getUrlOffre($event, $cat_ID);
@@ -48,14 +48,6 @@ try {
     get_footer();
 
     return;
-}
-foreach ($events as $event) {
-    $event->locality = $event->getAdresse()->localite[0]->get('fr');
-    $event->dateEvent = [
-        'year' => $event->dateEnd->format('Y'),
-        'month' => $event->dateEnd->format('m'),
-        'day' => $event->dateEnd->format('d'),
-    ];
 }
 Twig::rendPage(
     '@VisitTail/agenda.html.twig',

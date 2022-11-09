@@ -2,6 +2,8 @@
 
 namespace VisitMarche\ThemeTail\Inc;
 
+use VisitMarche\ThemeTail\Lib\Cache;
+
 class SetupTheme
 {
     public function __construct()
@@ -42,7 +44,7 @@ class SetupTheme
         // This theme uses wp_nav_menu() in one location.
         register_nav_menus(
             [
-                Menu::MENU_NAME => esc_html__('Menu top', 'marchebe'),
+                Cache::MENU_NAME => esc_html__('Menu top', 'marchebe'),
             ]
         );
 
