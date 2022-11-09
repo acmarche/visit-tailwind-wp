@@ -25,12 +25,10 @@ class Twig
             $path = get_template_directory().'/templates';
         }
 
-        dump(ABSPATH.'.env');
         $loader = new FilesystemLoader($path);
         (new Dotenv())
             ->bootEnv(ABSPATH.'.env');
-        dump($_ENV);
-dump(ABSPATH.'var/cache');
+
         $environment = new Environment(
             $loader,
             [
@@ -38,9 +36,8 @@ dump(ABSPATH.'var/cache');
                 'debug' => WP_DEBUG,
             ]
         );
-dump(ABSPATH.'var/cache');
-        $loader->addPath(ABSPATH.'wp-content/themes/visittail/templates/', 'VisitTail');
 
+        $loader->addPath(ABSPATH.'wp-content/themes/visittail/templates/', 'VisitTail');
         $environment->addExtension(new DebugExtension());
 
         $translator = LocaleHelper::iniTranslator();
