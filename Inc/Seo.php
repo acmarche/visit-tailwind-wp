@@ -5,7 +5,9 @@ namespace VisitMarche\ThemeTail\Inc;
 use AcMarche\Pivot\DependencyInjection\PivotContainer;
 use AcMarche\Pivot\Entities\Offre\Offre;
 use VisitMarche\ThemeTail\Lib\LocaleHelper;
+use VisitMarche\ThemeTail\Lib\PostUtils;
 use VisitMarche\ThemeTail\Lib\RouterPivot;
+use VisitMarche\ThemeTail\Lib\WpRepository;
 use WP_Post;
 
 class Seo
@@ -23,38 +25,49 @@ class Seo
         });
     }
 
-    public static function assignMetaInfo(): void
+    public static function assignMetaInfo(bool $render = true): array
     {
         if (Theme::isHomePage()) {
             self::metaHomePage();
-            self::renderMetas();
+            if ($render) {
+                self::renderMetas();
+            }
 
-            return;
+            return self::$metas;
         }
 
         global $post;
         if ($post) {
             self::metaPost($post);
-            self::renderMetas();
+            if ($render) {
+                self::renderMetas();
+            }
 
-            return;
+            return self::$metas;
         }
 
         $codeCgt = get_query_var(RouterPivot::PARAM_OFFRE);
         if ($codeCgt) {
             self::metaPivotOffre($codeCgt);
-            self::renderMetas();
+            if ($render) {
+                self::renderMetas();
+            }
         }
 
         $cat_id = get_query_var('cat');
         if ($cat_id) {
             self::metaCategory($cat_id);
-            self::renderMetas();
+            if ($render) {
+                self::renderMetas();
+            }
 
-            return;
+            return self::$metas;
+        }
+        if ($render) {
+            self::renderMetas();
         }
 
-        self::renderMetas();
+        return self::$metas;
     }
 
     public function isGoole(): void
@@ -116,6 +129,7 @@ class Seo
                 )
             );
             self::$metas['keywords'] = implode(',', $keywords);
+            self::$metas['image'] = $offre->firstImage();
         }
     }
 
@@ -124,7 +138,8 @@ class Seo
         $home = self::translate('homepage.title');
         self::$metas['title'] = self::baseTitle($home);
         self::$metas['description'] = get_bloginfo('description', 'display');
-        self::$metas['keywords'] = 'Commune, Ville, Marche, Marche-en-Famenne, Famenne, Tourisme, Horeca';
+        self::$metas['keywords'] = 'Commune, Ville, Marche, Marche-en-Famenne, Famenne, Tourisme, Horeca, Visit';
+        self::$metas['image'] = get_template_directory_uri().'/assets/tartine/patrimoine.jpg';
     }
 
     private static function metaCategory(int $cat_id): void
@@ -133,6 +148,11 @@ class Seo
         self::$metas['title'] = self::baseTitle('');
         self::$metas['description'] = self::cleanString($category->description);
         self::$metas['keywords'] = '';
+        $wpRepository = new WpRepository();
+        if ($category instanceof \WP_Term) {
+            $image = $wpRepository->categoryImage($category);
+            self::$metas['image'] = $image;
+        }
     }
 
     private static function metaPost(WP_Post $post): void
@@ -147,6 +167,8 @@ class Seo
                 $tags
             )
         );
+        $image = PostUtils::getImage($post);
+        self::$metas['image'] = $image;
     }
 
     private static function metaCartographie(): void

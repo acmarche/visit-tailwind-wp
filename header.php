@@ -15,7 +15,14 @@ $locale = LocaleHelper::getSelectedLanguage();
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="profile" href="https://gmpg.org/xfn/11">
         <link rel="icon" type="image/png" href="<?php echo get_template_directory_uri() ?>/assets/images/favicon.png"/>
-        <?php wp_head(); ?>
+        <?php wp_head();
+        Twig::rendPage(
+            '@VisitTail/pub/_pubs.html.twig',
+            [
+
+            ]
+        );
+        ?>
     </head>
 
 <body <?php body_class(); ?>>

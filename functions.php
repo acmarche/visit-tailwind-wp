@@ -6,6 +6,7 @@ use VisitMarche\ThemeTail\Inc\AdminPage;
 use VisitMarche\ThemeTail\Inc\Ajax;
 use VisitMarche\ThemeTail\Inc\ApiRoutes;
 use VisitMarche\ThemeTail\Inc\AssetsLoad;
+use VisitMarche\ThemeTail\Inc\OpenGraph;
 use VisitMarche\ThemeTail\Inc\PivotMetaBox;
 use VisitMarche\ThemeTail\Inc\SecurityConfig;
 use VisitMarche\ThemeTail\Inc\Seo;
@@ -41,6 +42,10 @@ new PivotMetaBox();
  * Balises pour le référencement
  */
 new Seo();
+/**
+ * Balises pour le social
+ */
+new OpenGraph();
 /**
  * Gpx viewer
  */
