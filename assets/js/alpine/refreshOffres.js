@@ -16,7 +16,7 @@ document.addEventListener('alpine:init', () => {
                 }
                 const url = `https://visitmarche.be/${this.language}/wp-json/pivot/offres/${this.currentCategory}/${this.filtreSelected}`;
                 console.log(url)
-                let response = await fetch(url)
+                this.offres=await fetch(url)
                     .then(function (response) {
                         // The API call was successful!
                         return response.json();
@@ -29,9 +29,7 @@ document.addEventListener('alpine:init', () => {
                         // There was an error
                         console.warn("Something went wrong.", err);
                         return err
-                    });
-                console.log(response)
-                this.offres=response
+                    })
             }
         })
     )
