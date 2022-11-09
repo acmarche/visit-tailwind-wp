@@ -25,6 +25,7 @@ class Twig
             $path = get_template_directory().'/templates';
         }
 
+        dump(ABSPATH.'.env');
         $loader = new FilesystemLoader($path);
         (new Dotenv())
             ->bootEnv(ABSPATH.'.env');
