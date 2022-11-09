@@ -2,7 +2,9 @@
 
 namespace VisitMarche\ThemeTail\Lib;
 
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\String\UnicodeString;
+use Symfony\Contracts\Cache\CacheInterface;
 
 class Cache
 {
@@ -12,20 +14,22 @@ class Cache
     public const OFFRES = 'offres';
     public const OFFRE = 'offre';
     public const SEE_ALSO_OFFRES = 'see_also_offre';
+    public static ?CacheInterface $instanceObject = null;
 
-    public static function setItem(string $keyname, string|array|object $data, int $expiration = 86400): bool
+    public static function instance(): CacheInterface
     {
-        return set_transient($keyname, $data, $expiration);
-    }
+        if (null !== self::$instanceObject) {
+            return self::$instanceObject;
+        }
 
-    public static function getItem(string $keyname): string|array|object|null
-    {
-        return get_transient($keyname);
-    }
+        self::$instanceObject =
+            new FilesystemAdapter(
+                '_visit',
+                86400,
+                $_ENV['APP_CACHE_DIR']
+            );
 
-    public static function removeCache(string $keyname): bool
-    {
-        return delete_transient($keyname);
+        return self::$instanceObject;
     }
 
     public static function generateKey(string $cacheKey): string
