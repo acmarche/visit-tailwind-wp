@@ -32,7 +32,7 @@ class Twig
         $environment = new Environment(
             $loader,
             [
-                'cache' => $_ENV['APP_CACHE_DIR']??ABSPATH.'var/cache',
+                'cache' => $_ENV['APP_CACHE_DIR'] ?? ABSPATH.'var/cache',
                 'debug' => WP_DEBUG,
             ]
         );
