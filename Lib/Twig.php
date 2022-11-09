@@ -30,6 +30,7 @@ class Twig
         (new Dotenv())
             ->bootEnv(ABSPATH.'.env');
         dump($_ENV);
+dump(ABSPATH.'var/cache');
         $environment = new Environment(
             $loader,
             [
