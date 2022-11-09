@@ -29,14 +29,15 @@ class Twig
         $loader = new FilesystemLoader($path);
         (new Dotenv())
             ->bootEnv(ABSPATH.'.env');
+        dump($_ENV);
         $environment = new Environment(
             $loader,
             [
-                'cache' => $_ENV['APP_CACHE_DIR'],
+                'cache' => $_ENV['APP_CACHE_DIR']??ABSPATH.'var/cache',
                 'debug' => WP_DEBUG,
             ]
         );
-
+dump(ABSPATH.'var/cache');
         $loader->addPath(ABSPATH.'wp-content/themes/visittail/templates/', 'VisitTail');
 
         $environment->addExtension(new DebugExtension());
