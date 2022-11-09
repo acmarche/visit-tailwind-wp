@@ -33,6 +33,7 @@ Twig::rendPage(
         'urlBack' => '/',
         'nameBack' => 'Home',
         'categoryName' => 'Search',
+        'image' => get_template_directory_uri().'/assets/tartine/bg_search.png',
         'keyword' => $keyword,
         'results' => $hits,
         'count' => is_countable($hits) ? \count($hits) : 0,
