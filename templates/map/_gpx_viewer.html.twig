@@ -1,7 +1,7 @@
 <div id="openmapgpx" class="leaflet-map mt-3 mb-3" style="width: 100%; height: 600px;"></div>
 
-<script defer>
-    var opts = {
+<script type="text/javascript" defer>
+    const opts = {
         map: {
             center: [50.2268, 5.3442],
             zoom: 5,
@@ -43,10 +43,10 @@
         },
     };
 
-    var map = L.map('openmapgpx', opts.map);
+    const map = L.map('openmapgpx', opts.map);
 
-    var controlElevation = L.control.elevation(opts.elevationControl.options);
-    var controlLayer = L.control.layers(null, null, opts.layersControl.options);
+    const controlElevation = L.control.elevation(opts.elevationControl.options);
+    const controlLayer = L.control.layers(null, null, opts.layersControl.options);
 
     controlElevation.addTo(map);
     controlLayer.addTo(map);

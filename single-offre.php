@@ -4,6 +4,7 @@ namespace VisitMarche\ThemeTail;
 
 use AcMarche\Pivot\Entities\Offre\Offre;
 use Exception;
+use VisitMarche\ThemeTail\Inc\AssetsLoad;
 use VisitMarche\ThemeTail\Lib\GpxViewer;
 use VisitMarche\ThemeTail\Lib\LocaleHelper;
 use VisitMarche\ThemeTail\Lib\RouterPivot;
@@ -48,8 +49,7 @@ if (null === $offre) {
 $latitude = $offre->getAdresse()->latitude ?? null;
 $longitude = $offre->getAdresse()->longitude ?? null;
 if ($latitude && $longitude) {
-    wp_enqueue_style('visitmarche-leaflet-css');
-    wp_enqueue_script('visitmarche-leaflet-js');
+    AssetsLoad::enqueueLeaflet();
 }
 
 get_header();

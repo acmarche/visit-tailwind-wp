@@ -6,15 +6,14 @@ class AssetsLoad
 {
     public function __construct()
     {
-        add_action('wp_enqueue_scripts', fn() => $this->visitmarcheAssets());
-        if (!is_category() && !is_search() && !is_front_page()) {
-            add_action('wp_enqueue_scripts', fn() => $this->visitmarcheLeaft());
-        }
+        add_action('wp_enqueue_scripts', fn() => $this->mainAssets());
+        add_action('wp_enqueue_scripts', fn() => $this->leaflet());
+        add_action('wp_enqueue_scripts', fn() => $this->leafletElevation());
         add_filter('script_loader_tag', fn($tag, $handle, $src) => $this->addAsModule($tag, $handle, $src), 10, 3);
         add_filter('script_loader_tag', fn($tag, $handle, $src) => $this->addDefer($tag, $handle, $src), 10, 3);
     }
 
-    public function visitmarcheAssets(): void
+    public function mainAssets(): void
     {
         wp_enqueue_style(
             'visitmarche-css',
@@ -84,7 +83,7 @@ class AssetsLoad
 
     }
 
-    public function visitmarcheLeaft(): void
+    public function leaflet(): void
     {
         wp_register_style(
             'visitmarche-leaflet-css',
@@ -95,6 +94,30 @@ class AssetsLoad
         wp_register_script(
             'visitmarche-leaflet-js',
             'https://unpkg.com/leaflet@latest/dist/leaflet.js',
+            [],
+            null
+        );
+    }
+
+    public function leafletElevation(): void
+    {
+        wp_register_style(
+            'visitmarche-leaflet-elevation-css',
+            'https://unpkg.com/@raruto/leaflet-elevation/dist/leaflet-elevation.min.css',
+            [],
+            null
+        );
+
+        wp_register_script(
+            'visitmarche-leaflet-ui-js',
+            'https://unpkg.com/leaflet-ui@0.5.9/dist/leaflet-ui.js',
+            [],
+            null
+        );
+
+        wp_register_script(
+            'visitmarche-leaflet-elevation-js',
+            'https://unpkg.com/@raruto/leaflet-elevation/dist/leaflet-elevation.min.js',
             [],
             null
         );
@@ -123,5 +146,18 @@ class AssetsLoad
         }
 
         return '<script src="'.esc_url($src).'" defer></script>';
+    }
+
+    public static function enqueueLeaflet()
+    {
+        wp_enqueue_style('visitmarche-leaflet-css');
+        wp_enqueue_script('visitmarche-leaflet-js');
+    }
+
+    public static function enqueueElevation()
+    {
+        wp_enqueue_style('visitmarche-leaflet-elevation-css');
+        wp_enqueue_script('visitmarche-leaflet-ui-js');
+        wp_enqueue_script('visitmarche-leaflet-elevation-js');
     }
 }

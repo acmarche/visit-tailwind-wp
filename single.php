@@ -2,11 +2,10 @@
 
 namespace VisitMarche\ThemeTail;
 
+use VisitMarche\ThemeTail\Inc\AssetsLoad;
 use VisitMarche\ThemeTail\Lib\PostUtils;
 use VisitMarche\ThemeTail\Lib\Twig;
 use VisitMarche\ThemeTail\Lib\WpRepository;
-
-get_header();
 
 global $post;
 
@@ -23,12 +22,18 @@ $tags = $wpRepository->getTags($post->ID);
 $recommandations = $wpRepository->recommandationsByPost($post);
 $recommandations = array_slice($recommandations, 0, 3);
 
+if (preg_match('#gpx_viewer#', $post->post_content)) {
+   AssetsLoad::enqueueLeaflet();
+   AssetsLoad::enqueueElevation();
+}
+
 $content = get_the_content(null, null, $post);
 $content = apply_filters('the_content', $content);
 $content = str_replace(']]>', ']]&gt;', $content);
 
 $nameBack = $currentCategory->name;
 
+get_header();
 Twig::rendPage(
     '@VisitTail/article.html.twig',
     [
