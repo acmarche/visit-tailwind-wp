@@ -8,20 +8,9 @@ use Symfony\Component\Translation\TranslatorBagInterface;
 
 class LocaleHelper
 {
-    //todo remove
-    const ICL_LANGUAGE_CODE = null;
     public static function getSelectedLanguage(): string
     {
-        if (self::ICL_LANGUAGE_CODE !== null) {
-            return self::ICL_LANGUAGE_CODE;
-        }
-
-        return 'fr';
-    }
-
-    public static function getSelectedLanguage22(): string
-    {
-        if (ICL_LANGUAGE_CODE) {
+        if (defined(ICL_LANGUAGE_CODE)) {
             return ICL_LANGUAGE_CODE;
         }
 
