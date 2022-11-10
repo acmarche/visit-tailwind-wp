@@ -10,7 +10,7 @@ class LocaleHelper
 {
     public static function getSelectedLanguage(): string
     {
-        if (defined(ICL_LANGUAGE_CODE)) {
+        if (ICL_LANGUAGE_CODE) {
             return ICL_LANGUAGE_CODE;
         }
 
