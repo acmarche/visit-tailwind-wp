@@ -18,9 +18,14 @@ use Twig\TwigFunction;
 
 class Twig
 {
+    public static ?Environment $instanceObject = null;
+
     public static function LoadTwig(?string $path = null): Environment
     {
-        //todo get instance
+        if (self::$instanceObject) {
+            return self::$instanceObject;
+        }
+
         if (!$path) {
             $path = get_template_directory().'/templates';
         }
@@ -57,12 +62,14 @@ class Twig
         $environment->addFunction(self::isExternalUrl());
         $environment->addFilter(self::removeHtml());
 
-        return $environment;
+        return self::$instanceObject = $environment;
     }
 
     public static function rendPage(string $templatePath, array $variables = []): void
     {
         $twig = self::LoadTwig();
+        //force
+        $variables['language'] = LocaleHelper::getSelectedLanguage();
         try {
             echo $twig->render(
                 $templatePath,
@@ -81,27 +88,6 @@ class Twig
             );
             $url = RouterPivot::getCurrentUrl();
             Mailer::sendError('Error page: '.$templatePath, $url.' \n '.$e->getMessage());
-        }
-    }
-
-    public function contentPage(string $templatePath, array $variables = []): string
-    {
-        $twig = self::LoadTwig();
-        try {
-            return $twig->render(
-                $templatePath,
-                $variables,
-            );
-        } catch (LoaderError|RuntimeError|SyntaxError $e) {
-            return $twig->render(
-                '@VisitTail/errors/500.html.twig',
-                [
-                    'message' => $e->getMessage(),
-                    'title' => "La page n'a pas pu être chargée",
-                    'tags' => [],
-                    'relations' => [],
-                ]
-            );
         }
     }
 
