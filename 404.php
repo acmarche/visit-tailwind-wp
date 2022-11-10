@@ -14,6 +14,7 @@ dump($language);
 dump(111);
 $menu = new Menu();
 $items = $menu->getMenuTop();
+dump(ICL_LANGUAGE_CODE);
 dump($items);
 Twig::rendPage(
     '@VisitTail/errors/404.html.twig',
