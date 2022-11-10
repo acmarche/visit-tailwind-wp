@@ -3,9 +3,8 @@
         {{ title ? title : 'Page non trouvée' }}
     </h2>
     <p class="text-cta-dark">
-        Cette page n'existe plus ou un lien est brisé
-        <br/>{{ url }}
+        {{ 'page.notfound'|trans }}
+        <br/>
+        {{ url }}
     </p>
-
-    {% include '@VisitTail/map/_carte.html.twig' %}
 </main>

@@ -1,6 +1,6 @@
 
     {% if keyword|length > 2 %}
-        <div class="mx-auto xl:w-[22rem] my-4">{{ count }} RÉSULTATS POUR {{ keyword|remove_html }}</div>
+        <div class="mx-auto xl:w-[22rem] my-4">{{ count }} {{ 'result.title'|trans}} {{ keyword|remove_html }}</div>
 
         {% if count > 0 %}
             <ul class="pt-6 grid grid-cols-1 gap-2 xl:gap-4 xl:grid-cols-2">

@@ -1,5 +1,5 @@
 <div class="mx-auto xl:w-[22rem] my-4" x-show="query.length > 2">
-    <span x-text="totalHits"></span> RÉSULTATS POUR <span x-text="query"></span>
+    <span x-text="totalHits"></span> {{ 'result.title'|trans}} <span x-text="query"></span>
 </div>
 
 <ul class="pt-6 grid grid-cols-1 gap-2 xl:gap-4 xl:grid-cols-2" x-show="totalHits > 0">

@@ -16,7 +16,7 @@ discover: 'Ontdekken'
 different:
   festivities: 'Kent u onze verschillende festiviteiten ?'
 menu:
-  home: 'Start pagina'
+  home: 'Start'
   title: 'Menu'
   contact: 'Contact'
 town_hall: 'Office Communal du Tourisme'
@@ -27,11 +27,13 @@ hours:
   friday_time: '8.00 - 12.00 uur en 13.00 - 15.00 uur'
   unite: 'u'
 private:
+  rgpd: 'Juridische kennisgevingen en AVG'
   life: 'Prive leven'
   notice: 'Juridische kennisgeving'
   right: 'Alle rechten voorbehouden'
 search:
   placeholder: 'Wat zoek je ?'
+  title: 'Zoeken'
 filter:
   all: 'Alle'
 url:
@@ -56,4 +58,13 @@ homepage:
   title: 'Startpagina'
 page:
   tourisme: 'Toerisme'
+  notfound: 'Deze pagina bestaat niet meer of een verbroken link'
 Découvrir: 'Ontdekken'
+close:
+  title: 'Sluiten'
+shortcut:
+  title: 'Sneltoetsen'
+result:
+  title: 'RESULTATEN VOOR'
+office:
+  title: 'Gemeentelijk VVV-kantoor'

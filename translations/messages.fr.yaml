@@ -27,11 +27,13 @@ hours:
   friday_time: 'de 8h à 12h et de 13h à 15h'
   unite: 'h'
 private:
+  rgpd: 'Mentions légales et RGPD'
   life: 'Vie privée'
   notice: 'Mentions légales'
   right: 'Tous droits réservés'
 search:
   placeholder: 'Que cherchez-vous ?'
+  title: 'Rechercher'
 filter:
   all: 'Tout'
 url:
@@ -56,4 +58,13 @@ homepage:
   title: 'Page d''accueil'
 page:
   tourisme: 'Tourisme'
+  notfound: 'Cette page n''existe plus ou un lien est brisé'
 Découvrir: 'Découvrir'
+close:
+  title: 'Fermer'
+shortcut:
+  title: 'Raccourcis'
+result:
+  title: 'RÉSULTATS POUR'
+office:
+  title: 'Office Communal du Tourisme'

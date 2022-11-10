@@ -15,17 +15,18 @@ $category = get_category($cat_ID);
 
 $language = LocaleHelper::getSelectedLanguage();
 $pivotRepository = PivotContainer::getPivotRepository(WP_DEBUG);
+$translator = LocaleHelper::iniTranslator();
 
 $wpRepository = new WpRepository();
 $image = $wpRepository->categoryImage($category);
 $filterSelected = $_GET[RouterPivot::PARAM_FILTRE] ?? null;
-$nameBack = 'Home';
+$nameBack = $translator->trans('menu.home');
 $categorName = $category->name;
 if ($filterSelected) {
     $typeOffreRepository = PivotContainer::getTypeOffreRepository(WP_DEBUG);
     $filtres = $typeOffreRepository->findByUrn($filterSelected);
     if ([] !== $filtres) {
-        $nameBack = 'Agenda';
+        $nameBack = $translator->trans('agenda.title');
         $categorName = $category->name.' - '.$filtres[0]->labelByLanguage($language);
     }
 }

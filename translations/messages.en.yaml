@@ -27,11 +27,13 @@ hours:
   friday_time: '8 am to 12 pm and 1 pm to 3 pm'
   unite: 'h'
 private:
+  rgpd: 'Legal notices and GDPR'
   life: 'Private life'
   notice: 'Legal notice'
   right: 'All rights reserved'
 search:
   placeholder: 'What are you looking for ?'
+  title: 'Search'
 filter:
   all: 'All'
 url:
@@ -56,4 +58,13 @@ homepage:
   title: 'Home page'
 page:
   tourisme: 'Tourism'
+  notfound: 'This page no longer exists or a broken link'
 Découvrir: 'Discover'
+close:
+  title: 'Close'
+shortcut:
+  title: 'Shortcuts'
+result:
+  title: 'RESULTS FOR'
+office:
+  title: 'Municipal Tourist Office'

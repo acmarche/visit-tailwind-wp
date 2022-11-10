@@ -52,7 +52,7 @@
                             x-model="query"
                             @input.debounce.250="launchSearch()"
                             class="w-full rounded-md border-0 bg-gray-100 px-4 py-2.5 text-gray-900 placeholder-gray-500 focus:ring-0 sm:text-sm"
-                            placeholder="Rechercher..."
+                            placeholder="{{ 'search.placeholder'|trans }}..."
                             role="combobox"
                             aria-expanded="false"
                             aria-controls="options"
@@ -64,7 +64,7 @@
                          class="w-6 h-6 inline-block text-cta-dark">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
                     </svg>
-                    <span class="font-montserrat-semi-bold text-cta-dark">Fermer</span>
+                    <span class="font-montserrat-semi-bold text-cta-dark">{{ 'close.title'|trans }}</span>
                 </button>
             </form>
 
@@ -103,7 +103,7 @@
                         />
                     </svg>
                     <p class="mt-4 text-sm text-gray-900">
-                        Pas de résultat trouvé
+                       {{ 'article.notfound'|trans }}
                     </p>
                 </div>
             </template>

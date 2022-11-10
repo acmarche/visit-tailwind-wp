@@ -6,7 +6,7 @@
             <path stroke-linecap="round" stroke-linejoin="round"
                   d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/>
         </svg>
-        <span class="text-menu-mobile">Rechercher</span>
+        <span class="text-menu-mobile">{{ 'search.title'|trans }}</span>
     </a>
     <div
             class="xl:hidden absolute bg-white right-0 bottom-[4.5rem] w-full h-[74vh] p-8 transition-all duration-500 overflow-hidden"
@@ -22,11 +22,11 @@
                      class="w-6 h-6 inline-block text-cta-dark">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
                 </svg>
-                <span class="font-montserrat-semi-bold text-cta-dark">Fermer</span>
+                <span class="font-montserrat-semi-bold text-cta-dark">{{ 'close.title'|trans }}</span>
             </button>
             <hr class="border-b border-cta-dark/50 m-3 w-full"/>
             <form class="w-full max-w-lg lg:max-w-xs" action="/{{ locale }}">
-                <label for="search" class="sr-only">Rechercher</label>
+                <label for="search" class="sr-only">{{ 'search.title'|trans }}</label>
                 <div class="relative">
                     <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                         <!-- Heroicon name: mini/magnifying-glass -->
@@ -39,7 +39,7 @@
                     </div>
                     <input id="search" name="s"
                            class="block w-full text-cta-dark rounded-md border border-gray-300 bg-white py-2 pl-10 pr-3 leading-5 placeholder-gray-500 focus:border-indigo-500 focus:placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm"
-                           placeholder="Chercher"
+                           placeholder="{{ 'search.title'|trans }}"
                            autocomplete="off"
                            type="search">
                 </div>

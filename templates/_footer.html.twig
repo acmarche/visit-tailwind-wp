@@ -2,7 +2,7 @@
         class="flex flex-col justify-between bg-caractere p-5 pb-20 font-montserrat-light text-white xl:grid xl:grid-cols-4 xl:pb-5"
 >
     <div class="flex gap-2">
-        <a href="/{{locale}}" class="">
+        <a href="/{{ locale }}" class="">
             <img src="{{ template_uri() }}/assets/tartine/visit_logo.png"
                  alt="logo visit" class="w-20 h-12"/>
         </a>
@@ -13,7 +13,7 @@
         </a>
     </div>
     <div class="border-l border-l-white/50 px-3">
-        <h4 class="font-montserrat-semi-bold">Menu</h4>
+        <h4 class="font-montserrat-semi-bold">{{ 'menu.title'|trans }}</h4>
         <ul class="grid grid-cols-2 p-2 text-sm leading-6 xl:grid-cols-1">
             <li class="px-2">
                 <a href="{{ items.inspirations.url }}">{{ items.inspirations.name }}</a>
@@ -31,12 +31,12 @@
     </div>
     {% include '@VisitTail/footer/_shortcut.html.twig' %}
     <div class="border-l border-l-white/50 px-3">
-        <h4 class="font-montserrat-semi-bold">Contact</h4>
+        <h4 class="font-montserrat-semi-bold">{{ 'menu.contact'|trans }}</h4>
         <div class="mb-2 text-sm leading-6">
-            Office Communal du Tourisme<br/>
+            {{ 'office.title'|trans }}<br/>
             <a href="tel:+3284326946">+32(0)84 32 69 46</a><br/>
-            Du lundi au jeudi : de 8h à 12h et de 13h à 17h<br/>
-            Vendredi : de 8h à 12h et de 13h à 15h<br/>
+            {{ 'hours.week'|trans }}<br/>
+            {{ 'hours.friday'|trans }}<br/>
         </div>
         {% include '@VisitTail/header/_icones_social.html.twig' %}
     </div>

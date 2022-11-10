@@ -1,13 +1,13 @@
 <div class="mx-auto mb-8 xl:mb-0">
     <h1 class="text-2xl text-center text-white pb-6 font-montserrat-semi-bold">
-        Découvrez <br class="xl:hidden"/>Marche-en-Famenne
+        {{'decouvrez.marche'|trans}} <br class="xl:hidden"/>Marche-en-Famenne
     </h1>
     <form class="flex-grow" role="search" action="/{{locale}}/">
         <label class="relative block" for="search">
-            <span class="sr-only">Rechercher</span>
+            <span class="sr-only">{{ 'search.title'|trans }}</span>
             <input id="search"
                    class="xl:w-[512px] h-12 placeholder:italic placeholder:text-gray-400 block w-ful4l border border-gray-300 rounded-full py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
-                   placeholder="Rechecher..." type="search" name="s"/>
+                   placeholder="{{ 'search.placeholder'|trans }}..." type="search" name="s"/>
             <button type="submit" class="absolute inset-y-0 right-0 flex items-center pl-2 hover:bg-cta-light w-16 rounded-full">
     <svg class="svg-icon h-5 w-5" viewBox="0 0 20 20">
 		<path
