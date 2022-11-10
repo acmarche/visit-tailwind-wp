@@ -62,7 +62,9 @@ class Twig
         $environment->addFunction(self::isExternalUrl());
         $environment->addFilter(self::removeHtml());
 
-        return self::$instanceObject = $environment;
+        self::$instanceObject = $environment;
+
+        return self::$instanceObject;
     }
 
     public static function rendPage(string $templatePath, array $variables = []): void
