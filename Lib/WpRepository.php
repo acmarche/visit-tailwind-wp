@@ -499,4 +499,11 @@ class WpRepository
             return $offre;
         });
     }
+
+    public function specificationsOffre(Offre $offre):array
+    {
+        $pivotRepository = PivotContainer::getPivotRepository(WP_DEBUG);
+
+        return $pivotRepository->specitificationsByOffre($offre);
+    }
 }
