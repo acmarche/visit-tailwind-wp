@@ -1,9 +1,10 @@
 {% if filtres|length > 1 %}
     <label>
         <select name="category"
+                @change="changeOffres($event.target.options[$event.target.selectedIndex].value)"
                 class="xl:hidden flex border border-cta-primary p-2 mt-3 font-montserrat-semi-bold bg-white mx-auto">
             {% for item in filtres %}
-                <option value="{{ item.id }}">
+                <option value="{{ item.id }}" data-filtre="{{ item.id }}">
                     {{ item.nom }}
                 </option>
             {% endfor %}

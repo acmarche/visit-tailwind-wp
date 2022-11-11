@@ -9,12 +9,16 @@ document.addEventListener('alpine:init', () => {
                 this.currentCategory=categoryId
                 this.launchRefresh(null)
             },
+            async changeOffres(f) {
+                this.filtreSelected=f
+                this.launchRefresh(null)
+            },
             async launchRefresh(e) {
                 console.log(this.currentCategory)
                 if(e !== null) {
                     this.filtreSelected = e.target.dataset.filtre
                 }
-                const url = `https://visitmarche.be/${this.language}/wp-json/pivot/offres/${this.currentCategory}/${this.filtreSelected}`;
+                const url = `https://visit.marche.be/${this.language}/wp-json/pivot/offres/${this.currentCategory}/${this.filtreSelected}`;
                 console.log(url)
                 this.offres=await fetch(url)
                     .then(function (response) {
