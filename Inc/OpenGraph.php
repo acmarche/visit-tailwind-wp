@@ -22,7 +22,7 @@ class OpenGraph
         $metas = Seo::assignMetaInfo(false);
         Twig::rendPage('@VisitTail/pub/_og.html.twig', [
             'title' => $metas['title'],
-            'image' => $metas['image'],
+            'image' => $metas['image'] ?? '',
             'content' => $metas['description'],
         ]);
     }
