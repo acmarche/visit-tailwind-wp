@@ -481,9 +481,8 @@ class WpRepository
 
         return $this->cache->get($cacheKey, function ($item) use ($typesOffre, $parse) {
             $pivotRepository = PivotContainer::getPivotRepository(WP_DEBUG);
-            $offres = $pivotRepository->getOffres($typesOffre, $parse);
 
-            return $offres;
+            return $pivotRepository->getOffres($typesOffre, $parse);
         });
     }
 
