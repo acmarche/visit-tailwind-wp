@@ -3,6 +3,7 @@
 namespace VisitMarche\ThemeTail\Lib;
 
 use AcMarche\Pivot\Entities\Offre\Offre;
+use AcMarche\Pivot\Entities\Specification\SpecData;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use Symfony\Component\Dotenv\Dotenv;
 use Twig\Environment;
@@ -61,6 +62,7 @@ class Twig
         $environment->addFunction(self::templateUri());
         $environment->addFunction(self::isExternalUrl());
         $environment->addFilter(self::removeHtml());
+        $environment->addFilter(self::renderValuePivot());
 
         self::$instanceObject = $environment;
 
@@ -199,4 +201,29 @@ class Twig
             ]
         );
     }
+
+    private static function renderValuePivot(): TwigFilter
+    {
+        return new TwigFilter(
+            'format_pivot_value',
+            function (SpecData $specData) {
+                $return_value = match ($specData->type) {
+                    'Boolean' => 'oui',
+                    'TextML' => $specData->value,
+                    'StringML' => $specData->value,
+                    'Currency' => $specData->value.' €',
+                    'Date' => $specData->value,
+                    'Phone' => '<a href="tel:'.$specData->value.'">'.$specData->value.'</a>',
+                    'EMail' => '<a href="mailto:'.$specData->value.'">'.$specData->value.'</a>',
+                    'URL' => '<a href="'.$specData->value.'">'.$specData->value.'</a>',
+                    default => $specData->value
+                };
+
+                return $return_value;
+            }, [
+                'is_safe' => ['html'],
+            ]
+        );
+    }
+
 }
