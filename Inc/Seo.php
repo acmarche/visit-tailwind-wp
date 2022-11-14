@@ -104,8 +104,8 @@ class Seo
     private static function metaPivotOffre(string $codeCgt): void
     {
         $language = LocaleHelper::getSelectedLanguage();
-        $pivotRepository = PivotContainer::getPivotRepository(WP_DEBUG);
-        $offre = $pivotRepository->getOffreByCgtAndParse($codeCgt, Offre::class);
+        $wpRepository = new WpRepository();
+        $offre = $wpRepository->getOffreByCgtAndParse($codeCgt, Offre::class);
 
         if (null !== $offre) {
             $base = self::baseTitle('');
