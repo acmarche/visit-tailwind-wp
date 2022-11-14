@@ -46,6 +46,7 @@ if (null === $offre) {
     return;
 }
 
+//dd($wpRepository->groupSpecifications($offre));
 $latitude = $offre->getAdresse()->latitude ?? null;
 $longitude = $offre->getAdresse()->longitude ?? null;
 if ($latitude && $longitude) {
@@ -78,9 +79,7 @@ if (count($offre->gpxs) > 0) {
     //$gpxMap = $gpxViewer->render($offre->gpxs[0]);
     //$gpxViewer->renderWithPlugin($filepath);
 }
-
-$specs = $wpRepository->specificationsOffre($offre);
-
+$specs = $wpRepository->groupSpecifications($offre);
 Twig::rendPage(
     '@VisitTail/offre.html.twig',
     [
