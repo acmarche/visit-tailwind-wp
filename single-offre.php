@@ -46,7 +46,6 @@ if (null === $offre) {
     return;
 }
 
-//dd($wpRepository->groupSpecifications($offre));
 $latitude = $offre->getAdresse()->latitude ?? null;
 $longitude = $offre->getAdresse()->longitude ?? null;
 if ($latitude && $longitude) {
