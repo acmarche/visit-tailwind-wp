@@ -208,14 +208,14 @@ class Twig
             'format_pivot_value',
             function (SpecData $specData) {
                 $return_value = match ($specData->type) {
-                    'Boolean' => 'oui',
+                    'Boolean' => '',
                     'TextML' => $specData->value,
                     'StringML' => $specData->value,
                     'Currency' => $specData->value.' €',
                     'Date' => $specData->value,
                     'Phone' => '<a href="tel:'.$specData->value.'">'.$specData->value.'</a>',
                     'EMail' => '<a href="mailto:'.$specData->value.'">'.$specData->value.'</a>',
-                    'URL' => '<a href="'.$specData->value.'">'.$specData->value.'</a>',
+                    'URL','URLFacebook','URLTripadvisor' => '<a href="'.$specData->value.'">'.$specData->value.'</a>',
                     default => $specData->value
                 };
 
