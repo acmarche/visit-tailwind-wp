@@ -14,7 +14,6 @@ $cat_ID = get_queried_object_id();
 $category = get_category($cat_ID);
 
 $language = LocaleHelper::getSelectedLanguage();
-$pivotRepository = PivotContainer::getPivotRepository(WP_DEBUG);
 $translator = LocaleHelper::iniTranslator();
 
 $wpRepository = new WpRepository();
@@ -22,16 +21,20 @@ $image = $wpRepository->categoryImage($category);
 $filterSelected = $_GET[RouterPivot::PARAM_FILTRE] ?? null;
 $nameBack = $translator->trans('menu.home');
 $categorName = $category->name;
+
 if ($filterSelected) {
     $typeOffreRepository = PivotContainer::getTypeOffreRepository(WP_DEBUG);
     $filtres = $typeOffreRepository->findByUrn($filterSelected);
     if ([] !== $filtres) {
         $nameBack = $translator->trans('agenda.title');
         $categorName = $category->name.' - '.$filtres[0]->labelByLanguage($language);
+        $filterSelected = [$filterSelected];
     }
+} else {
+    $filterSelected = [];
 }
 try {
-    $events = $wpRepository->getEvents(true, [$filterSelected]);
+    $events = $wpRepository->getEvents(true, $filterSelected);
     array_map(
         function ($event) use ($cat_ID, $language) {
             $event->url = RouterPivot::getUrlOffre($event, $cat_ID);
