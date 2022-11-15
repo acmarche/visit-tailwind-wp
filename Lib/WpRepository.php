@@ -411,11 +411,10 @@ class WpRepository
     {
         $cacheKey = Cache::generateKey(Cache::SEE_ALSO_OFFRES.'-'.$offerRefer->codeCgt.'-'.$category->term_id);
 
-        return $this->cache->get($cacheKey, function ($item) use ($offerRefer, $category, $language) {
-
+        return $this->cache->get($cacheKey.time(), function () use ($offerRefer, $category, $language) {
             $recommandations = [];
-            if (count($offerRefer->voir_aussis)) {
-                $offres = $offerRefer->voir_aussis;
+            if (count($offerRefer->see_also)) {
+                $offres = $offerRefer->see_also;
             } else {
                 $pivotRepository = PivotContainer::getPivotRepository();
                 $offres = $pivotRepository->getSameOffres($offerRefer);
@@ -446,9 +445,9 @@ class WpRepository
 
     public function getEvents(bool $removeObsolete = false, array $urnsSelected = []): array
     {
-        $cacheKey = Cache::generateKey(Cache::EVENTS.'-'.$removeObsolete.'-'.join($urnsSelected));
+        $cacheKey = Cache::generateKey(Cache::EVENTS.'-'.$removeObsolete.'-'.join($urnsSelected)).time();
 
-        return $this->cache->get($cacheKey, function ($item) use ($removeObsolete, $urnsSelected) {
+        return $this->cache->get($cacheKey, function () use ($removeObsolete, $urnsSelected) {
             $pivotRepository = PivotContainer::getPivotRepository(WP_DEBUG);
             $events = $pivotRepository->getEvents($removeObsolete, $urnsSelected);
 
@@ -477,9 +476,9 @@ class WpRepository
         foreach ($typesOffre as $typeOffre) {
             $keyName .= $typeOffre->urn.'-';
         }
-        $cacheKey = Cache::generateKey(Cache::OFFRES.'-'.$keyName.'-'.$parse);
+        $cacheKey = Cache::generateKey(Cache::OFFRES.'-'.$keyName.'-'.$parse).time();
 
-        return $this->cache->get($cacheKey, function ($item) use ($typesOffre, $parse) {
+        return $this->cache->get($cacheKey, function () use ($typesOffre, $parse) {
             $pivotRepository = PivotContainer::getPivotRepository(WP_DEBUG);
 
             return $pivotRepository->getOffres($typesOffre, $parse);
@@ -488,21 +487,25 @@ class WpRepository
 
     public function getOffreByCgtAndParse(string $codeCgt, string $class, ?string $cacheKeyPlus = null): ?Offre
     {
-        $cacheKey = Cache::generateKey(Cache::OFFRE.'-'.$codeCgt.'-'.$class);
+        $cacheKey = Cache::generateKey(Cache::OFFRE.'-'.$codeCgt.'-'.$class).time();
 
-        return $this->cache->get($cacheKey, function ($item) use ($codeCgt, $class, $cacheKeyPlus) {
+        return $this->cache->get($cacheKey, function () use ($codeCgt, $class, $cacheKeyPlus) {
 
             $pivotRepository = PivotContainer::getPivotRepository(WP_DEBUG);
-            $offre = $pivotRepository->getOffreByCgtAndParse($codeCgt, $class, $cacheKeyPlus);
 
-            return $offre;
+            return $pivotRepository->getOffreByCgtAndParse($codeCgt, $class, $cacheKeyPlus);
         });
     }
 
-    public function specificationsOffre(Offre $offre):array
+    public function groupSpecifications(Offre $offre): array
     {
-        $pivotRepository = PivotContainer::getPivotRepository(WP_DEBUG);
+        $categories = [];
+        foreach ($offre->specifications as $specification) {
+            $categories[$specification->data->urnCat]['category'] = $specification->urnCatDefinition;
+            $item = ["data" => $specification->data, "definition" => $specification->urnDefinition];
+            $categories[$specification->data->urnCat]['items'][] = $item;
+        }
 
-        return $pivotRepository->specitificationsByOffre($offre);
+        return $categories;
     }
 }
