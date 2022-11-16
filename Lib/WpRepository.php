@@ -446,7 +446,7 @@ class WpRepository
 
     public function getEvents(bool $removeObsolete = false, array $urnsSelected = []): array
     {
-        $cacheKey = Cache::generateKey(Cache::EVENTS.'-'.$removeObsolete.'-'.join($urnsSelected)).time();
+        $cacheKey = Cache::generateKey(Cache::EVENTS.'-'.$removeObsolete.'-'.join($urnsSelected));
 
         return $this->cache->get($cacheKey, function () use ($removeObsolete, $urnsSelected) {
             $pivotRepository = PivotContainer::getPivotRepository(WP_DEBUG);
@@ -477,7 +477,7 @@ class WpRepository
         foreach ($typesOffre as $typeOffre) {
             $keyName .= $typeOffre->urn.'-';
         }
-        $cacheKey = Cache::generateKey(Cache::OFFRES.'-'.$keyName.'-'.$parse).time();
+        $cacheKey = Cache::generateKey(Cache::OFFRES.'-'.$keyName.'-'.$parse);
 
         return $this->cache->get($cacheKey, function () use ($typesOffre, $parse) {
             $pivotRepository = PivotContainer::getPivotRepository(WP_DEBUG);
