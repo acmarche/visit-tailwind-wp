@@ -488,7 +488,7 @@ class WpRepository
 
     public function getOffreByCgtAndParse(string $codeCgt, string $class, ?string $cacheKeyPlus = null): ?Offre
     {
-        $cacheKey = Cache::generateKey(Cache::OFFRE.'-'.$codeCgt.'-'.$class).time();
+        $cacheKey = Cache::generateKey(Cache::OFFRE.'-'.$codeCgt.'-'.$class);
 
         return $this->cache->get($cacheKey, function () use ($codeCgt, $class, $cacheKeyPlus) {
 
