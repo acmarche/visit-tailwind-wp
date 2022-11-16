@@ -411,13 +411,13 @@ class WpRepository
     {
         $cacheKey = Cache::generateKey(Cache::SEE_ALSO_OFFRES.'-'.$offerRefer->codeCgt.'-'.$category->term_id);
 
-        return $this->cache->get($cacheKey.time(), function () use ($offerRefer, $category, $language) {
+        return $this->cache->get($cacheKey, function () use ($offerRefer, $category, $language) {
             $recommandations = [];
             if (count($offerRefer->see_also)) {
                 $offres = $offerRefer->see_also;
             } else {
                 $pivotRepository = PivotContainer::getPivotRepository();
-                $offres = $pivotRepository->getSameOffres($offerRefer);
+                $offres = $pivotRepository->fetchSameOffres($offerRefer);
             }
             $urlCat = get_category_link($category);
             foreach ($offres as $offre) {
@@ -449,7 +449,7 @@ class WpRepository
 
         return $this->cache->get($cacheKey, function () use ($removeObsolete, $urnsSelected) {
             $pivotRepository = PivotContainer::getPivotRepository(WP_DEBUG);
-            $events = $pivotRepository->getEvents($removeObsolete, $urnsSelected);
+            $events = $pivotRepository->fetchEvents($removeObsolete, $urnsSelected);
 
             foreach ($events as $event) {
                 $event->locality = $event->getAdresse()->localite[0]->get('fr');
@@ -481,7 +481,7 @@ class WpRepository
         return $this->cache->get($cacheKey, function () use ($typesOffre, $parse) {
             $pivotRepository = PivotContainer::getPivotRepository(WP_DEBUG);
 
-            return $pivotRepository->getOffres($typesOffre, $parse);
+            return $pivotRepository->fetchOffres($typesOffre, $parse);
         });
     }
 
@@ -493,7 +493,7 @@ class WpRepository
 
             $pivotRepository = PivotContainer::getPivotRepository(WP_DEBUG);
 
-            return $pivotRepository->getOffreByCgtAndParse($codeCgt, $class, $cacheKeyPlus);
+            return $pivotRepository->fetchOffreByCgtAndParse($codeCgt, $class, $cacheKeyPlus);
         });
     }
 
