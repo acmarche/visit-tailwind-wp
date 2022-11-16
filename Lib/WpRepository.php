@@ -5,6 +5,7 @@ namespace VisitMarche\ThemeTail\Lib;
 use AcMarche\Pivot\DependencyInjection\PivotContainer;
 use AcMarche\Pivot\Entities\Offre\Offre;
 use AcMarche\Pivot\Entity\TypeOffre;
+use AcMarche\Pivot\Entity\UrnDefinitionEntity;
 use AcMarche\Pivot\Spec\UrnList;
 use AcMarche\Pivot\Spec\UrnTypeList;
 use Doctrine\ORM\NonUniqueResultException;
@@ -495,6 +496,13 @@ class WpRepository
 
             return $pivotRepository->fetchOffreByCgtAndParse($codeCgt, $class, $cacheKeyPlus);
         });
+    }
+
+    public function getUrnDefinition(string $urnName): ?UrnDefinitionEntity
+    {
+        $pivotRepository = PivotContainer::getUrnDefinitionRepository(WP_DEBUG);
+
+        return $pivotRepository->findByUrn($urnName);
     }
 
     public function groupSpecifications(Offre $offre): array
