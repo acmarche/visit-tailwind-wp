@@ -4,6 +4,7 @@ namespace VisitMarche\ThemeTail\Lib;
 
 use AcMarche\Pivot\Entities\Offre\Offre;
 use AcMarche\Pivot\Entities\Specification\SpecData;
+use AcMarche\Pivot\Spec\SpecTypeEnum;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use Symfony\Component\Dotenv\Dotenv;
 use Twig\Environment;
@@ -208,14 +209,14 @@ class Twig
             'format_pivot_value',
             function (SpecData $specData) {
                 $return_value = match ($specData->type) {
-                    'Boolean' => '',
-                    'TextML' => $specData->value,
-                    'StringML' => $specData->value,
-                    'Currency' => $specData->value.' €',
-                    'Date' => $specData->value,
-                    'Phone' => '<a href="tel:'.$specData->value.'">'.$specData->value.'</a>',
-                    'EMail' => '<a href="mailto:'.$specData->value.'">'.$specData->value.'</a>',
-                    'URL','URLFacebook','URLTripadvisor' => '<a href="'.$specData->value.'">'.$specData->value.'</a>',
+                    SpecTypeEnum::BOOLEAN->value => '',
+                    SpecTypeEnum::TEXTML->value => $specData->value,
+                    SpecTypeEnum::STRINGML->value => $specData->value,
+                    SpecTypeEnum::CURRENCY->value => $specData->value.' €',
+                    SpecTypeEnum::DATE->value => $specData->value,
+                    SpecTypeEnum::PHONE->value,SpecTypeEnum::GSM->value => '<a href="tel:'.$specData->value.'">'.$specData->value.'</a>',
+                    SpecTypeEnum::EMAIL->value => '<a href="mailto:'.$specData->value.'">'.$specData->value.'</a>',
+                    SpecTypeEnum::URL->value, SpecTypeEnum::URL_FACEBOOK->value, SpecTypeEnum::URL_TRIPADVISOR->value => '<a href="'.$specData->value.'">'.$specData->value.'</a>',
                     default => $specData->value
                 };
 
