@@ -121,13 +121,6 @@ class Seo
                 fn($category) => $category->labelByLanguage($language),
                 $offre->categories
             );
-            $keywords = array_merge(
-                $keywords,
-                array_map(
-                    fn($tag) => $tag,
-                    $offre->tags
-                )
-            );
             self::$metas['keywords'] = implode(',', $keywords);
             self::$metas['image'] = $offre->firstImage();
         }
