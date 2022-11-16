@@ -471,18 +471,18 @@ class WpRepository
      * @return Offre[]
      * @throws \Psr\Cache\InvalidArgumentException
      */
-    public function getOffres(array $typesOffre, bool $parse = true): array
+    public function getOffres(array $typesOffre): array
     {
         $keyName = '';
         foreach ($typesOffre as $typeOffre) {
             $keyName .= $typeOffre->urn.'-';
         }
-        $cacheKey = Cache::generateKey(Cache::OFFRES.'-'.$keyName.'-'.$parse);
+        $cacheKey = Cache::generateKey(Cache::OFFRES.'-'.$keyName);
 
-        return $this->cache->get($cacheKey, function () use ($typesOffre, $parse) {
+        return $this->cache->get($cacheKey, function () use ($typesOffre) {
             $pivotRepository = PivotContainer::getPivotRepository(WP_DEBUG);
 
-            return $pivotRepository->fetchOffres($typesOffre, $parse);
+            return $pivotRepository->fetchOffres($typesOffre);
         });
     }
 
