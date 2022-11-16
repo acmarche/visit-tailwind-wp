@@ -78,6 +78,23 @@ class GpxViewer
         );
     }
 
+    public function renderWithPlugin(string $filePath)
+    {
+        $filepath = '/wp-content/uploads/gpx/non-classifiee/Cirkwi-Marche-en-Famenne_-_Circuit_VTT_Vert.gpx';
+
+        $gpx = gpx_view(array(
+                'src' => $filepath,
+                'title' => 'Cirkwi-Marche-en-Famenne_-_Circuit_VTT_Vert.gpx',
+                'color' => '#FF0000',
+                'width' => '450px',
+                'distance_unit' => 'km',
+                'download_button' => true,
+            )
+        );
+
+        echo $gpx;
+    }
+
     public function writeTmpFile(Gpx $gpx): string
     {
         try {
