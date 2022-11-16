@@ -27,8 +27,9 @@
             </svg>
             <div class="flex flex-col">
                 <span class="">Téléphone(s)</span>
-                <a href="tel:{{ offre.tels[0] }}"
-                   class="">{{ offre.tels[0] }}</a>
+                {% for tel in offre.tels %}
+                    <a href="tel:{{ tel }}" class="">{{ tel }}</a>
+                {% endfor %}
             </div>
         </div>
     {% endif %}
@@ -43,13 +44,12 @@
             </svg>
             <div class="flex flex-col">
                 <span class="">Emails</span>
-                <a href="mailto:{{ offre.emails[0] }}"
-                   class="">{{ offre.emails[0] }}
-                </a>
+                {% for email in offre.emails %}
+                    <a href="mailto:{{ email }}" class="">{{ email }}</a>
+                {% endfor %}
             </div>
         </div>
     {% endif %}
-
 
     {% if offre.webs|length > 0 %}
         <div class="divcontact">
@@ -61,9 +61,11 @@
             </svg>
             <div class="flex flex-col">
                 <span class="">Site web</span>
-                <a href="{{ offre.webs[0].value }}" target="_blank"
-                   class="">{{ offre.webs[0].value }}
-                </a>
+                {% for web in offre.webs %}
+                    <a href="{{ web.value }}" target="_blank"
+                       class="">{{ web.value }}
+                    </a>
+                {% endfor %}
             </div>
         </div>
     {% endif %}
