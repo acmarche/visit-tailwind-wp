@@ -123,6 +123,9 @@ class Seo
             );
             self::$metas['keywords'] = implode(',', $keywords);
             self::$metas['image'] = $offre->firstImage();
+            self::$metas['updated_time'] = $offre->dateModification;
+            self::$metas['published_time'] = $offre->dateCreation;
+            self::$metas['modified_time'] = $offre->dateModification;
         }
     }
 
