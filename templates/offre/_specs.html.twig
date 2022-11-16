@@ -1,13 +1,26 @@
+{% set  data =  specs['urn:cat:accueil'] %}
+{% if data.items > 0 %}
+    {% include '@VisitTail/offre/_specification_line.html.twig' %}
+{% endif %}
+
+{% set  data =  specs['urn:cat:eqpsrv'] %}
+{% if data.items > 0 %}
+    {% include '@VisitTail/offre/_specification_line.html.twig' %}
+{% endif %}
+
+{% set  data =  specs['urn:cat:classlab'] %}
+{% if data.items > 0 %}
+    {% include '@VisitTail/offre/_specification_line.html.twig' %}
+{% endif %}
+
+{% set  data =  specs['urn:cat:tarif'] %}
+{% if data.items > 0 %}
+    {% include '@VisitTail/offre/_specification_line.html.twig' %}
+{% endif %}
+
+
 {% for keyname,data in specs %}
     <h4 class="text-lg text-cta-dark"><strong>{{ data.category.labelByLanguage() }}</strong> {{ data.category.urn }}
     </h4>
-    <div class="flex flex-col gap-2">
-        {% for item in data.items %}
-            <div class="flex flex-row gap-2">
-                <div><strong>{{ item.definition.labelByLanguage('fr') }}</strong></div>
-                <div class="text-cta-light">{{ item.data|format_pivot_value|raw }}</div>
-                <div>{{ item.data.type }}</div>
-            </div>
-        {% endfor %}
-    </div>
+    {% include '@VisitTail/offre/_specification_line.html.twig' %}
 {% endfor %}
