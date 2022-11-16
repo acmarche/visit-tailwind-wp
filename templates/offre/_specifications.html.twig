@@ -1,11 +1,22 @@
-{% for specInfo in event.specsDetailed %}
-    <strong>{{ specInfo.specDefinition.labelByLanguage('fr') }}</strong><br/>
-    {{ specInfo.specData.value }}
-    <span class="text-muted">
-    {{ specInfo.specData.urn }} /
-        {% if specInfo.specData.urnCat is defined %}
-            cat: {{ specInfo.specData.urnCat }}
-        {% endif %}
-    </span>
-    <br/><br/>
-{% endfor %}
+{% set  data =  specs['urn:cat:accueil'] %}
+{% if data.items > 0 %}
+    {% include '@VisitTail/offre/_specification_line.html.twig' %}
+{% endif %}
+
+{% set  data =  specs['urn:cat:eqpsrv'] %}
+{% if data.items > 0 %}
+    {% include '@VisitTail/offre/_specification_line.html.twig' %}
+{% endif %}
+
+{% set  data =  specs['urn:cat:classlab'] %}
+{% if data.items > 0 %}
+    {% include '@VisitTail/offre/_specification_line.html.twig' %}
+{% endif %}
+
+{% set  data =  specs['urn:cat:tarif'] %}
+{% if data.items > 0 %}
+    {% include '@VisitTail/offre/_specification_line.html.twig' %}
+{% endif %}
+
+
+{% include '@VisitTail/offre/_all_specifications.html.twig' %}

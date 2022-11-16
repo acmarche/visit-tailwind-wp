@@ -7,6 +7,7 @@ use AcMarche\Pivot\Entities\Specification\SpecData;
 use AcMarche\Pivot\Spec\SpecTypeEnum;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use Symfony\Component\Dotenv\Dotenv;
+use Symfony\Component\String\UnicodeString;
 use Twig\Environment;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
@@ -64,6 +65,7 @@ class Twig
         $environment->addFunction(self::isExternalUrl());
         $environment->addFilter(self::removeHtml());
         $environment->addFilter(self::renderValuePivot());
+        $environment->addFilter(self::checkDisplay());
 
         self::$instanceObject = $environment;
 
@@ -207,14 +209,15 @@ class Twig
     {
         return new TwigFilter(
             'format_pivot_value',
-            function (SpecData $specData) {
+            function (SpecData $specData): string {
                 $return_value = match ($specData->type) {
                     SpecTypeEnum::BOOLEAN->value => '',
+                    SpecTypeEnum::CHOICE->value => '',//todo
                     SpecTypeEnum::TEXTML->value => $specData->value,
                     SpecTypeEnum::STRINGML->value => $specData->value,
                     SpecTypeEnum::CURRENCY->value => $specData->value.' €',
                     SpecTypeEnum::DATE->value => $specData->value,
-                    SpecTypeEnum::PHONE->value,SpecTypeEnum::GSM->value => '<a href="tel:'.$specData->value.'">'.$specData->value.'</a>',
+                    SpecTypeEnum::PHONE->value, SpecTypeEnum::GSM->value => '<a href="tel:'.$specData->value.'">'.$specData->value.'</a>',
                     SpecTypeEnum::EMAIL->value => '<a href="mailto:'.$specData->value.'">'.$specData->value.'</a>',
                     SpecTypeEnum::URL->value, SpecTypeEnum::URL_FACEBOOK->value, SpecTypeEnum::URL_TRIPADVISOR->value => '<a href="'.$specData->value.'">'.$specData->value.'</a>',
                     default => $specData->value
@@ -224,6 +227,44 @@ class Twig
             }, [
                 'is_safe' => ['html'],
             ]
+        );
+    }
+
+    /**
+     * N'affiche pas en fr si urn commence par en ou nl
+     * en:urn:fld:orc
+     * @return TwigFilter
+     */
+    private static function checkDisplay(): TwigFilter
+    {
+        return new TwigFilter(
+            'pivot_check_display',
+            function (SpecData $specData): bool {
+                if ($specData->type == SpecTypeEnum::CHOICE->value) {
+                    return false;
+                }
+                $useless = array(
+                    'urn:val:class:michstar:nc',
+                    'urn:val:class:michfour:nc',
+                    'urn:val:class:gaultmiltoq:nc',
+                    'urn:fld:attestincendie:dateech',
+                    'urn:fld:idautor',
+                    'urn:fld:dateech',
+                );
+                if (in_array($specData->urn, $useless)) {
+                    return false;
+                }
+                $language = LocaleHelper::getSelectedLanguage();
+                $text = (new UnicodeString($specData->urn));
+                if ($language == 'fr' && $text->startsWith('urn')) {
+                    return true;
+                }
+                if ($text->slice(0, 2) == $language) {
+                    return true;
+                }
+
+                return false;
+            }
         );
     }
 

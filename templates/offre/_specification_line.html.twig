@@ -1,14 +1,17 @@
-<h3 class="font-montserrat-semi-bold text-cta-light text-md">{{ data.category.labelByLanguage(locale) }}</h3>
+<h3 class="font-montserrat-semi-bold text-cta-light text-md border-bottom">
+    {{ data.category.labelByLanguage(locale) }}
+</h3>
 <div class="flex flex-col gap-2">
     {% for item in data.items %}
-        <div class="grid grid-cols-[20rem,1fr]">
+        {% if item.data|pivot_check_display %}
+            <div class="grid grid-cols-[20rem,1fr]">
             <span class="font-montserrat-semi-bold text-cta-dark">
-                {{ item.definition.labelByLanguage('fr') }}
+                {{ item.definition.labelByLanguage(locale) }}
             </span>
-            <span class="text-caractere">
-                {{ item.data|format_pivot_value|raw }} (type){{ item.data.type }}
+                <span class="text-caractere">
+                {{ item.data|format_pivot_value|raw }}
             </span>
-        </div>
+            </div>
+        {% endif %}
     {% endfor %}
 </div>
-
