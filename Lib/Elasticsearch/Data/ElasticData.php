@@ -133,7 +133,7 @@ class ElasticData
 
             if ([] !== $filtres) {
                 $pivotRepository = PivotContainer::getPivotRepository(WP_DEBUG);
-                $offres = $pivotRepository->getOffres($filtres);
+                $offres = $pivotRepository->fetchOffres($filtres);
                 array_map(
                     function ($offre) use ($category, $language) {
                         $offre->url = RouterPivot::getUrlOffre($offre, $category->cat_ID);
@@ -225,7 +225,7 @@ class ElasticData
 
         if ([] !== $filtres) {
             $pivotRepository = PivotContainer::getPivotRepository(WP_DEBUG);
-            $offres = $pivotRepository->getOffres($filtres);
+            $offres = $pivotRepository->fetchOffres($filtres);
             array_map(
                 function ($offre) use ($category, $language) {
                     $offre->url = RouterPivot::getUrlOffre($offre, $category->cat_ID);
