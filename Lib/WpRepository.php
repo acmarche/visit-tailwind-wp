@@ -296,7 +296,7 @@ class WpRepository
     {
         $filtreRepository = PivotContainer::getTypeOffreRepository(WP_DEBUG);
         $barVin = $filtreRepository->findOneByUrn(UrnList::BAR_VIN->value);
-        $allFiltres = $filtreRepository->findByParent($barVin->id);
+        $allFiltres = $filtreRepository->findByParent($barVin->parent->id);
 
         if ($filterCount) {
             return self::filterCount($allFiltres);
