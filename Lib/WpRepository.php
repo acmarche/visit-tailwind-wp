@@ -248,24 +248,13 @@ class WpRepository
             }
 
             if ($dataFiltre['withChildren']) {
-                $children = $typeOffreRepository->findByParent($typeOffre->id);
+                $children = $typeOffreRepository->findByParent($typeOffre->id, $filterCount);
                 foreach ($children as $typeOffreChild) {
                     //bug parent is a proxy
                     unset($typeOffreChild->parent);
                     $allFiltres[] = $typeOffreChild;
                 }
             }
-        }
-
-        if ($filterCount) {
-            $filtres = [];
-            foreach ($allFiltres as $filtre) {
-                if ($filtre->countOffres > 0) {
-                    $filtres[] = $filtre;
-                }
-            }
-
-            return $filtres;
         }
 
         return $allFiltres;
@@ -291,13 +280,8 @@ class WpRepository
     {
         $filtreRepository = PivotContainer::getTypeOffreRepository(WP_DEBUG);
         $barVin = $filtreRepository->findOneByUrn(UrnList::BAR_VIN->value);
-        $allFiltres = $filtreRepository->findByParent($barVin->parent->id);
 
-        if ($filterCount) {
-            return self::filterCount($allFiltres);
-        }
-
-        return $allFiltres;
+        return $filtreRepository->findByParent($barVin->parent->id, $filterCount);
     }
 
     /**
@@ -308,26 +292,8 @@ class WpRepository
     {
         $filtreRepository = PivotContainer::getTypeOffreRepository(WP_DEBUG);
         $filtre = $filtreRepository->findOneByUrn(UrnList::HERGEMENT->value);
-        $allFiltres = $filtreRepository->findByParent($filtre->id);
 
-        if ($filterCount) {
-            return self::filterCount($allFiltres);
-        }
-
-        return $allFiltres;
-    }
-
-    /**
-     * @param array|TypeOffre[] $allFiltres
-     * @return array|TypeOffre[]
-     */
-    private static function filterCount(array $allFiltres): array
-    {
-        $allFiltres = array_filter($allFiltres, function ($typeOffre) {
-            return $typeOffre->countOffres > 0;
-        });
-
-        return array_values($allFiltres);//reset keys for js
+        return $filtreRepository->findByParent($filtre->id, $filterCount);
     }
 
     public function categoryImage(WP_Term $category): string
