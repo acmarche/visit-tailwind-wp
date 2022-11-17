@@ -7,7 +7,6 @@ use AcMarche\Pivot\Entities\Offre\Offre;
 use AcMarche\Pivot\Entity\TypeOffre;
 use AcMarche\Pivot\Entity\UrnDefinitionEntity;
 use AcMarche\Pivot\Spec\UrnList;
-use AcMarche\Pivot\Spec\UrnTypeList;
 use Doctrine\ORM\NonUniqueResultException;
 use Symfony\Contracts\Cache\CacheInterface;
 use VisitMarche\ThemeTail\Inc\PivotMetaBox;
@@ -278,23 +277,10 @@ class WpRepository
      */
     public static function getChildrenEvents(bool $filterCount): array
     {
-        $allFiltres = [];
-        $pivotRepository = PivotContainer::getPivotRepository(WP_DEBUG);
         $filtreRepository = PivotContainer::getTypeOffreRepository(WP_DEBUG);
+        $parent = $filtreRepository->findOneByUrn(UrnList::EVENTS->value);
+        $allFiltres = $filtreRepository->findByParent($parent->id);
 
-        $families = $pivotRepository->thesaurusChildren(
-            UrnTypeList::evenement()->typeId,
-            UrnList::CATEGORIE_EVENT->value
-        );
-
-        foreach ($families as $family) {
-            $filtres = $filtreRepository->findByUrn($family->urn);
-            if (count($filtres) > 0) {
-                $filtre = $filtres[0];
-                $filtre->children = [];//bug loop infinit
-                $allFiltres[] = $filtre;
-            }
-        }
         if ($filterCount) {
             return self::filterCount($allFiltres);
         }
@@ -308,23 +294,10 @@ class WpRepository
      */
     public static function getChildrenRestauration(bool $filterCount): array
     {
-        $allFiltres = [];
-        $pivotRepository = PivotContainer::getPivotRepository(WP_DEBUG);
         $filtreRepository = PivotContainer::getTypeOffreRepository(WP_DEBUG);
+        $barVin = $filtreRepository->findOneByUrn(UrnList::BAR_VIN->value);
+        $allFiltres = $filtreRepository->findByParent($barVin->id);
 
-        $families = $pivotRepository->thesaurusChildren(
-            UrnTypeList::restauration()->typeId,
-            UrnList::CATEGORIE->value
-        );
-
-        foreach ($families as $family) {
-            $filtres = $filtreRepository->findByUrn($family->urn);
-            if (count($filtres) > 0) {
-                $filtre = $filtres[0];
-                $filtre->children = [];//bug loop infinit
-                $allFiltres[] = $filtre;
-            }
-        }
         if ($filterCount) {
             return self::filterCount($allFiltres);
         }
@@ -339,10 +312,9 @@ class WpRepository
     public static function getChildrenHebergements(bool $filterCount): array
     {
         $filtreRepository = PivotContainer::getTypeOffreRepository(WP_DEBUG);
-
         $filtre = $filtreRepository->findOneByUrn(UrnList::HERGEMENT->value);
-
         $allFiltres = $filtreRepository->findByParent($filtre->id);
+
         if ($filterCount) {
             return self::filterCount($allFiltres);
         }
