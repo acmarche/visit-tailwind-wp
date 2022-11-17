@@ -386,6 +386,7 @@ class WpRepository
 
         return $this->cache->get($cacheKey, function () use ($offerRefer, $category, $language) {
             $recommandations = [];
+
             if (count($offerRefer->see_also)) {
                 $offres = $offerRefer->see_also;
             } else {

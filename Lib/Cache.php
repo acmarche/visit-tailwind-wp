@@ -14,6 +14,7 @@ class Cache
     public const OFFRES = 'offres';
     public const OFFRE = 'offre';
     public const SEE_ALSO_OFFRES = 'see_also_offre';
+    public const FETCH_OFFRES = 'fetch_offres';
     public static ?CacheInterface $instanceObject = null;
 
     public static function instance(): CacheInterface
