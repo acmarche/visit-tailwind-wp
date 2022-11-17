@@ -26,7 +26,7 @@ $locale = LocaleHelper::getSelectedLanguage();
     </head>
 
 <body <?php body_class(); ?> id="app">
-<?php
+    <?php
 wp_body_open();
 $menu = new Menu();
 $items = $menu->getMenuTop();
@@ -35,5 +35,6 @@ Twig::rendPage(
     '@VisitTail/header/_header.html.twig',
     [
         'items' => $items,
+        'locale' => LocaleHelper::getSelectedLanguage(),
     ]
 );
