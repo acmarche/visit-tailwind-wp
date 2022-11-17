@@ -28,10 +28,7 @@ if ($filterSelected) {
     if ([] !== $filtres) {
         $nameBack = $translator->trans('agenda.title');
         $categorName = $category->name.' - '.$filtres[0]->labelByLanguage($language);
-        $filterSelected = [$filterSelected];
     }
-} else {
-    $filterSelected = [];
 }
 try {
     $events = $wpRepository->getEvents(true, $filterSelected);

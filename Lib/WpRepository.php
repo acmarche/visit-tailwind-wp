@@ -417,9 +417,12 @@ class WpRepository
         });
     }
 
-    public function getEvents(bool $removeObsolete = false, array $urnsSelected = []): array
+    public function getEvents(bool $removeObsolete = false, ?string $urnsSelected = null): array
     {
-        $cacheKey = Cache::generateKey(Cache::EVENTS.'-'.$removeObsolete.'-'.join($urnsSelected));
+        $cacheKey = Cache::generateKey(Cache::EVENTS.'-'.$removeObsolete);
+        if ($urnsSelected) {
+            $cacheKey .= '-'.$urnsSelected;
+        }
 
         return $this->cache->get($cacheKey, function () use ($removeObsolete, $urnsSelected) {
             $pivotRepository = PivotContainer::getPivotRepository(WP_DEBUG);
