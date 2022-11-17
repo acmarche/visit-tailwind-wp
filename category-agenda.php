@@ -35,6 +35,7 @@ if ($filterSelected) {
 }
 try {
     $events = $wpRepository->getEvents(true, $filterSelected);
+
     array_map(
         function ($event) use ($cat_ID, $language) {
             $event->url = RouterPivot::getUrlOffre($event, $cat_ID);
@@ -53,6 +54,7 @@ try {
 
     return;
 }
+
 Twig::rendPage(
     '@VisitTail/agenda.html.twig',
     [
