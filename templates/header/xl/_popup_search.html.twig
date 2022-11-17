@@ -1,5 +1,5 @@
 <div
-        class="z-10 transition-all"
+        class="z-10 transition-all opacity-0"
         x-bind:class="
       searchIsOpen
         ? 'relative opacity-100 duration-200 ease-in '
@@ -58,7 +58,7 @@
                             aria-controls="options"
                     />
                 </label>
-                <button class="w-32 " @click="searchIsOpen=false">
+                <button class="w-32" @click.prevent="searchIsOpen=false" type="button">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                          stroke="currentColor"
                          class="w-6 h-6 inline-block text-cta-dark">
