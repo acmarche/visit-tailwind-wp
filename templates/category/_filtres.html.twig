@@ -11,10 +11,10 @@
         </select>
     </label>
 
-    <ul class="hidden xl:flex pt-6 flex-1 flex-wrap gap-2 w-1/2 my-2 mx-auto">
+    <ul class="hidden xl:flex pt-6 flex-1 flex-wrap gap-2 w-3/5 my-2 mx-auto">
         {% for item in filtres %}
             <li class="border border-cta-dark p-3 font-montserrat-light  hover:bg-cta-dark hover:text-white">
-                <a href="{{ item.url }}" @click.prevent="launchRefresh" data-filtre="{{ item.id }}">
+                <a href="{{ item.url }}" @click.prevent="launchRefresh" data-filtre="{{ item.id }}" class="p-3">
                     {{ item.nom }}
                 </a>
             </li>

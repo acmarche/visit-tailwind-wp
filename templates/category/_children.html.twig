@@ -1,8 +1,8 @@
 {% if children|length > 0 %}
     <ul class="flex pt-6 flex-1 flex-wrap gap-2 xl:w-1/2 my-2 mx-auto">
         {% for item in children %}
-            <li class="border border-cta-dark p-3 font-montserrat-light hover:bg-cta-dark hover:text-white">
-                <a href="{{ item.url }}" class="">
+            <li class="border border-cta-dark font-montserrat-light hover:bg-cta-dark hover:text-white">
+                <a href="{{ item.url }}" class="p-3">
                     {{ item.name }}
                 </a>
             </li>
