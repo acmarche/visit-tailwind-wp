@@ -7,9 +7,11 @@ use VisitMarche\ThemeTail\Lib\Twig;
 get_header();
 $searcher = new Searcher();
 $keyword = get_search_query();
-$results = $searcher->searchFromWww($keyword);
-$hits = json_decode($results, null, 512, JSON_THROW_ON_ERROR);
-
+$hits = [];
+if ($keyword) {
+    $results = $searcher->searchFromWww($keyword);
+    $hits = json_decode($results, null, 512, JSON_THROW_ON_ERROR);
+}
 if (isset($hits['error'])) {
     Mailer::sendError('wp error search', $hits['error']);
     Twig::rendPage(
