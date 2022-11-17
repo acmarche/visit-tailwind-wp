@@ -85,7 +85,6 @@ if ([] !== $filtres) {
     $offres = $postUtils->convertOffresToArray($offres, $cat_ID, $language);
     // $offres = array_merge($posts, $offres);
 }
-$sortLink = SortLink::linkSortArticles($cat_ID);
 $countArticles = count($posts) + count($offres);
 Twig::rendPage(
     '@VisitTail/category.html.twig',
@@ -103,7 +102,6 @@ Twig::rendPage(
         'categoryName' => $categoryName,
         'posts' => $posts,
         'offres' => $offres,
-        'sortLink' => $sortLink,
         'bgcat' => $bgcat,
         'countArticles' => $countArticles,
     ]
