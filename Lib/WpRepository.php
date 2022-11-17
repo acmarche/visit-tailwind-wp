@@ -435,6 +435,9 @@ class WpRepository
                     'month' => $event->dateEnd->format('m'),
                     'day' => $event->dateEnd->format('d'),
                 ];
+                if (count($event->images) == 0) {
+                    $event->images = [get_template_directory_uri().'/assets/tartine/bg_events.png'];
+                }
             }
 
             return $events;
