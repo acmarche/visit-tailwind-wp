@@ -53,6 +53,13 @@ try {
     return;
 }
 
+$filtres = $wpRepository->getChildrenEvents(true);
+if (count($filtres) > 1) {
+    $labelAll = $translator->trans('filter.all');
+    $filtreTout = new TypeOffre($labelAll, 0, 0, "ALL", "", "Type", null);
+    $filtreTout->id = 0;
+    $filtres = [$filtreTout, ...$filtres];
+}
 Twig::rendPage(
     '@VisitTail/agenda.html.twig',
     [
@@ -62,6 +69,7 @@ Twig::rendPage(
         'nameBack' => $nameBack,
         'categoryName' => $categorName,
         'image' => $image,
+        'filtres' => $filtres,
         'icone' => null,
     ]
 );

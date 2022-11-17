@@ -3,6 +3,7 @@
 namespace VisitMarche\ThemeTail\Lib;
 
 use AcMarche\Pivot\Entities\Offre\Offre;
+use AcMarche\Pivot\Spec\UrnTypeList;
 use WP_Post;
 
 class PostUtils
@@ -95,11 +96,21 @@ class PostUtils
                 }
                 $this->tagsOffre($offre, $language);
                 $image = $offre->firstImage();
+                $offre->dateEvent = [];
+                if ($offre->typeOffre->idTypeOffre == UrnTypeList::evenement()->typeId) {
+                    $offre->dateEvent = [
+                        'year' => $offre->dateEnd->format('Y'),
+                        'month' => $offre->dateEnd->format('m'),
+                        'day' => $offre->dateEnd->format('d'),
+                    ];
+                }
 
                 return [
                     'id' => $offre->codeCgt,
                     'url' => $url,
                     'nom' => $nom,
+                    'locality' => $offre->adresse1->localiteByLanguage('fr'),
+                    'dateEvent' => $offre->dateEvent,
                     'description' => $description,
                     'tags' => $offre->tags,
                     'image' => $image,

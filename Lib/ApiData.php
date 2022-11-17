@@ -90,26 +90,26 @@ class ApiData
     {
         $offres = $filtres = [];
         $language = LocaleHelper::getSelectedLanguage();
-        $filtreRepository = PivotContainer::getTypeOffreRepository(WP_DEBUG);
+        $typeOffreRepository = PivotContainer::getTypeOffreRepository(WP_DEBUG);
         $wpRepository = new WpRepository();
         $postUtils = new PostUtils();
 
         if ($filtreSelected == 0) {
             $filtres = $wpRepository->getCategoryFilters($currentCategoryId);
         } else {
-            if ($filtre = $filtreRepository->find($filtreSelected)) {
+            if ($filtre = $typeOffreRepository->find($filtreSelected)) {
                 $filtres[] = $filtre;
             }
         }
 
         if ([] !== $filtres) {
             $offres = $wpRepository->getOffres($filtres);
-            $offres = $postUtils->convertOffresToArray($offres, $currentCategoryId, $language);
         }
 
-        $posts = $wpRepository->getPostsByCatId($currentCategoryId);
+        $offres = $postUtils->convertOffresToArray($offres, $currentCategoryId, $language);
+        //$posts = $wpRepository->getPostsByCatId($currentCategoryId);
         //fusion offres et articles
-        $posts = $postUtils->convertPostsToArray($posts);
+        //$posts = $postUtils->convertPostsToArray($posts);
 
         return $offres;
 
