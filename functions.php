@@ -2,6 +2,7 @@
 
 namespace VisitMarche\ThemeTail;
 
+use VisitMarche\ThemeTail\Inc\AdminBar;
 use VisitMarche\ThemeTail\Inc\AdminPage;
 use VisitMarche\ThemeTail\Inc\Ajax;
 use VisitMarche\ThemeTail\Inc\ApiRoutes;
@@ -54,6 +55,10 @@ new ShortCodes();
  * Admin pages
  */
 new AdminPage();
+/**
+ * Add buttons to admin bar
+ */
+new AdminBar();
 /**
  * Ajax for admin
  */
