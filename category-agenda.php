@@ -3,8 +3,9 @@
 namespace VisitMarche\ThemeTail;
 
 use AcMarche\Pivot\DependencyInjection\PivotContainer;
-use VisitMarche\ThemeTail\Lib\RouterPivot;
+use AcMarche\Pivot\Entity\TypeOffre;
 use VisitMarche\ThemeTail\Lib\LocaleHelper;
+use VisitMarche\ThemeTail\Lib\RouterPivot;
 use VisitMarche\ThemeTail\Lib\Twig;
 use VisitMarche\ThemeTail\Lib\WpRepository;
 
@@ -21,17 +22,17 @@ $image = $wpRepository->categoryImage($category);
 $filterSelected = $_GET[RouterPivot::PARAM_FILTRE] ?? null;
 $nameBack = $translator->trans('menu.home');
 $categorName = $category->name;
-
+$filtre = null;
 if ($filterSelected) {
     $typeOffreRepository = PivotContainer::getTypeOffreRepository(WP_DEBUG);
-    $filtres = $typeOffreRepository->findByUrn($filterSelected);
-    if ([] !== $filtres) {
+    $filtre = $typeOffreRepository->findOneByUrn($filterSelected);
+    if ($filtre instanceof TypeOffre) {
         $nameBack = $translator->trans('agenda.title');
-        $categorName = $category->name.' - '.$filtres[0]->labelByLanguage($language);
+        $categorName = $category->name.' - '.$filtre->labelByLanguage($language);
     }
 }
 try {
-    $events = $wpRepository->getEvents(true, $filterSelected);
+    $events = $wpRepository->getEvents(true, $filtre);
 
     array_map(
         function ($event) use ($cat_ID, $language) {

@@ -278,14 +278,9 @@ class WpRepository
     public static function getChildrenEvents(bool $filterCount): array
     {
         $filtreRepository = PivotContainer::getTypeOffreRepository(WP_DEBUG);
-        $parent = $filtreRepository->findOneByUrn(UrnList::EVENTS->value);
-        $allFiltres = $filtreRepository->findByParent($parent->id);
+        $parents = $filtreRepository->findByUrn(UrnList::EVENT_CINEMA->value);
 
-        if ($filterCount) {
-            return self::filterCount($allFiltres);
-        }
-
-        return $allFiltres;
+        return $filtreRepository->findByParent($parents[0]->parent->id, $filterCount);
     }
 
     /**
@@ -417,31 +412,30 @@ class WpRepository
         });
     }
 
-    public function getEvents(bool $removeObsolete = false, ?string $urnsSelected = null): array
+    public function getEvents(bool $removeObsolete = false, TypeOffre $typeOffre = null): array
     {
-        $cacheKey = Cache::generateKey(Cache::EVENTS.'-'.$removeObsolete);
-        if ($urnsSelected) {
-            $cacheKey .= '-'.$urnsSelected;
+        $pivotRepository = PivotContainer::getPivotRepository(WP_DEBUG);
+        if ($typeOffre) {
+            $filtres = [$typeOffre];
+        } else {
+            $filtres = $this->getChildrenEvents(true);
         }
 
-        return $this->cache->get($cacheKey, function () use ($removeObsolete, $urnsSelected) {
-            $pivotRepository = PivotContainer::getPivotRepository(WP_DEBUG);
-            $events = $pivotRepository->fetchEvents($removeObsolete, $urnsSelected);
+        $events = $pivotRepository->fetchEvents($removeObsolete, $filtres);
 
-            foreach ($events as $event) {
-                $event->locality = $event->getAdresse()->localite[0]->get('fr');
-                $event->dateEvent = [
-                    'year' => $event->dateEnd->format('Y'),
-                    'month' => $event->dateEnd->format('m'),
-                    'day' => $event->dateEnd->format('d'),
-                ];
-                if (count($event->images) == 0) {
-                    $event->images = [get_template_directory_uri().'/assets/tartine/bg_events.png'];
-                }
+        foreach ($events as $event) {
+            $event->locality = $event->getAdresse()->localite[0]->get('fr');
+            $event->dateEvent = [
+                'year' => $event->dateEnd->format('Y'),
+                'month' => $event->dateEnd->format('m'),
+                'day' => $event->dateEnd->format('d'),
+            ];
+            if (count($event->images) == 0) {
+                $event->images = [get_template_directory_uri().'/assets/tartine/bg_events.png'];
             }
+        }
 
-            return $events;
-        });
+        return $events;
     }
 
     /**
