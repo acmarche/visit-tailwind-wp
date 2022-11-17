@@ -15,8 +15,6 @@ $codeCgt = get_query_var(RouterPivot::PARAM_OFFRE);
 
 $wpRepository = new WpRepository();
 
-$urn = $wpRepository->getUrnDefinition("urn:cat:moycom");
-//dd($urn->labelByLanguage('fr'));
 try {
     $offre = $wpRepository->getOffreByCgtAndParse($codeCgt, Offre::class);
 } catch (Exception $e) {
