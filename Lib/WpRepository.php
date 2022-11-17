@@ -219,17 +219,17 @@ class WpRepository
             return WpRepository::getChildrenRestauration($filterCount);
         }
 
-        $categoryFiltres = PivotMetaBox::getMetaPivotTypesOffre($categoryWpId);
+        $categoryUrns = PivotMetaBox::getMetaPivotTypesOffre($categoryWpId);
         $typeOffreRepository = PivotContainer::getTypeOffreRepository(WP_DEBUG);
         $allFiltres = [];
 
-        foreach ($categoryFiltres as $dataFiltre) {
+        foreach ($categoryUrns as $categoryUrn) {
 
-            if (!isset($dataFiltre['urn'])) {
+            if (!isset($categoryUrn['urn'])) {
                 continue;
             }
 
-            $typeOffre = $typeOffreRepository->findOneByUrn($dataFiltre['urn']);
+            $typeOffre = $typeOffreRepository->findOneByUrn($categoryUrn['urn']);
             if (!$typeOffre) {
                 continue;
             }
@@ -237,7 +237,7 @@ class WpRepository
             //bug parent is a proxy
             unset($typeOffre->parent);
 
-            $typeOffre->withChildren = $dataFiltre['withChildren'];
+            $typeOffre->withChildren = $categoryUrn['withChildren'];
             $allFiltres[] = $typeOffre;
 
             /**
@@ -247,7 +247,7 @@ class WpRepository
                 continue;
             }
 
-            if ($dataFiltre['withChildren']) {
+            if ($categoryUrn['withChildren']) {
                 $children = $typeOffreRepository->findByParent($typeOffre->id, $filterCount);
                 foreach ($children as $typeOffreChild) {
                     //bug parent is a proxy
