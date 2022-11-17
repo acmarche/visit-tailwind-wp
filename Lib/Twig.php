@@ -209,7 +209,7 @@ class Twig
     {
         return new TwigFilter(
             'format_pivot_value',
-            function (SpecData $specData): string {
+            function (SpecData $specData): ?string {
                 $return_value = match ($specData->type) {
                     SpecTypeEnum::BOOLEAN->value => '',
                     SpecTypeEnum::CHOICE->value => '',//todo
