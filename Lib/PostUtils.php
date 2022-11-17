@@ -103,6 +103,9 @@ class PostUtils
                         'month' => $offre->dateEnd->format('m'),
                         'day' => $offre->dateEnd->format('d'),
                     ];
+                    if (!$offre->image) {
+                        $offre->image = get_template_directory_uri().'/assets/tartine/bg_events.png';
+                    }
                 }
 
                 return [
