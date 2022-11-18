@@ -5,6 +5,7 @@ namespace VisitMarche\ThemeTail;
 use VisitMarche\ThemeTail\Inc\Menu;
 use VisitMarche\ThemeTail\Lib\GpxViewer;
 use VisitMarche\ThemeTail\Lib\LocaleHelper;
+use VisitMarche\ThemeTail\Lib\RouterPivot;
 use VisitMarche\ThemeTail\Lib\Twig;
 
 get_header();
@@ -15,7 +16,7 @@ $menu = new Menu();
 $items = $menu->getMenuTop();
 //dump(ICL_LANGUAGE_CODE);
 //dump($items);
-
+/*
 $filepath = '/wp-content/uploads/gpx/non-classifiee/Cirkwi-Marche-en-Famenne_-_Circuit_VTT_Vert.gpx';
 
 $pgwViewer = new GpxViewer();
@@ -32,16 +33,17 @@ $gpx = gpx_view(array(
 );
 
 echo $gpx;
-
+*/
+$gpx = null;
 Twig::rendPage(
     '@VisitTail/errors/404.html.twig',
     [
-        'title' => 'post_title',
-        'message' => 'post_title',
-        'url' => '/',
+        'title' => null,
+        'message' => null,
+        'url' => RouterPivot::getCurrentUrl(),
         'latitude' => '5.342961',
         'longitude' => '50.226484',
-        'gpx'=>$gpx
+        'gpx' => $gpx,
     ]
 );
 get_footer();
