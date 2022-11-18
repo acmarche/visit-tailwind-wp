@@ -19,7 +19,6 @@ get_header();
 $cat_ID = get_queried_object_id();
 $category = get_category($cat_ID);
 $categoryName = single_cat_title('', false);
-$permalink = get_category_link($cat_ID);
 
 $wpRepository = new WpRepository();
 $translator = LocaleHelper::iniTranslator();
