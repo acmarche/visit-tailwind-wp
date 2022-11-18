@@ -17,5 +17,9 @@
             {% include '@VisitTail/article/_see_also.html.twig' %}
         </aside>
     </article>
-    {% include '@VisitTail/map/_carte.html.twig' %}
+    {% if gpxMap != null %}
+        {% include '@VisitTail/map/_gpx.html.twig' %}
+    {% else %}
+        {% include '@VisitTail/map/_carte.html.twig' %}
+    {% endif %}
 </main>

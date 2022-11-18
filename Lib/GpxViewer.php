@@ -78,21 +78,28 @@ class GpxViewer
         );
     }
 
-    public function renderWithPlugin(string $filePath)
+    public function renderWithPlugin(string $filePath): string
     {
-        $filepath = '/wp-content/uploads/gpx/non-classifiee/Cirkwi-Marche-en-Famenne_-_Circuit_VTT_Vert.gpx';
+        // $filePath = '/wp-content/uploads/gpx/non-classifiee/Cirkwi-Marche-en-Famenne_-_Circuit_VTT_Vert.gpx';
+        //ko elevation
+        //$filePath = 'https://visit.marche.be/output/ANX-01-09DV-003E.gpx';
+        //cleaning elevation ok
+        //$filePath = 'https://visit.marche.be/wp-content/uploads/gpx/non-classifiee/Cirkwi-Marche-en-Famenne_-_Circuit_VTT_Vert.gpx';
 
         $gpx = gpx_view(array(
-                'src' => $filepath,
-                'title' => 'Cirkwi-Marche-en-Famenne_-_Circuit_VTT_Vert.gpx',
-                'color' => '#FF0000',
-                'width' => '450px',
+                'src' => $filePath,
+                'title' => 'Gpx',
+                'color' => '#00ff00',
+                'width' => '5',
                 'distance_unit' => 'km',
+                "height_unit" => "m",
+                "step_min" => "10",
+                "icon_url" => "https://visit.marche.be/wp-content/plugins/gpx-viewer/images/",
                 'download_button' => true,
             )
         );
 
-        echo $gpx;
+        return $gpx;
     }
 
     public function writeTmpFile(Gpx $gpx): string

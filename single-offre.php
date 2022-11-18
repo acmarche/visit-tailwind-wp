@@ -49,8 +49,10 @@ if (null === $offre) {
 $latitude = $offre->getAdresse()->latitude ?? null;
 $longitude = $offre->getAdresse()->longitude ?? null;
 if ($latitude && $longitude) {
-    //toto wp_add_inline_script
-    AssetsLoad::enqueueLeaflet();
+    if (count($offre->gpxs) === 0) {
+        //toto wp_add_inline_script
+        AssetsLoad::enqueueLeaflet();
+    }
 }
 
 get_header();
@@ -75,9 +77,10 @@ foreach ($offre->pois as $poi) {
 $gpxMap = null;
 if (count($offre->gpxs) > 0) {
     $gpxViewer = new GpxViewer();
-    //$gpxMap = $gpxViewer->render($offre->gpxs[0]);
-    //$gpxViewer->renderWithPlugin($filepath);
+    //$gpxMap = $gpxViewer->render(['file1' => $offre->gpxs[0]]);
+    $gpxMap = $gpxViewer->renderWithPlugin($offre->gpxs[0]->url);
 }
+
 $specs = $wpRepository->groupSpecifications($offre);
 Twig::rendPage(
     '@VisitTail/offre.html.twig',
@@ -95,6 +98,7 @@ Twig::rendPage(
         'categoryName' => $currentCategory->name,
         'nameBack' => $currentCategory->name,
         'specs' => $specs,
+        'gpxMap' => $gpxMap,
     ]
 );
 get_footer();
