@@ -30,7 +30,7 @@ class WpRepository
         return get_category_by_slug($slug);
     }
 
-    public function getTags(int $postId): array
+    public function tagsOfPost(int $postId): array
     {
         $tags = [];
         foreach (get_the_category($postId) as $category) {
@@ -137,7 +137,7 @@ class WpRepository
                 'excerpt' => $post->post_excerpt,
                 'url' => get_permalink($post->ID),
                 'image' => $image,
-                'tags' => self::getTags($post->ID),
+                'tags' => self::tagsOfPost($post->ID),
             ];
         }
 
@@ -352,7 +352,7 @@ class WpRepository
                 $offres = $offerRefer->see_also;
             } else {
                 $pivotRepository = PivotContainer::getPivotRepository();
-                $offres = $pivotRepository->fetchSameOffres($offerRefer);
+                $offres = $pivotRepository->fetchSameOffres($offerRefer, 10);
             }
             $urlCat = get_category_link($category);
             foreach ($offres as $offre) {
@@ -366,15 +366,25 @@ class WpRepository
                 }
 
                 $recommandations[] = [
-                    'title' => $offre->nomByLanguage($language),
+                    'title' => $offre->nom,
                     'url' => $url,
                     'excerpt' => '',
                     'image' => $offre->firstImage(),
                     'tags' => $tags,
                 ];
             }
+            $count = count($recommandations);
 
-            return $recommandations;
+            if ($count > 3) {
+                $count = 3;
+            }
+            $keys = array_rand($recommandations, $count);
+            $data = [];
+            foreach ($keys as $key) {
+                $data[] = $recommandations[$key];
+            }
+
+            return $data;
         });
     }
 
