@@ -1,4 +1,5 @@
-<ul class="pt-6 grid grid-cols-1 gap-2 xl:grid-cols-[repeat(3,minmax(0,1fr))]">
+<ul class="pt-6 grid grid-cols-1 gap-2 xl:grid-cols-[repeat(3,minmax(0,1fr))]"
+    x-show="isLoading===false">
     <template x-for="item in offres" :key="item.id">
         <li class=" rounded-lg shadow-lg">
             <a :href="item.url" class="group grid grid-cols-1 xl:grid-cols-2 overflow-hidden xl:block">
@@ -25,3 +26,5 @@
         </li>
     </template>
 </ul>
+
+{% include '@VisitTail/category/_loader.html.twig' %}

@@ -6,21 +6,23 @@ document.addEventListener('alpine:init', () => {
             isLoading: false,
             offres: [],
             async initOffres(categoryId) {
-                this.currentCategory=categoryId
+                this.isLoading = true
+                this.currentCategory = categoryId
                 this.launchRefresh(null)
             },
             async changeOffres(f) {
-                this.filtreSelected=f
+                this.filtreSelected = f
                 this.launchRefresh(null)
             },
             async launchRefresh(e) {
+                this.isLoading = true
                 console.log(this.currentCategory)
-                if(e !== null) {
+                if (e !== null) {
                     this.filtreSelected = e.target.dataset.filtre
                 }
                 const url = `https://visitmarche.be/${this.language}/wp-json/pivot/offres/${this.currentCategory}/${this.filtreSelected}`;
                 console.log(url)
-                this.offres=await fetch(url)
+                this.offres = await fetch(url)
                     .then(function (response) {
                         // The API call was successful!
                         return response.json();
@@ -31,9 +33,12 @@ document.addEventListener('alpine:init', () => {
                     })
                     .catch(function (err) {
                         // There was an error
+                        this.isLoading = false
                         console.warn("Something went wrong.", err);
                         return err
                     })
+
+                this.isLoading = false
             }
         })
     )
