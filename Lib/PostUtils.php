@@ -67,7 +67,7 @@ class PostUtils
 
     public function tagsPost(WP_Post $post)
     {
-        $tags = $this->wpRepository->getTags($post->ID);
+        $tags = $this->wpRepository->tagsOfPost($post->ID);
         $post->tags = array_map(
             fn($category) => $category['name'],
             $tags

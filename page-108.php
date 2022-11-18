@@ -14,10 +14,7 @@ global $post;
 $wpRepository = new WpRepository();
 
 $image = PostUtils::getImage($post);
-$tags = $wpRepository->getTags($post->ID);
-
-$recommandations = $wpRepository->recommandationsByPost($post);
-$recommandations = array_slice($recommandations, 0, 3);
+$tags = $wpRepository->tagsOfPost($post->ID);
 
 $content = get_the_content(null, null, $post);
 $content = apply_filters('the_content', $content);
@@ -35,7 +32,7 @@ Twig::rendPage(
         'tags' => $tags,
         'image' => $image,
         'icone' => null,
-        'recommandations' => $recommandations,
+        'recommandations' => [],
         'bgCat' => '',
         'urlBack' => '/',
         'categoryName' => '',
