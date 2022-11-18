@@ -52,6 +52,7 @@ article:
   notfound: 'No articles'
   sample: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Libero provident veritatis eius, nostrum eos, explicabo repudiandae laborum rerum magni, nesciunt nemo quod tenetur omnis dolorum facilis illum. Obcaecati, nobis, a...'
   address: 'Address'
+  pois: 'Points d''intérêts sur le parcours'
 offre:
   information: 'Information'
 homepage:
