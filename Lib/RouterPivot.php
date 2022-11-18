@@ -22,6 +22,13 @@ class RouterPivot
         $this->addRouteOffre();
     }
 
+    public static function getUrlSite(): string
+    {
+        global $wp;
+
+        return home_url();
+    }
+
     public static function getCurrentUrl(): string
     {
         global $wp;

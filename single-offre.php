@@ -78,7 +78,7 @@ $gpxMap = null;
 if (count($offre->gpxs) > 0) {
     $gpxViewer = new GpxViewer();
     //$gpxMap = $gpxViewer->render(['file1' => $offre->gpxs[0]]);
-    $gpxMap = $gpxViewer->renderWithPlugin($offre->gpxs[0]->url);
+    $gpxMap = $gpxViewer->renderWithPlugin($offre->codeCgt, $offre->gpxs[0]->url);
 }
 
 $specs = $wpRepository->groupSpecifications($offre);

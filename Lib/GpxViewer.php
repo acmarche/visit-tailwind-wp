@@ -78,7 +78,7 @@ class GpxViewer
         );
     }
 
-    public function renderWithPlugin(string $filePath): string
+    public function renderWithPlugin(string $codeCgt, string $filePath): string
     {
         // $filePath = '/wp-content/uploads/gpx/non-classifiee/Cirkwi-Marche-en-Famenne_-_Circuit_VTT_Vert.gpx';
         //ko elevation
@@ -86,8 +86,10 @@ class GpxViewer
         //cleaning elevation ok
         //$filePath = 'https://visit.marche.be/wp-content/uploads/gpx/non-classifiee/Cirkwi-Marche-en-Famenne_-_Circuit_VTT_Vert.gpx';
 
+        $this->writeTmpFile2($codeCgt, $filePath);
+        $url = RouterPivot::getUrlSite().'/var/cache/gpx/'.$codeCgt.'.xml';
         $gpx = gpx_view(array(
-                'src' => $filePath,
+                'src' => $url,
                 'title' => 'Gpx',
                 'color' => '#00ff00',
                 'width' => '5',
@@ -100,6 +102,23 @@ class GpxViewer
         );
 
         return $gpx;
+    }
+
+    public function writeTmpFile2(string $fileName, string $url): string
+    {
+        $pathName = ABSPATH.'var/cache/gpx/'.$fileName.'.xml';
+        if (is_readable($fileName)) {
+            return $fileName;
+        }
+        try {
+            $filesystem = new Filesystem();
+            //$filesystem->dumpFile(sys_get_temp_dir().'/'.'file.gpx', file_get_contents($gpx->url));
+            $filesystem->dumpFile($pathName, file_get_contents($url));
+        } catch (IOExceptionInterface $exception) {
+            echo "An error occurred while creating your directory at ".$exception->getPath();
+        }
+
+        return $fileName;
     }
 
     public function writeTmpFile(Gpx $gpx): string
