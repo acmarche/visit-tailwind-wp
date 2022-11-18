@@ -68,16 +68,16 @@ foreach ($offre->categories as $category) {
 }
 
 $recommandations = $wpRepository->recommandationsByOffre($offre, $currentCategory, $language);
-$recommandations = array_slice($recommandations, 0, 3);
 
 foreach ($offre->pois as $poi) {
     $poi->url = RouterPivot::getUrlOffre($poi, $currentCategory->cat_ID);
+    $poi->title = $poi->nom;
+    $poi->image = $poi->firstImage();
 }
 
 $gpxMap = null;
 if (count($offre->gpxs) > 0) {
     $gpxViewer = new GpxViewer();
-    //$gpxMap = $gpxViewer->render(['file1' => $offre->gpxs[0]]);
     $gpxMap = $gpxViewer->renderWithPlugin($offre->codeCgt, $offre->gpxs[0]->url);
 }
 
