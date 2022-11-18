@@ -96,19 +96,8 @@ class PostUtils
                 }
                 $this->tagsOffre($offre, $language);
                 $image = $offre->firstImage();
-                $offre->dateEvent = [];
-                if ($offre->typeOffre->idTypeOffre == UrnTypeList::evenement()->typeId) {
-                    $offre->dateEvent = [
-                        'year' => $offre->dateEnd->format('Y'),
-                        'month' => $offre->dateEnd->format('m'),
-                        'day' => $offre->dateEnd->format('d'),
-                    ];
-                    if (!$offre->image) {
-                        $offre->image = get_template_directory_uri().'/assets/tartine/bg_events.png';
-                    }
-                }
 
-                return [
+                $data = [
                     'id' => $offre->codeCgt,
                     'url' => $url,
                     'nom' => $nom,
@@ -118,6 +107,15 @@ class PostUtils
                     'tags' => $offre->tags,
                     'image' => $image,
                 ];
+
+                if ($offre->typeOffre->idTypeOffre == UrnTypeList::evenement()->typeId) {
+                    $data['dateEvent'] = $offre->dateEvent;
+                    if (!$offre->image) {
+                        $offre->image = get_template_directory_uri().'/assets/tartine/bg_events.png';
+                    }
+                }
+
+                return $data;
 
             },
             $offres

@@ -3,6 +3,7 @@
 namespace VisitMarche\ThemeTail\Lib;
 
 use AcMarche\Pivot\DependencyInjection\PivotContainer;
+use VisitMarche\ThemeTail\Inc\Theme;
 use VisitMarche\ThemeTail\Lib\Elasticsearch\Data\ElasticData;
 use WP_Error;
 use WP_HTTP_Response;
@@ -103,7 +104,11 @@ class ApiData
         }
 
         if ([] !== $filtres) {
-            $offres = $wpRepository->getOffres($filtres);
+            if (in_array($currentCategoryId, Theme::CATEGORIES_AGENDA)) {
+                $offres = $wpRepository->getEvents(true);
+            } else {
+                $offres = $wpRepository->getOffres($filtres);
+            }
         }
 
         $offres = $postUtils->convertOffresToArray($offres, $currentCategoryId, $language);
@@ -113,6 +118,6 @@ class ApiData
 
         return $offres;
 
-        return array_merge($posts, $offres);
+        //return array_merge($posts, $offres);
     }
 }
