@@ -64,36 +64,11 @@ class GpxViewer
 
     }
 
-    public function renderByGpx(Gpx $gpx): string
-    {
-        $twig = Twig::LoadTwig();
-        $post = get_post();
-        $title = $post ? $post->post_title : '';
-
-        try {
-            $this->writeTmpFile($gpx);
-        } catch (\Exception $exception) {
-
-        }
-
-        return $twig->render(
-            '@VisitTail/map/_gpx_viewer.html.twig',
-            [
-                'title' => $title,
-                'latitude' => 50.2268,
-                'longitude' => 5.3442,
-                'file' => 'https://visitmarche.be/var/'.$gpx->code.'.xml',
-                //'file' => $gpx->url,
-                'file2' => null,
-            ]
-        );
-    }
-
     public function renderWithPlugin(string $codeCgt, string $url): string
     {
         $fileName = $codeCgt.'xml';
         $filePath = ABSPATH.$this->folder_gpx.$fileName;
-        if (!$this->writeTmpFile2($filePath, $url)) {
+        if (!$this->writeTmpFile($filePath, $url)) {
             $this->elevation($filePath);
         }
         $urlLocal = RouterPivot::getUrlSite().'/'.$this->folder_gpx.$fileName;
@@ -185,7 +160,7 @@ class GpxViewer
         }
     }
 
-    public function writeTmpFile2(string $filePath, string $url): bool
+    public function writeTmpFile(string $filePath, string $url): bool
     {
         if (is_readable($filePath)) {
             return true;
@@ -198,19 +173,6 @@ class GpxViewer
         }
 
         return false;
-    }
-
-    public function writeTmpFile(Gpx $gpx): string
-    {
-        try {
-            $filesystem = new Filesystem();
-            //$filesystem->dumpFile(sys_get_temp_dir().'/'.'file.gpx', file_get_contents($gpx->url));
-            $filesystem->dumpFile('/homez.1029/visitmp/www/var/'.$gpx->code.'.xml', file_get_contents($gpx->url));
-        } catch (IOExceptionInterface $exception) {
-            echo "An error occurred while creating your directory at ".$exception->getPath();
-        }
-
-        return sys_get_temp_dir().'/'.'file.gpx';
     }
 
     /**
