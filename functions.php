@@ -2,6 +2,7 @@
 
 namespace VisitMarche\ThemeTail;
 
+use Symfony\Component\ErrorHandler\ErrorRenderer\HtmlErrorRenderer;
 use VisitMarche\ThemeTail\Inc\AdminBar;
 use VisitMarche\ThemeTail\Inc\AdminPage;
 use VisitMarche\ThemeTail\Inc\Ajax;
@@ -64,3 +65,4 @@ new AdminBar();
  */
 new Ajax();
 
+HtmlErrorRenderer::setTemplate(get_template_directory().'/error.php');
