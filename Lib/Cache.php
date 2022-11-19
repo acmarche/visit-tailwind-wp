@@ -17,6 +17,11 @@ class Cache
     public const FETCH_OFFRES = 'fetch_offres';
     public static ?CacheInterface $instanceObject = null;
 
+    public static function getPathCache(): string
+    {
+        return ABSPATH.'../var/cache';
+    }
+
     public static function instance(): CacheInterface
     {
         if (null !== self::$instanceObject) {
@@ -27,7 +32,7 @@ class Cache
             new FilesystemAdapter(
                 '_visit',
                 43200,
-                $_ENV['APP_CACHE_DIR'] ?? ABSPATH.'../var/cache'
+                $_ENV['APP_CACHE_DIR'] ?? ABSPATH.self::getPathCache()
             );
 
         return self::$instanceObject;

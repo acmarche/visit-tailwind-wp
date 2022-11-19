@@ -2,7 +2,6 @@
 
 namespace VisitMarche\ThemeTail\Lib;
 
-use AcMarche\Pivot\Entities\Specification\Gpx;
 use Exception;
 use phpGPX\Models\Point;
 use phpGPX\phpGPX;
