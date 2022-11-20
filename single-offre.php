@@ -19,6 +19,7 @@ if (!str_contains($codeCgt, "-")) {
     get_header();
     Twig::rend404Page();
     get_footer();
+
     return;
 }
 
@@ -28,6 +29,7 @@ try {
     get_header();
     Twig::rend500Page();
     get_footer();
+
     return;
 }
 
@@ -38,9 +40,10 @@ if ($latitude && $longitude) {
         AssetsLoad::enqueueLeaflet();
     }
 }
-
 get_header();
-$currentCategory = get_category_by_slug(get_query_var('category_name'));
+if (!$currentCategory = get_category_by_slug(get_query_var('category_name'))) {
+    $currentCategory = get_category_by_slug('non-classifiee');
+}
 $urlcurrentCategory = get_category_link($currentCategory);
 $language = LocaleHelper::getSelectedLanguage();
 $tags = [];
