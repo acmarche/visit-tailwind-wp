@@ -1,9 +1,15 @@
-<main>
-    <div class="pt-24" style="margin-top: 20rem;">
-        <h2 class="">{{ title }}</h2>
-
-        <div class="text-dyn">
-            <p>{{ message }}</p>
+{% include '@VisitTail/article/_header_article.html.twig' %}
+{% include '@VisitTail/article/_cadre.html.twig' %}
+<main class="container mx-auto">
+    <article
+            class="grid grid-cols-1 xl:grid-cols-[60%,40%] items-start mt-2 xl:mt-4 mx-auto px-4">
+        <div class="p-2 xl:p-4">
+            <h1 class="font-montserrat-semi-bold text-lg xl:text-2xl text-caractere">Erreur de chargement de la page</h1>
+            <h2 class="">La page n'a pas pu s'afficher</h2>
+            <section class="my-8 text-body prose">
+                <p>Nous allons régler le problème aussi vite que possible</p>
+                <p><a href="{{ urlBack }}">Vous pouvez rejoindre la page d'accueil</a></p>
+            </section>
         </div>
-    </div>
+    </article>
 </main>
