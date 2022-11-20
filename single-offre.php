@@ -15,11 +15,18 @@ $codeCgt = get_query_var(RouterPivot::PARAM_OFFRE);
 
 $wpRepository = new WpRepository();
 
+if (!str_contains($codeCgt, "-")) {
+    get_header();
+    Twig::rend404Page();
+    get_footer();
+    return;
+}
+
 try {
     $offre = $wpRepository->getOffreByCgtAndParse($codeCgt, Offre::class);
 } catch (Exception $e) {
     get_header();
-    Twig::rend404Page();
+    Twig::rend500Page();
     get_footer();
     return;
 }
