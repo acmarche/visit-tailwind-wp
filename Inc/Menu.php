@@ -14,7 +14,7 @@ class Menu
 
     public function __construct()
     {
-        $this->cache = Cache::instance();
+        $this->cache = Cache::instance('menu');
     }
 
     /**
