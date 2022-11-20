@@ -19,17 +19,8 @@ try {
     $offre = $wpRepository->getOffreByCgtAndParse($codeCgt, Offre::class);
 } catch (Exception $e) {
     get_header();
-    Twig::rend500Page();
-    get_footer();
-    return;
-}
-
-if (null === $offre) {
-    get_header();
     Twig::rend404Page();
-
     get_footer();
-
     return;
 }
 
