@@ -22,7 +22,7 @@ class WpRepository
 
     public function __construct()
     {
-        $this->cache = Cache::instance();
+        $this->cache = Cache::instance('wprepo');
     }
 
     public function getCategoryBySlug(string $slug)

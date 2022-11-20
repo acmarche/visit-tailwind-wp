@@ -40,7 +40,7 @@ class Twig
         $environment = new Environment(
             $loader,
             [
-                'cache' => $_ENV['APP_CACHE_DIR'] ?? Cache::getPathCache(),
+                'cache' => $_ENV['APP_CACHE_DIR'] ?? Cache::getPathCache('twig'),
                 'debug' => WP_DEBUG,
             ]
         );
