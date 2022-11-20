@@ -2,7 +2,6 @@
 
 namespace VisitMarche\ThemeTail\Inc;
 
-use AcMarche\Pivot\DependencyInjection\PivotContainer;
 use AcMarche\Pivot\Entities\Offre\Offre;
 use VisitMarche\ThemeTail\Lib\LocaleHelper;
 use VisitMarche\ThemeTail\Lib\PostUtils;
@@ -105,7 +104,14 @@ class Seo
     {
         $language = LocaleHelper::getSelectedLanguage();
         $wpRepository = new WpRepository();
-        $offre = $wpRepository->getOffreByCgtAndParse($codeCgt, Offre::class);
+        try {
+            $offre = $wpRepository->getOffreByCgtAndParse($codeCgt, Offre::class);
+        } catch (\Exception $exception) {
+            $base = self::baseTitle('');
+            self::$metas['title'] = "Error 500 ".$base;
+
+            return;
+        }
 
         if (null !== $offre) {
             $base = self::baseTitle('');
