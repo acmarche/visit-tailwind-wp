@@ -2,6 +2,7 @@
 
 namespace VisitMarche\ThemeTail;
 
+use Symfony\Component\ErrorHandler\Debug;
 use Symfony\Component\ErrorHandler\ErrorRenderer\HtmlErrorRenderer;
 use VisitMarche\ThemeTail\Inc\AdminBar;
 use VisitMarche\ThemeTail\Inc\AdminPage;
@@ -69,4 +70,6 @@ new Ajax();
  */
 if (WP_DEBUG === false) {
     HtmlErrorRenderer::setTemplate(get_template_directory().'/error500.php');
+} else {
+    Debug::enable();
 }
