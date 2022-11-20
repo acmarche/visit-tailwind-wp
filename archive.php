@@ -7,13 +7,14 @@ use AcMarche\Pivot\Entity\TypeOffre;
 use AcSort;
 use Psr\Cache\InvalidArgumentException;
 use SortLink;
+use Symfony\Component\ErrorHandler\Debug;
 use VisitMarche\ThemeTail\Inc\CategoryMetaBox;
 use VisitMarche\ThemeTail\Lib\LocaleHelper;
 use VisitMarche\ThemeTail\Lib\PostUtils;
 use VisitMarche\ThemeTail\Lib\RouterPivot;
 use VisitMarche\ThemeTail\Lib\Twig;
 use VisitMarche\ThemeTail\Lib\WpRepository;
-
+Debug::enable();
 get_header();
 
 $cat_ID = get_queried_object_id();
