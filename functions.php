@@ -64,5 +64,9 @@ new AdminBar();
  * Ajax for admin
  */
 new Ajax();
-
-HtmlErrorRenderer::setTemplate(get_template_directory().'/error500.php');
+/**
+ * Template sf
+ */
+if (WP_DEBUG === false) {
+    HtmlErrorRenderer::setTemplate(get_template_directory().'/error500.php');
+}
