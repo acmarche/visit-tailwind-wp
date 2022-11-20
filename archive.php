@@ -50,6 +50,7 @@ $offres = [];
 
 $filterSelected = $_GET[RouterPivot::PARAM_FILTRE] ?? null;
 if ($filterSelected) {
+    dd(12);
     $typeOffreRepository = PivotContainer::getTypeOffreRepository(WP_DEBUG);
     $filtres = $typeOffreRepository->findByUrn($filterSelected);
     if ([] !== $filtres) {
