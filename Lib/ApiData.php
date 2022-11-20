@@ -81,17 +81,18 @@ class ApiData
         $wpRepository = new WpRepository();
         $postUtils = new PostUtils();
 
+        $typeOffreSelected = null;
         if ($filtreSelected == 0) {
             $filtres = $wpRepository->getCategoryFilters($currentCategoryId);
         } else {
-            if ($filtre = $typeOffreRepository->find($filtreSelected)) {
-                $filtres[] = $filtre;
+            if ($typeOffreSelected = $typeOffreRepository->find($filtreSelected)) {
+                $filtres[] = $typeOffreSelected;
             }
         }
 
         if ([] !== $filtres) {
             if (in_array($currentCategoryId, Theme::CATEGORIES_AGENDA)) {
-                $offres = $wpRepository->getEvents(true);
+                $offres = $wpRepository->getEvents(typeOffre:  $typeOffreSelected);
             } else {
                 $offres = $wpRepository->getOffres($filtres);
             }

@@ -392,7 +392,7 @@ class WpRepository
         });
     }
 
-    public function getEvents(bool $removeObsolete = false, TypeOffre $typeOffre = null): array
+    public function getEvents(bool $removeObsolete = true, TypeOffre $typeOffre = null): array
     {
         $pivotRepository = PivotContainer::getPivotRepository(WP_DEBUG);
         if ($typeOffre) {
