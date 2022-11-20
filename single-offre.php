@@ -19,27 +19,14 @@ try {
     $offre = $wpRepository->getOffreByCgtAndParse($codeCgt, Offre::class);
 } catch (Exception $e) {
     get_header();
-    Twig::rendPage(
-        '@VisitTail/errors/500.html.twig',
-        [
-            'title' => 'Error',
-            'message' => 'Impossible de charger l\'offre: '.$e->getMessage(),
-        ]
-    );
+    Twig::rend500Page();
     get_footer();
-
     return;
 }
 
 if (null === $offre) {
     get_header();
-    Twig::rendPage(
-        '@VisitTail/errors/404.html.twig',
-        [
-            'url' => '',
-            'title' => 'Page non trouvée',
-        ]
-    );
+    Twig::rend404Page();
 
     get_footer();
 
@@ -50,7 +37,6 @@ $latitude = $offre->getAdresse()->latitude ?? null;
 $longitude = $offre->getAdresse()->longitude ?? null;
 if ($latitude && $longitude) {
     if (count($offre->gpxs) === 0) {
-        //toto wp_add_inline_script
         AssetsLoad::enqueueLeaflet();
     }
 }
@@ -66,7 +52,8 @@ foreach ($offre->categories as $category) {
         'url' => $urlcurrentCategory.'?'.RouterPivot::PARAM_FILTRE.'='.$category->urn,
     ];
 }
-
+//todo heberg pas de categories
+//$offre->categories;
 $recommandations = $wpRepository->recommandationsByOffre($offre, $currentCategory, $language);
 
 foreach ($offre->pois as $poi) {

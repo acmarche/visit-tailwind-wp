@@ -10,30 +10,38 @@ use Symfony\Component\Translation\TranslatorBagInterface;
 
 class LocaleHelper
 {
-    private LocalSwitcherPivot $localeSwitcher;
+    private static ?LocalSwitcherPivot $localeSwitcher = null;
 
-    public function __construct()
+    private static function init()
     {
-        $this->localeSwitcher = PivotContainer::getLocalSwitcherPivot();
+        if (!self::$localeSwitcher) {
+            self::$localeSwitcher = PivotContainer::getLocalSwitcherPivot();
+        }
     }
 
     public static function getSelectedLanguage(): string
     {
         if (defined(ICL_LANGUAGE_CODE)) {
+            self::setCurrentLanguageSf(ICL_LANGUAGE_CODE);
+
             return ICL_LANGUAGE_CODE;
         }
+        self::setCurrentLanguageSf('fr');
 
         return 'fr';
     }
 
-    public function getCurrentLanguageSf(): string
+    public static function getCurrentLanguageSf(): string
     {
-        return $this->localeSwitcher->getLocale();
+        self::init();
+
+        return self::$localeSwitcher->getLocale();
     }
 
-    public function setCurrentLanguageSf(string $locale): void
+    public static function setCurrentLanguageSf(string $locale): void
     {
-        $this->localeSwitcher->setLocale($locale);
+        self::init();
+        self::$localeSwitcher->setLocale($locale);
     }
 
     public static function iniTranslator(): TranslatorBagInterface

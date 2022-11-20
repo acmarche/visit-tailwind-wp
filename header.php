@@ -7,6 +7,7 @@ use VisitMarche\ThemeTail\Lib\LocaleHelper;
 use VisitMarche\ThemeTail\Lib\Twig;
 
 $locale = LocaleHelper::getSelectedLanguage();
+$localeSf = LocaleHelper::getCurrentLanguageSf();
 ?>
     <!doctype html>
 <html lang="<?php echo $locale; ?>">
@@ -25,7 +26,7 @@ $locale = LocaleHelper::getSelectedLanguage();
         ?>
     </head>
 
-<body <?php body_class(); ?> id="app">
+<body <?php body_class(); ?> id="app" data-langwp="<?= $locale ?>" data-langsf="<?= $localeSf ?>">
     <?php
 wp_body_open();
 $menu = new Menu();
@@ -35,6 +36,6 @@ Twig::rendPage(
     '@VisitTail/header/_header.html.twig',
     [
         'items' => $items,
-        'locale' => LocaleHelper::getSelectedLanguage(),
+        'locale' => $locale,
     ]
 );

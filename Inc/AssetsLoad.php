@@ -150,6 +150,8 @@ class AssetsLoad
 
     public static function enqueueLeaflet()
     {
+        //todo test this
+        //wp_add_inline_script();
         wp_enqueue_style('visitmarche-leaflet-css');
         wp_enqueue_script('visitmarche-leaflet-js');
     }
