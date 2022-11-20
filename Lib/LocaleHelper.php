@@ -21,14 +21,13 @@ class LocaleHelper
 
     public static function getSelectedLanguage(): string
     {
-        if (defined(ICL_LANGUAGE_CODE)) {
-            self::setCurrentLanguageSf(ICL_LANGUAGE_CODE);
-
-            return ICL_LANGUAGE_CODE;
+        $current_lang = apply_filters('wpml_current_language', null);
+        if (!$current_lang) {
+            $current_lang = 'fr';
         }
-        self::setCurrentLanguageSf('fr');
+        self::setCurrentLanguageSf($current_lang);
 
-        return 'fr';
+        return $current_lang;
     }
 
     public static function getCurrentLanguageSf(): string
