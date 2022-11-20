@@ -201,13 +201,15 @@ class WpRepository
      * @param int $categoryWpId
      * @param bool $flatWithChildren pour admin ne pas etendre enfants
      * @param bool $filterCount
-     * @return TypeOffre[]|array
+     * @param bool $unsetParent pour ajax
+     * @return array|TypeOffre[]
      * @throws NonUniqueResultException
      */
     public static function getCategoryFilters(
         int $categoryWpId,
         bool $flatWithChildren = false,
-        bool $filterCount = true
+        bool $filterCount = true,
+        bool $unsetParent = false
     ): array {
         if (in_array($categoryWpId, Theme::CATEGORIES_HEBERGEMENT)) {
             return WpRepository::getChildrenHebergements($filterCount);
@@ -235,7 +237,9 @@ class WpRepository
             }
 
             //bug parent is a proxy
-            unset($typeOffre->parent);
+            if ($unsetParent) {
+                unset($typeOffre->parent);
+            }
 
             $typeOffre->withChildren = $categoryUrn['withChildren'];
             $allFiltres[] = $typeOffre;

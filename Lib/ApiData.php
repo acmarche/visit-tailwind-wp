@@ -15,20 +15,6 @@ use WP_REST_Response;
  */
 class ApiData
 {
-    public static function pivotFiltresByParent(WP_REST_Request $request)
-    {
-        $parentId = (int)$request->get_param('parentId');
-
-        $pivotRepository = PivotContainer::getTypeOffreRepository(WP_DEBUG);
-        if ($parentId == 0) {
-            $filtres = $pivotRepository->findRoots();
-        } else {
-            $filtres = $pivotRepository->findByParent($parentId);
-        }
-
-        return rest_ensure_response($filtres);
-    }
-
     public static function pivotFiltresByName(WP_REST_Request $request)
     {
         $name = $request->get_param('name');
@@ -52,7 +38,7 @@ class ApiData
             return new WP_Error(500, 'missing param categoryId');
         }
 
-        $filtres = WpRepository::getCategoryFilters($categoryWpId, $flatWithChildren, $filterCount);
+        $filtres = WpRepository::getCategoryFilters($categoryWpId, $flatWithChildren, $filterCount, unsetParent: true);
 
         return rest_ensure_response($filtres);
     }
