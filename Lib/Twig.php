@@ -108,6 +108,7 @@ class Twig
                 'excerpt' => null,
                 'image' => get_template_directory_uri().'/assets/images/error500.jpg',
                 'urlBack' => '/',
+                'imagePosition' => 'bottom center',
                 'categoryName' => 'Accueil',
                 'nameBack' => 'Acceuil',
             ]
@@ -125,6 +126,7 @@ class Twig
                 'title' => null,
                 'message' => null,
                 'image' => get_template_directory_uri().'/assets/images/error404.jpg',
+                'imagePosition' => 'bottom center',
                 'url' => RouterPivot::getCurrentUrl(),
                 'urlBack' => '/',
                 'categoryName' => 'Accueil',
