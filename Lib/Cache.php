@@ -3,6 +3,7 @@
 namespace VisitMarche\ThemeTail\Lib;
 
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\String\UnicodeString;
 use Symfony\Contracts\Cache\CacheInterface;
 
@@ -26,6 +27,11 @@ class Cache
     {
         if (null !== self::$instanceObject) {
             return self::$instanceObject;
+        }
+
+        if (!isset($_ENV['APP_CACHE_DIR'])) {
+            (new Dotenv())
+                ->bootEnv(ABSPATH.'.env');
         }
 
         self::$instanceObject =
