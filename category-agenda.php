@@ -41,13 +41,7 @@ try {
         $events
     );
 } catch (\Exception $e) {
-    Twig::rendPage(
-        '@VisitTail/errors/500.html.twig',
-        [
-            'title' => 'Page non chargée',
-            'message' => 'Impossible de charger les évènements: '.$e->getMessage(),
-        ]
-    );
+    Twig::rend500Page();
     get_footer();
 
     return;

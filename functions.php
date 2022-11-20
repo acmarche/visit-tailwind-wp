@@ -65,4 +65,4 @@ new AdminBar();
  */
 new Ajax();
 
-HtmlErrorRenderer::setTemplate(get_template_directory().'/error.php');
+HtmlErrorRenderer::setTemplate(get_template_directory().'/error500.php');

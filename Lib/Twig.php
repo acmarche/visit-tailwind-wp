@@ -98,6 +98,41 @@ class Twig
         }
     }
 
+    public static function rend500Page(): void
+    {
+        $twig = self::LoadTwig();
+
+        echo $twig->render(
+            '@VisitTail/errors/500.html.twig',
+            [
+                'excerpt' => null,
+                'image' => get_template_directory_uri().'/assets/images/error500.jpg',
+                'urlBack' => '/',
+                'categoryName' => 'Accueil',
+                'nameBack' => 'Acceuil',
+            ]
+        );
+    }
+
+    public static function rend404Page(): void
+    {
+        $twig = self::LoadTwig();
+
+        echo $twig->render(
+            '@VisitTail/errors/404.html.twig',
+            [
+                'excerpt' => null,
+                'title' => null,
+                'message' => null,
+                'image' => get_template_directory_uri().'/assets/images/error404.jpg',
+                'url' => RouterPivot::getCurrentUrl(),
+                'urlBack' => '/',
+                'categoryName' => 'Accueil',
+                'nameBack' => 'Acceuil',
+            ]
+        );
+    }
+
     /**
      * For sharing pages.
      */

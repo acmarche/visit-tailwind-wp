@@ -13,16 +13,8 @@ if ($keyword) {
     $hits = json_decode($results, null, 512, JSON_THROW_ON_ERROR);
 }
 if (isset($hits['error'])) {
+    Twig::rend500Page();
     Mailer::sendError('wp error search', $hits['error']);
-    Twig::rendPage(
-        '@VisitTail/errors/500.html.twig',
-        [
-            'message' => $hits['error'],
-            'title' => 'Erreur lors de la recherche',
-            'tags' => [],
-            'relations' => [],
-        ]
-    );
     get_footer();
 
     return;
