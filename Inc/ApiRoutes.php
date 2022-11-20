@@ -38,20 +38,6 @@ class ApiRoutes
             function () {
                 register_rest_route(
                     'pivot',
-                    'filtres_parent/(?P<parentId>[\w]+)',
-                    [
-                        'methods' => 'GET',
-                        'callback' => fn($args) => ApiData::pivotFiltresByParent($args),
-                    ]
-                );
-            }
-        );
-
-        add_action(
-            'rest_api_init',
-            function () {
-                register_rest_route(
-                    'pivot',
                     'filtres_name/(?P<name>[\w]+)',
                     [
                         'methods' => 'GET',

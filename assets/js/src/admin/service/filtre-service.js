@@ -21,18 +21,6 @@ export function fetchFiltresByCategoryRequest(
 }
 
 /**
- * @param {int} parentId
- * @returns {Promise}
- */
-export function fetchFiltresByParentRequest(parentId) {
-    const params = {};
-    const url = `wp-json/pivot/filtres_parent/${parentId}`;
-    return axios.get(url, {
-        params
-    });
-}
-
-/**
  * @param {string} name
  * @returns {Promise}
  */
