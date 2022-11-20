@@ -12,7 +12,7 @@ Twig::rend500Page();
 get_footer();
 
 try {
-    Mailer::sendError('error visit', "page ".RouterPivot::getCurrentUrl());
+    Mailer::sendError('error visit', "page ".RouterPivot::getCurrentUrl().' '.$_SERVER['HTTP_REFERER']);
 
 } catch (\Exception $exception) {
 
