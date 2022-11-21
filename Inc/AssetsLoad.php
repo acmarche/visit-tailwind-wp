@@ -59,28 +59,6 @@ class AssetsLoad
             false,
             false
         );
-        /*   wp_enqueue_script(
-               'oljf-js',
-               get_template_directory_uri().'/assets/js/dist/js/oljf.js',
-               [],
-               false,
-               false
-           );
-           wp_enqueue_script(
-               'titi-js',
-               get_template_directory_uri().'/assets/js/titi.js',
-               [],
-               false,
-               false
-           );
-
-        /*   wp_enqueue_style(
-               'visitmarche-jf-style',
-               get_template_directory_uri().'/assets/js/dist/css/oljf.css',
-               [],
-               wp_get_theme()->get('Version')
-           );*/
-
     }
 
     public function leaflet(): void
@@ -132,7 +110,7 @@ class AssetsLoad
      */
     function addAsModule($tag, $handle, $src)
     {
-        if (!in_array($handle, ['oljf-js', 'titi-js'])) {
+        if (!in_array($handle, [])) {
             return $tag;
         }
 
