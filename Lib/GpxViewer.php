@@ -25,7 +25,7 @@ class GpxViewer
         if (!$this->writeTmpFile($filePath, $url)) {
             $this->elevation($filePath);
         }
-        $urlLocal = RouterPivot::getUrlSite().'/'.$this->folder_gpx.$fileName;
+        $urlLocal = '/'.$this->folder_gpx.$fileName;
         $gpx = gpx_view(array(
                 'src' => $urlLocal,
                 'title' => 'Gpx',
