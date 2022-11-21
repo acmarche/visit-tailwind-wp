@@ -74,6 +74,22 @@ class PostUtils
         );
     }
 
+    public static  function convertRecommandationsToArray(array $offres): array
+    {
+        $recommandations = [];
+        foreach ($offres as $offre) {
+            $recommandations[] = [
+                'title' => $offre->nom,
+                'url' => $offre->url,
+                'excerpt' => '',
+                'image' => $offre->firstImage(),
+                'tags' => $offre->tags,
+            ];
+        }
+
+        return $recommandations;
+    }
+
     /**
      * @param Offre[] $offres
      * @param int $categoryId

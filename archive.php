@@ -61,13 +61,7 @@ if ([] !== $filtres) {
     $filtres = RouterPivot::setRoutesToFilters($filtres, $cat_ID);
 
     try {
-        $offres = $wpRepository->getOffres($filtres);
-        array_map(
-            function ($offre) use ($cat_ID, $language) {
-                $offre->url = RouterPivot::getUrlOffre($offre, $cat_ID);
-            },
-            $offres
-        );
+        $offres = $wpRepository->getOffres($filtres, $cat_ID, $language);
     } catch (InvalidArgumentException|\Exception $e) {
         dump($e->getMessage());
     }

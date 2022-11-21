@@ -350,33 +350,14 @@ class WpRepository
         $cacheKey = Cache::generateKey(Cache::SEE_ALSO_OFFRES.'-'.$offerRefer->codeCgt.'-'.$category->term_id);
 
         return $this->cache->get($cacheKey, function () use ($offerRefer, $category, $language) {
-            $recommandations = [];
-
             if (count($offerRefer->see_also)) {
                 $offres = $offerRefer->see_also;
             } else {
                 $pivotRepository = PivotContainer::getPivotRepository();
                 $offres = $pivotRepository->fetchSameOffres($offerRefer, 10);
             }
-            $urlCat = get_category_link($category);
-            foreach ($offres as $offre) {
-                $url = RouterPivot::getUrlOffre($offre, $category->cat_ID);
-                $tags[] = [];
-                foreach ($offre->categories as $categoryItem) {
-                    $tags[] = [
-                        'name' => $categoryItem->labelByLanguage($language),
-                        'url' => $urlCat.'?'.RouterPivot::PARAM_FILTRE.'='.$category->urn,
-                    ];
-                }
-
-                $recommandations[] = [
-                    'title' => $offre->nom,
-                    'url' => $url,
-                    'excerpt' => '',
-                    'image' => $offre->firstImage(),
-                    'tags' => $tags,
-                ];
-            }
+            $this->setLinkOnOffres($offres, $category->term_id, $language);
+            $recommandations = PostUtils::convertRecommandationsToArray($offres);
             $count = count($recommandations);
 
             if ($count > 3) {
@@ -424,7 +405,7 @@ class WpRepository
      * @return Offre[]
      * @throws \Psr\Cache\InvalidArgumentException
      */
-    public function getOffres(array $typesOffre): array
+    public function getOffres(array $typesOffre, int $category, string $language): array
     {
         $keyName = '';
         foreach ($typesOffre as $typeOffre) {
@@ -432,11 +413,34 @@ class WpRepository
         }
         $cacheKey = Cache::generateKey(Cache::OFFRES.'-'.$keyName);
 
-        return $this->cache->get($cacheKey, function () use ($typesOffre) {
+        return $this->cache->get($cacheKey, function () use ($typesOffre, $category, $language) {
             $pivotRepository = PivotContainer::getPivotRepository(WP_DEBUG);
 
-            return $pivotRepository->fetchOffres($typesOffre);
+            $offres = $pivotRepository->fetchOffres($typesOffre);
+            $this->setLinkOnOffres($offres, $category, $language);
         });
+    }
+
+    private function setLinkOnOffres(array $offres, int $categoryId, string $language)
+    {
+        array_map(
+            function ($offre) use ($categoryId, $language) {
+                $urlCat = get_category_link($categoryId);
+                $offre->url = RouterPivot::getUrlOffre($offre, $categoryId);
+                if (count($offre->images) == 0) {
+                    $offre->images = [get_template_directory_uri().'/assets/tartine/bg_events.png'];
+                }
+                $tags = [];
+                foreach ($offre->categories as $categoryItem) {
+                    $tags[] = [
+                        'name' => $categoryItem->labelByLanguage($language),
+                        'url' => $urlCat.'?'.RouterPivot::PARAM_FILTRE.'='.$categoryItem->urn,
+                    ];
+                }
+                $offre->tags = $tags;
+            },
+            $offres
+        );
     }
 
     public function getOffreByCgtAndParse(string $codeCgt, string $class, ?string $cacheKeyPlus = null): ?Offre

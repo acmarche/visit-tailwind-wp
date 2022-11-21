@@ -94,7 +94,7 @@ class ApiData
             if (in_array($currentCategoryId, Theme::CATEGORIES_AGENDA)) {
                 $offres = $wpRepository->getEvents(typeOffre:  $typeOffreSelected);
             } else {
-                $offres = $wpRepository->getOffres($filtres);
+                $offres = $wpRepository->getOffres($filtres,$currentCategoryId,$language);
             }
         }
 
