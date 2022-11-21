@@ -78,7 +78,6 @@ class GpxViewer
         foreach ($elevations as $elevation) {
             if ($elevation->latitude === $point->latitude && $elevation->longitude == $point->longitude) {
                 $point->elevation = $elevation->elevation;
-                Mailer::sendError('elevation', 'el '.$elevation);
 
                 return true;
             }
