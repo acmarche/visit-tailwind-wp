@@ -10,7 +10,6 @@
             {% include '@VisitTail/offre/_descriptions.html.twig' %}
             {% include '@VisitTail/offre/_specifications.html.twig' %}
             {% include '@VisitTail/offre/_images.html.twig' %}
-            {% include '@VisitTail/map/_pois.html.twig' %}
             {% include '@VisitTail/offre/_gpx_details.html.twig' %}
         </div>
         <aside class="p-4">
@@ -21,6 +20,7 @@
     </article>
     {% if gpxMap != null %}
         {% include '@VisitTail/map/_gpx.html.twig' %}
+        {% include '@VisitTail/map/_pois.html.twig' %}
     {% else %}
         {% include '@VisitTail/map/_carte.html.twig' %}
     {% endif %}
