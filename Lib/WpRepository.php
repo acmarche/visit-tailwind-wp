@@ -430,7 +430,7 @@ class WpRepository
                 $urlCat = get_category_link($categoryId);
                 $offre->url = RouterPivot::getUrlOffre($offre, $categoryId);
                 if (count($offre->images) == 0) {
-                    $offre->images = [get_template_directory_uri().'/assets/tartine/bg_events.png'];
+                    $offre->images = [get_template_directory_uri().'/assets/tartine/bg_home.jpg'];
                 }
                 $tags = [];
                 foreach ($offre->categories as $categoryItem) {
