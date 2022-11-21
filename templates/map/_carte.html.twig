@@ -15,7 +15,7 @@
         const center = [latitude, longitude];
         const map = L.map('openmap_offre')
             .setView(center, 15);
-        const nom = "{{ title|remove_html|raw }}";
+        const name = "{{ name|remove_html|raw }}";
 
         L.tileLayer('https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
@@ -25,7 +25,7 @@
             .addTo(map);
 
         L.marker(center, {
-            title: nom,
+            title: name,
             draggable: true
         })
             .addTo(map);
