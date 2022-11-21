@@ -418,6 +418,8 @@ class WpRepository
 
             $offres = $pivotRepository->fetchOffres($typesOffre);
             $this->setLinkOnOffres($offres, $category, $language);
+
+            return $offres;
         });
     }
 
