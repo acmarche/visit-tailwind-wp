@@ -49,10 +49,11 @@ $language = LocaleHelper::getSelectedLanguage();
 $tags = [];
 foreach ($offre->tags as $tag) {
     $tags[] = [
-        'name' => $tag->urnCatDefinition->labelByLanguage($language),
+        'name' => $tag->urnDefinition->labelByLanguage($language),
         'url' => $urlcurrentCategory.'?'.RouterPivot::PARAM_FILTRE.'='.$tag->data->urn,
     ];
 }
+
 //todo heberg pas de categories
 //$offre->categories;
 $recommandations = $wpRepository->recommandationsByOffre($offre, $currentCategory, $language);
