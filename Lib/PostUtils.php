@@ -123,7 +123,7 @@ class PostUtils
                     'locality' => $offre->adresse1->localiteByLanguage('fr'),
                     'dateEvent' => $offre->dateEvent,
                     'description' => $description,
-                    'tags' => $offre->tags,
+                    'tags' => $offre->tagsFormatted,
                     'image' => $image,
                 ];
 
