@@ -124,7 +124,7 @@ class Seo
                 )
             );
             $keywords = array_map(
-                fn($tag) => $tag->urnCatDefinition->labelByLanguage($language),
+                fn($tag) => $tag->urnDefinition->labelByLanguage($language),
                 $offre->tags
             );
             self::$metas['keywords'] = implode(',', $keywords);

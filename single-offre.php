@@ -7,6 +7,7 @@ use Exception;
 use VisitMarche\ThemeTail\Inc\AssetsLoad;
 use VisitMarche\ThemeTail\Lib\GpxViewer;
 use VisitMarche\ThemeTail\Lib\LocaleHelper;
+use VisitMarche\ThemeTail\Lib\PostUtils;
 use VisitMarche\ThemeTail\Lib\RouterPivot;
 use VisitMarche\ThemeTail\Lib\Twig;
 use VisitMarche\ThemeTail\Lib\WpRepository;
@@ -46,13 +47,9 @@ if (!$currentCategory = get_category_by_slug(get_query_var('category_name'))) {
 }
 $urlcurrentCategory = get_category_link($currentCategory);
 $language = LocaleHelper::getSelectedLanguage();
-$tags = [];
-foreach ($offre->tags as $tag) {
-    $tags[] = [
-        'name' => $tag->urnDefinition->labelByLanguage($language),
-        'url' => $urlcurrentCategory.'?'.RouterPivot::PARAM_FILTRE.'='.$tag->data->urn,
-    ];
-}
+
+$postUtils = new PostUtils();
+$postUtils->tagsOffre($offre, $language, $urlcurrentCategory);
 
 //todo heberg pas de categories
 //$offre->categories;
@@ -60,7 +57,6 @@ $recommandations = $wpRepository->recommandationsByOffre($offre, $currentCategor
 
 foreach ($offre->pois as $poi) {
     $poi->url = RouterPivot::getUrlOffre($poi, $currentCategory->cat_ID);
-    $poi->title = $poi->name;
     $poi->image = $poi->firstImage();
 }
 
@@ -78,7 +74,7 @@ Twig::rendPage(
         'latitude' => $latitude,
         'longitude' => $longitude,
         'excerpt' => null,
-        'tags' => $tags,
+        'tags' => $offre->tagsFormatted,
         'image' => $offre->firstImage(),
         'icone' => null,
         'recommandations' => $recommandations,

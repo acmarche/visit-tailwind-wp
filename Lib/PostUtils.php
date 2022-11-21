@@ -53,16 +53,19 @@ class PostUtils
         return null;
     }
 
-    public function tagsOffre(Offre $offre, string $language)
+    public function tagsOffre(Offre $offre, string $language, ?string $urlCat = null)
     {
         $tags = [];
         foreach ($offre->tags as $category) {
             $tag = new \stdClass();
-            $tag->name = $category->urnCatDefinition->labelByLanguage($language);
+            $tag->name = $category->urnDefinition->labelByLanguage($language);
+            if ($urlCat) {
+                $tag->url = $urlCat.'?'.RouterPivot::PARAM_FILTRE.'='.$tag->data->urn;
+            }
             $tag->key = $category->data->urn;
             $tags[] = $tag;
         }
-        $offre->tags = $tags;
+        $offre->tagsFormatted = $tags;
     }
 
     public function tagsPost(WP_Post $post)
@@ -74,7 +77,7 @@ class PostUtils
         );
     }
 
-    public static  function convertRecommandationsToArray(array $offres): array
+    public static function convertRecommandationsToArray(array $offres): array
     {
         $recommandations = [];
         foreach ($offres as $offre) {

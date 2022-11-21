@@ -423,6 +423,12 @@ class WpRepository
         });
     }
 
+    /**
+     * @param array|Offre[] $offres
+     * @param int $categoryId
+     * @param string $language
+     * @return void
+     */
     private function setLinkOnOffres(array $offres, int $categoryId, string $language)
     {
         array_map(
@@ -432,14 +438,8 @@ class WpRepository
                 if (count($offre->images) == 0) {
                     $offre->images = [get_template_directory_uri().'/assets/tartine/bg_home.jpg'];
                 }
-                $tags = [];
-                foreach ($offre->categories as $categoryItem) {
-                    $tags[] = [
-                        'name' => $categoryItem->labelByLanguage($language),
-                        'url' => $urlCat.'?'.RouterPivot::PARAM_FILTRE.'='.$categoryItem->urn,
-                    ];
-                }
-                $offre->tags = $tags;
+                $postUtils = new PostUtils();
+                $postUtils->tagsOffre($offre, $language);
             },
             $offres
         );
