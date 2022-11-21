@@ -107,6 +107,7 @@ class GpxViewer
 
             return $response->getContent();
         } catch (ClientException|ClientExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface|TransportExceptionInterface $exception) {
+            Mailer::sendError('elevation', 'el '.$exception->getMessage());
             throw  new Exception($exception->getMessage(), $exception->getCode(), $exception);
         }
     }
