@@ -35,7 +35,7 @@ try {
             $events
         );
     }
-} catch (Exception) {
+} catch (Exception $exception) {
     $events = [];
 }
 
