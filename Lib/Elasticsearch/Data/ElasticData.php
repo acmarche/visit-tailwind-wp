@@ -194,7 +194,6 @@ class ElasticData
         }
 
         $content = '';
-        $offre->description = '';
         $descriptions = $offre->descriptionsByLanguage($language);
         if ([] !== $descriptions) {
             $offre->description = $offre->descriptions[0]->value;
