@@ -28,7 +28,7 @@ class GpxViewer
         $urlLocal = '/'.$this->folder_gpx.$fileName;
         $gpx = gpx_view(array(
                 'src' => $urlLocal,
-                'title' => 'Gpx',
+                'name' => 'Gpx',
                 'color' => '#00ff00',
                 'width' => '5',
                 'distance_unit' => 'km',

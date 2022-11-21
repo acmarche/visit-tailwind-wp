@@ -81,7 +81,7 @@ $countArticles = count($posts) + count($offres);
 Twig::rendPage(
     '@VisitTail/category.html.twig',
     [
-        'title' => $categoryName,
+        'name' => $categoryName,
         'excerpt' => $category->description,
         'image' => $image,
         'bgCat' => $bgcat,

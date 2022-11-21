@@ -23,7 +23,7 @@ if (isset($hits['error'])) {
 Twig::rendPage(
     '@VisitTail/search.html.twig',
     [
-        'title' => 'Search',
+        'name' => 'Search',
         'urlBack' => '/',
         'nameBack' => 'Home',
         'categoryName' => 'Search',

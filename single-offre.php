@@ -73,7 +73,7 @@ Twig::rendPage(
     '@VisitTail/offre.html.twig',
     [
         'offre' => $offre,
-        'title' => $offre->nameByLanguage($language),
+        'name' => $offre->nameByLanguage($language),
         'latitude' => $latitude,
         'longitude' => $longitude,
         'excerpt' => null,

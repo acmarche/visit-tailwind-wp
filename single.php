@@ -31,7 +31,7 @@ get_header();
 Twig::rendPage(
     '@VisitTail/article.html.twig',
     [
-        'title' => $post->post_title,
+        'name' => $post->post_title,
         'post' => $post,
         'excerpt' => $post->post_excerpt,
         'tags' => $tags,

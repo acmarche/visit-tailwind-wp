@@ -133,7 +133,7 @@ class WpRepository
                 }
             }
             $recommandations[] = [
-                'title' => $post->post_title,
+                'name' => $post->post_title,
                 'excerpt' => $post->post_excerpt,
                 'url' => get_permalink($post->ID),
                 'image' => $image,

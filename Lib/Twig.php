@@ -88,7 +88,7 @@ class Twig
                 [
                     'message' => $e->getMessage()." ligne ".$e->getLine()." file ".$e->getFile(),
                     'error' => $e,
-                    'title' => "La page n'a pas pu être chargée",
+                    'name' => "La page n'a pas pu être chargée",
                     'tags' => [],
                     'relations' => [],
                 ]
@@ -123,7 +123,7 @@ class Twig
             '@VisitTail/errors/404.html.twig',
             [
                 'excerpt' => null,
-                'title' => null,
+                'name' => null,
                 'message' => null,
                 'image' => get_template_directory_uri().'/assets/images/error404.jpg',
                 'imagePosition' => 'bottom center',

@@ -59,7 +59,7 @@ Twig::rendPage(
     [
         'events' => $events,
         'category' => $category,
-        'title' => $category->name,
+        'name' => $category->name,
         'nameBack' => $nameBack,
         'categoryName' => $categorName,
         'image' => $image,

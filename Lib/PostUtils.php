@@ -79,7 +79,7 @@ class PostUtils
         $recommandations = [];
         foreach ($offres as $offre) {
             $recommandations[] = [
-                'title' => $offre->name,
+                'name' => $offre->name,
                 'url' => $offre->url,
                 'excerpt' => '',
                 'image' => $offre->firstImage(),
