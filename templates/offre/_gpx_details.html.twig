@@ -1,0 +1,17 @@
+{% if gpxMap != null %}
+    <h3 class="font-montserrat-semi-bold text-cta-light text-md border-bottom">
+        Détails du parcourt
+    </h3>
+    <div class="flex flex-col gap-2">
+        <div class="grid grid-cols-[20rem,1fr]">
+            <span class="font-montserrat-semi-bold text-cta-dark">Distance</span>
+            <span class="text-caractere">{{ offre.gpx_distance }} km</span>
+
+            <span class="font-montserrat-semi-bold text-cta-dark">Durée du parcours</span>
+            <span class="text-caractere">{{ offre.gpx_duree }}</span>
+
+            <span class="font-montserrat-semi-bold text-cta-dark">Niveau de difficulté</span>
+            <span class="text-caractere">{{ offre.gpx_difficulte|format_pivot_value|raw }}</span>
+        </div>
+    </div>
+{% endif %}

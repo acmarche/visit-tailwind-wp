@@ -68,7 +68,6 @@ if (count($offre->gpxs) > 0) {
     $gpxViewer = new GpxViewer();
     $gpxMap = $gpxViewer->renderWithPlugin($offre->codeCgt, $offre->gpxs[0]->url);
 }
-
 $specs = $wpRepository->groupSpecifications($offre);
 Twig::rendPage(
     '@VisitTail/offre.html.twig',
