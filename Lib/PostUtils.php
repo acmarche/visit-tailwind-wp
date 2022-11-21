@@ -56,13 +56,11 @@ class PostUtils
     public function tagsOffre(Offre $offre, string $language, ?string $urlCat = null)
     {
         $tags = [];
-        foreach ($offre->tags as $category) {
-            $tag = new \stdClass();
-            $tag->name = $category->urnDefinition->labelByLanguage($language);
+        foreach ($offre->tags as $tag) {
+            $tag->name = $tag->labelByLanguage($language);
             if ($urlCat) {
-                $tag->url = $urlCat.'?'.RouterPivot::PARAM_FILTRE.'='.$tag->data->urn;
+                $tag->url = $urlCat.'?'.RouterPivot::PARAM_FILTRE.'='.$tag->urn;
             }
-            $tag->key = $category->data->urn;
             $tags[] = $tag;
         }
         $offre->tagsFormatted = $tags;

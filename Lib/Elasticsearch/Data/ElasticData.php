@@ -190,7 +190,7 @@ class ElasticData
     {
         $categories = [];
         foreach ($offre->tags as $tag) {
-            $categories[] .= ' '.$tag->urnCatDefinition->labelByLanguage($language);
+            $categories[] .= ' '.$tag->labelByLanguage($language);
         }
 
         $content = '';
@@ -241,7 +241,7 @@ class ElasticData
                     }
                 }
                 foreach ($offre->tags as $tag) {
-                    $content .= ' '.$tag->urnCatDefinition->labelByLanguage($language);
+                    $content .= ' '.$tag->labelByLanguage($language);
                 }
             }
         }
