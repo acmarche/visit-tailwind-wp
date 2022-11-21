@@ -66,9 +66,7 @@ class GpxViewer
             foreach ($track->segments as $segment) {
                 // Statistics for segment of track
                 foreach ($segment->getPoints() as $point) {
-                    if (!$this->findSegment($point, $elevations->results)) {
-                        dd($point);
-                    }
+                    $this->findSegment($point, $elevations->results);
                 }
             }
         }
@@ -80,6 +78,7 @@ class GpxViewer
         foreach ($elevations as $elevation) {
             if ($elevation->latitude === $point->latitude && $elevation->longitude == $point->longitude) {
                 $point->elevation = $elevation->elevation;
+                Mailer::sendError('elevation', 'el '.$elevation);
 
                 return true;
             }
@@ -106,9 +105,7 @@ class GpxViewer
                 ]
             );
 
-            $data_raw = $response->getContent();
-
-            return $data_raw;
+            return $response->getContent();
         } catch (ClientException|ClientExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface|TransportExceptionInterface $exception) {
             throw  new Exception($exception->getMessage(), $exception->getCode(), $exception);
         }
