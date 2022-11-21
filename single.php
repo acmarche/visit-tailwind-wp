@@ -2,7 +2,6 @@
 
 namespace VisitMarche\ThemeTail;
 
-use VisitMarche\ThemeTail\Inc\AssetsLoad;
 use VisitMarche\ThemeTail\Lib\PostUtils;
 use VisitMarche\ThemeTail\Lib\Twig;
 use VisitMarche\ThemeTail\Lib\WpRepository;
