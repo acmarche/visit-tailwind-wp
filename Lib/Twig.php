@@ -2,6 +2,7 @@
 
 namespace VisitMarche\ThemeTail\Lib;
 
+use AcMarche\Pivot\DependencyInjection\PivotContainer;
 use AcMarche\Pivot\Entities\Offre\Offre;
 use AcMarche\Pivot\Entities\Specification\SpecData;
 use AcMarche\Pivot\Spec\SpecTypeEnum;
@@ -248,9 +249,9 @@ class Twig
         return new TwigFilter(
             'format_pivot_value',
             function (SpecData $specData): ?string {
-                $return_value = match ($specData->type) {
+
+                $value = match ($specData->type) {
                     SpecTypeEnum::BOOLEAN->value => '',
-                    SpecTypeEnum::CHOICE->value => '',//todo
                     SpecTypeEnum::TEXTML->value => $specData->value,
                     SpecTypeEnum::STRINGML->value => $specData->value,
                     SpecTypeEnum::CURRENCY->value => $specData->value.' €',
@@ -258,10 +259,20 @@ class Twig
                     SpecTypeEnum::PHONE->value, SpecTypeEnum::GSM->value => '<a href="tel:'.$specData->value.'">'.$specData->value.'</a>',
                     SpecTypeEnum::EMAIL->value => '<a href="mailto:'.$specData->value.'">'.$specData->value.'</a>',
                     SpecTypeEnum::URL->value, SpecTypeEnum::URL_FACEBOOK->value, SpecTypeEnum::URL_TRIPADVISOR->value => '<a href="'.$specData->value.'">'.$specData->value.'</a>',
+                    SpecTypeEnum::CHOICE->value, SpecTypeEnum::HCHOICE->value => false,
                     default => $specData->value
                 };
+                if ($value === false) {
+                    $urnDefinitionRepository = PivotContainer::getUrnDefinitionRepository(WP_DEBUG);
+                    if ($urnDefinition = $urnDefinitionRepository->findByUrn($specData->value)) {
+                        $label = $urnDefinition->labelByLanguage(LocaleHelper::getSelectedLanguage());
+                        if ($label) {
+                            return $label;
+                        }
+                    }
+                }
 
-                return $return_value;
+                return $value;
             }, [
                 'is_safe' => ['html'],
             ]
@@ -278,9 +289,6 @@ class Twig
         return new TwigFilter(
             'pivot_check_display',
             function (SpecData $specData): bool {
-                if ($specData->type == SpecTypeEnum::CHOICE->value) {
-                    return false;
-                }
                 $useless = array(
                     'urn:val:class:michstar:nc',
                     'urn:val:class:michfour:nc',

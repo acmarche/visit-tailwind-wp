@@ -58,6 +58,7 @@ $recommandations = $wpRepository->recommandationsByOffre($offre, $currentCategor
 foreach ($offre->pois as $poi) {
     $poi->url = RouterPivot::getUrlOffre($poi, $currentCategory->cat_ID);
     $poi->image = $poi->firstImage();
+    $postUtils->tagsOffre($poi, $language, $urlcurrentCategory);
 }
 
 $gpxMap = null;
