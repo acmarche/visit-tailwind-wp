@@ -22,11 +22,6 @@ $tags = $wpRepository->tagsOfPost($post->ID);
 $recommandations = $wpRepository->recommandationsByPost($post);
 $recommandations = array_slice($recommandations, 0, 3);
 
-if (preg_match('#gpx_viewer#', $post->post_content)) {
-   AssetsLoad::enqueueLeaflet();
-   AssetsLoad::enqueueElevation();
-}
-
 $content = get_the_content(null, null, $post);
 $content = apply_filters('the_content', $content);
 $content = str_replace(']]>', ']]&gt;', $content);
