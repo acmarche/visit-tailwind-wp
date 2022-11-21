@@ -5,7 +5,7 @@
                 class="xl:hidden flex border border-cta-primary p-2 mt-3 font-montserrat-semi-bold bg-white mx-auto">
             {% for item in filtres %}
                 <option value="{{ item.id }}" data-filtre="{{ item.id }}">
-                    {{ item.nom }}
+                    {{ item.name }}
                 </option>
             {% endfor %}
         </select>
@@ -15,7 +15,7 @@
         {% for item in filtres %}
             <li class="border border-cta-dark p-3 font-montserrat-light  hover:bg-cta-dark hover:text-white">
                 <a href="{{ item.url }}" @click.prevent="launchRefresh" data-filtre="{{ item.id }}" class="p-3">
-                    {{ item.nom }}
+                    {{ item.name }}
                 </a>
             </li>
         {% endfor %}
