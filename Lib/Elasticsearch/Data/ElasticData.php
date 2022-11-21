@@ -7,9 +7,9 @@ use AcMarche\Pivot\Entities\Offre\Offre;
 use DateTime;
 use Exception;
 use stdClass;
-use VisitMarche\ThemeTail\Lib\RouterPivot;
 use VisitMarche\ThemeTail\Lib\Mailer;
 use VisitMarche\ThemeTail\Lib\PostUtils;
+use VisitMarche\ThemeTail\Lib\RouterPivot;
 use VisitMarche\ThemeTail\Lib\WpRepository;
 use WP_Post;
 use WP_Term;
@@ -189,8 +189,8 @@ class ElasticData
     private function createDocumentElasticFromOffre(Offre $offre, string $language): DocumentElastic
     {
         $categories = [];
-        foreach ($offre->categories as $category) {
-            $categories[] .= ' '.$category->labelByLanguage($language);
+        foreach ($offre->tags as $tag) {
+            $categories[] .= ' '.$tag->urnCatDefinition->labelByLanguage($language);
         }
 
         $content = '';
@@ -240,8 +240,8 @@ class ElasticData
                         $content .= ' '.$description->value;
                     }
                 }
-                foreach ($offre->categories as $category) {
-                    $content .= ' '.$category->labelByLanguage($language);
+                foreach ($offre->tags as $tag) {
+                    $content .= ' '.$tag->urnCatDefinition->labelByLanguage($language);
                 }
             }
         }

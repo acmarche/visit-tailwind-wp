@@ -56,10 +56,10 @@ class PostUtils
     public function tagsOffre(Offre $offre, string $language)
     {
         $tags = [];
-        foreach ($offre->categories as $category) {
+        foreach ($offre->tags as $category) {
             $tag = new \stdClass();
-            $tag->name = $category->labelByLanguage($language);
-            $tag->key = $category->urn;
+            $tag->name = $category->urnCatDefinition->labelByLanguage($language);
+            $tag->key = $category->data->urn;
             $tags[] = $tag;
         }
         $offre->tags = $tags;
@@ -79,7 +79,7 @@ class PostUtils
         $recommandations = [];
         foreach ($offres as $offre) {
             $recommandations[] = [
-                'name' => $offre->name,
+                'name' => $offre->name(),
                 'url' => $offre->url,
                 'excerpt' => '',
                 'image' => $offre->firstImage(),

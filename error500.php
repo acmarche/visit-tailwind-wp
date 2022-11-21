@@ -2,15 +2,16 @@
 
 namespace VisitMarche\ThemeTail;
 
-//use Symfony\Component\ErrorHandler\Debug;
 use VisitMarche\ThemeTail\Lib\Mailer;
 use VisitMarche\ThemeTail\Lib\RouterPivot;
 use VisitMarche\ThemeTail\Lib\Twig;
 
+/**
+ * This page is called by symfony @file  functions.php
+ */
 //$statusCode;  $statusText;
-//Debug::enable();
-
 //get_header();
+
 Twig::rend500Page();
 get_footer();
 

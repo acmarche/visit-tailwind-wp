@@ -124,8 +124,8 @@ class Seo
                 )
             );
             $keywords = array_map(
-                fn($category) => $category->labelByLanguage($language),
-                $offre->categories
+                fn($tag) => $tag->urnCatDefinition->labelByLanguage($language),
+                $offre->tags
             );
             self::$metas['keywords'] = implode(',', $keywords);
             self::$metas['image'] = $offre->firstImage();

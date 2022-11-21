@@ -82,9 +82,6 @@ class AdminPage
                 $categories[] = $category;
             } else {
                 $categoryFiltres = PivotMetaBox::getMetaPivotTypesOffre($category->term_id);
-                foreach ($categoryFiltres as $data) {
-
-                }
                 $categories[] = $category;
             }
         }

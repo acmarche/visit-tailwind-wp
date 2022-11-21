@@ -47,10 +47,10 @@ if (!$currentCategory = get_category_by_slug(get_query_var('category_name'))) {
 $urlcurrentCategory = get_category_link($currentCategory);
 $language = LocaleHelper::getSelectedLanguage();
 $tags = [];
-foreach ($offre->categories as $category) {
+foreach ($offre->tags as $tag) {
     $tags[] = [
-        'name' => $category->labelByLanguage($language),
-        'url' => $urlcurrentCategory.'?'.RouterPivot::PARAM_FILTRE.'='.$category->urn,
+        'name' => $tag->urnCatDefinition->labelByLanguage($language),
+        'url' => $urlcurrentCategory.'?'.RouterPivot::PARAM_FILTRE.'='.$tag->data->urn,
     ];
 }
 //todo heberg pas de categories
