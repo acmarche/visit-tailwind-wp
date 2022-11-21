@@ -127,7 +127,7 @@ class PostUtils
                 if ($offre->typeOffre->idTypeOffre == UrnTypeList::evenement()->typeId) {
                     $data['dateEvent'] = $offre->dateEvent;
                     if (!$offre->image) {
-                        $offre->image = get_template_directory_uri().'/assets/tartine/bg_events.png';
+                        $offre->image = get_template_directory_uri().'/assets/tartine/bg_home.jpg';
                     }
                 }
 
