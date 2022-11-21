@@ -115,7 +115,7 @@ class Seo
 
         if (null !== $offre) {
             $base = self::baseTitle('');
-            self::$metas['title'] = $offre->nomByLanguage($language).$base;
+            self::$metas['title'] = $offre->nameByLanguage($language).$base;
             self::$metas['description'] = implode(
                 ',',
                 array_map(

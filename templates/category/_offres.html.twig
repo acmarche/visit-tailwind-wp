@@ -8,14 +8,14 @@
                 />
                 <div class="ml-2 flex flex-col items-start justify-between h-36 py-2 xl:py-4 xl:px-4">
                     <h3 class="xl:text-md xl:font-montserrat-semi-bold text-md text-cta-dark group-hover:text-cta-light">
-                        {{ item.nom }}
+                        {{ item.name }}
                     </h3>
                     <span class="text-caractere text-sm font-montserrat-light">
                         {{ item.description|remove_html|u.truncate(170, '...') }}
                     </span>
                     <div class="text-cta-light my-1 flex gap-1 block font-montserrat-medium text-xs xl:text-base">
                         {% for tag in item.tag %}
-                            <span>{{ tag.nom }}</span>
+                            <span>{{ tag.name }}</span>
                         {% endfor %}
                     </div>
                 </div>

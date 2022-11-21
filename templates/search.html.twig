@@ -3,7 +3,7 @@
       x-data="searchXl">
     <form class="mx-auto xl:mx-[20rem] flex flex-col justify-end" action="/">
         <label for="search" class="sr-only">
-            {{ 'search.title'|trans }}
+            {{ 'search.name'|trans }}
         </label>
         <div class="relative flex">
             <div class="grow-0 pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
@@ -20,11 +20,11 @@
                         @input.debounce.250="launchSearch()"
                    name="search"
                    class="grow block w-full rounded-md border border-gray-300 bg-white py-2 pl-10 pr-3 leading-5 placeholder-gray-500 focus:border-cta-dark focus:placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-cta-dark sm:text-sm"
-                   placeholder="{{ 'search.title'|trans }}" type="search">
+                   placeholder="{{ 'search.name'|trans }}" type="search">
         </div>
         <button type="submit" name="search"
                 class="p-4 m-4 grow-0 border border-cta-dark rounded-md self-end hover:bg-cta-light hover:text-white">
-            {{ 'search.title'|trans }}
+            {{ 'search.name'|trans }}
         </button>
     </form>
 

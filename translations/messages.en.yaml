@@ -1,5 +1,5 @@
 agenda:
-  title: 'Agenda'
+  name: 'Agenda'
   moreevents: 'More events'
 decouvrez:
   marche: 'To discover'
@@ -17,7 +17,7 @@ different:
   festivities: 'Do you know our different festivities ?'
 menu:
   home: 'Home'
-  title: 'Menu'
+  name: 'Menu'
   contact: 'Contact'
 town_hall: 'Office Communal du Tourisme'
 hours:
@@ -33,7 +33,7 @@ private:
   right: 'All rights reserved'
 search:
   placeholder: 'What are you looking for ?'
-  title: 'Search'
+  name: 'Search'
 filter:
   all: 'All'
 url:
@@ -56,16 +56,16 @@ article:
 offre:
   information: 'Information'
 homepage:
-  title: 'Home page'
+  name: 'Home page'
 page:
   tourisme: 'Tourism'
   notfound: 'This page no longer exists or a broken link'
 Découvrir: 'Discover'
 close:
-  title: 'Close'
+  name: 'Close'
 shortcut:
-  title: 'Shortcuts'
+  name: 'Shortcuts'
 result:
-  title: 'RESULTS FOR'
+  name: 'RESULTS FOR'
 office:
-  title: 'Municipal Tourist Office'
+  name: 'Municipal Tourist Office'

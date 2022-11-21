@@ -1,5 +1,5 @@
 agenda:
-  title: 'Agenda'
+  name: 'Agenda'
   moreevents: 'Charger plus d''évènements'
 decouvrez:
   marche: 'Découvrez'
@@ -17,7 +17,7 @@ different:
   festivities: 'Connaissez-vous nos différentes festivités ?'
 menu:
   home: 'Accueil'
-  title: 'Menu'
+  name: 'Menu'
   contact: 'Contact'
 town_hall: 'Office Communal du Tourisme'
 hours:
@@ -33,7 +33,7 @@ private:
   right: 'Tous droits réservés'
 search:
   placeholder: 'Que cherchez-vous ?'
-  title: 'Rechercher'
+  name: 'Rechercher'
 filter:
   all: 'Tout'
 url:
@@ -56,16 +56,16 @@ article:
 offre:
   information: 'Renseignements'
 homepage:
-  title: 'Page d''accueil'
+  name: 'Page d''accueil'
 page:
   tourisme: 'Tourisme'
   notfound: 'Cette page n''existe plus ou un lien est brisé'
 Découvrir: 'Découvrir'
 close:
-  title: 'Fermer'
+  name: 'Fermer'
 shortcut:
-  title: 'Raccourcis'
+  name: 'Raccourcis'
 result:
-  title: 'RÉSULTATS POUR'
+  name: 'RÉSULTATS POUR'
 office:
-  title: 'Office Communal du Tourisme'
+  name: 'Office Communal du Tourisme'

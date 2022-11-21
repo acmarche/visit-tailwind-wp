@@ -45,7 +45,7 @@ class PivotOffresTable extends WP_List_Table
             case 'nom':
                 $url = RouterPivot::getUrlOffre($item, $this->categoryId);
 
-                return '<a href="'.$url.'">'.$item->nom.'</a>';
+                return '<a href="'.$url.'">'.$item->name.'</a>';
             case 'debug':
                 return '<a href="'.$this->url($item->codeCgt).'">Debug</a>';
             case 'codeCgt':

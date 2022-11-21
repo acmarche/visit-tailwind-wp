@@ -59,7 +59,7 @@ $recommandations = $wpRepository->recommandationsByOffre($offre, $currentCategor
 
 foreach ($offre->pois as $poi) {
     $poi->url = RouterPivot::getUrlOffre($poi, $currentCategory->cat_ID);
-    $poi->title = $poi->nom;
+    $poi->title = $poi->name;
     $poi->image = $poi->firstImage();
 }
 
@@ -73,7 +73,7 @@ Twig::rendPage(
     '@VisitTail/offre.html.twig',
     [
         'offre' => $offre,
-        'title' => $offre->nomByLanguage($language),
+        'title' => $offre->nameByLanguage($language),
         'latitude' => $latitude,
         'longitude' => $longitude,
         'excerpt' => null,

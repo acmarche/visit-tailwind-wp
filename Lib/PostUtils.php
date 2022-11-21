@@ -58,7 +58,7 @@ class PostUtils
         $tags = [];
         foreach ($offre->categories as $category) {
             $tag = new \stdClass();
-            $tag->nom = $category->labelByLanguage($language);
+            $tag->name = $category->labelByLanguage($language);
             $tag->key = $category->urn;
             $tags[] = $tag;
         }
@@ -79,7 +79,7 @@ class PostUtils
         $recommandations = [];
         foreach ($offres as $offre) {
             $recommandations[] = [
-                'title' => $offre->nom,
+                'title' => $offre->name,
                 'url' => $offre->url,
                 'excerpt' => '',
                 'image' => $offre->firstImage(),
@@ -101,7 +101,7 @@ class PostUtils
         return array_map(
             function ($offre) use ($categoryId, $language) {
                 $url = RouterPivot::getUrlOffre($offre, $categoryId);
-                $nom = $offre->nomByLanguage($language);
+                $name = $offre->nameByLanguage($language);
                 $description = null;
                 if ((is_countable($offre->descriptions) ? \count($offre->descriptions) : 0) > 0) {
                     $tmp = $offre->descriptionsByLanguage($language);
@@ -116,7 +116,7 @@ class PostUtils
                 $data = [
                     'id' => $offre->codeCgt,
                     'url' => $url,
-                    'nom' => $nom,
+                    'name' => $name,
                     'locality' => $offre->adresse1->localiteByLanguage('fr'),
                     'dateEvent' => $offre->dateEvent,
                     'description' => $description,

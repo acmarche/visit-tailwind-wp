@@ -1,5 +1,5 @@
 agenda:
-  title: 'Agenda'
+  name: 'Agenda'
   moreevents: 'Laad meer evenementen'
 decouvrez:
   marche: 'Ontdek'
@@ -17,7 +17,7 @@ different:
   festivities: 'Kent u onze verschillende festiviteiten ?'
 menu:
   home: 'Start'
-  title: 'Menu'
+  name: 'Menu'
   contact: 'Contact'
 town_hall: 'Office Communal du Tourisme'
 hours:
@@ -33,7 +33,7 @@ private:
   right: 'Alle rechten voorbehouden'
 search:
   placeholder: 'Wat zoek je ?'
-  title: 'Zoeken'
+  name: 'Zoeken'
 filter:
   all: 'Alle'
 url:
@@ -56,16 +56,16 @@ article:
 offre:
   information: 'Informatie'
 homepage:
-  title: 'Startpagina'
+  name: 'Startpagina'
 page:
   tourisme: 'Toerisme'
   notfound: 'Deze pagina bestaat niet meer of een verbroken link'
 Découvrir: 'Ontdekken'
 close:
-  title: 'Sluiten'
+  name: 'Sluiten'
 shortcut:
-  title: 'Sneltoetsen'
+  name: 'Sneltoetsen'
 result:
-  title: 'RESULTATEN VOOR'
+  name: 'RESULTATEN VOOR'
 office:
-  title: 'Gemeentelijk VVV-kantoor'
+  name: 'Gemeentelijk VVV-kantoor'

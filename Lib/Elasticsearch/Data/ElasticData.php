@@ -137,7 +137,7 @@ class ElasticData
                 array_map(
                     function ($offre) use ($category, $language) {
                         $offre->url = RouterPivot::getUrlOffre($offre, $category->cat_ID);
-                        $offre->nom = $offre->nomByLanguage($language);
+                        $offre->name = $offre->nameByLanguage($language);
                     },
                     $offres
                 );
@@ -205,7 +205,7 @@ class ElasticData
         $today = new DateTime();
         $document = new DocumentElastic();
         $document->id = $offre->codeCgt;
-        $document->name = Cleaner::cleandata($offre->nomByLanguage($language));
+        $document->name = Cleaner::cleandata($offre->nameByLanguage($language));
         $document->excerpt = Cleaner::cleandata($offre->description);
         $document->content = Cleaner::cleandata($content);
         $document->tags = $categories;
@@ -228,12 +228,12 @@ class ElasticData
             array_map(
                 function ($offre) use ($category, $language) {
                     $offre->url = RouterPivot::getUrlOffre($offre, $category->cat_ID);
-                    $offre->titre = $offre->nomByLanguage($language);
+                    $offre->titre = $offre->nameByLanguage($language);
                 },
                 $offres
             );
             foreach ($offres as $offre) {
-                $content .= $offre->nomByLanguage($language);
+                $content .= $offre->nameByLanguage($language);
                 $descriptions = $offre->descriptionsByLanguage($language);
                 if ([] !== $descriptions) {
                     foreach ($descriptions as $description) {
