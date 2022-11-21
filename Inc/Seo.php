@@ -35,6 +35,14 @@ class Seo
             return self::$metas;
         }
 
+        $codeCgt = get_query_var(RouterPivot::PARAM_OFFRE);
+        if ($codeCgt) {
+            self::metaPivotOffre($codeCgt);
+            if ($render) {
+                self::renderMetas();
+            }
+        }
+
         global $post;
         if ($post) {
             self::metaPost($post);
@@ -43,14 +51,6 @@ class Seo
             }
 
             return self::$metas;
-        }
-
-        $codeCgt = get_query_var(RouterPivot::PARAM_OFFRE);
-        if ($codeCgt) {
-            self::metaPivotOffre($codeCgt);
-            if ($render) {
-                self::renderMetas();
-            }
         }
 
         $cat_id = get_query_var('cat');
@@ -115,7 +115,8 @@ class Seo
 
         if (null !== $offre) {
             $base = self::baseTitle('');
-            self::$metas['title'] = $offre->nameByLanguage($language).$base;
+            $label = $offre->typeOffre->labelByLanguage($language);
+            self::$metas['title'] = $offre->nameByLanguage($language).' '.$label.' '.$base;
             self::$metas['description'] = implode(
                 ',',
                 array_map(
