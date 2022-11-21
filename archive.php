@@ -52,6 +52,7 @@ if ($filterSelected) {
     $filtres = $typeOffreRepository->findByUrn($filterSelected);
     if ([] !== $filtres) {
         $filtres = [$filtres[0]];
+        $categoryName=$filtres[0]->name;
     }
 } else {
     $filtres = $wpRepository->getCategoryFilters($cat_ID);
