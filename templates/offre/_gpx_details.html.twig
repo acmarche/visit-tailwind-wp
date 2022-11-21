@@ -12,6 +12,13 @@
 
             <span class="font-montserrat-semi-bold text-cta-dark">Niveau de difficulté</span>
             <span class="text-caractere">{{ offre.gpx_difficulte }}</span>
+
+            <span class="font-montserrat-semi-bold text-cta-dark">Télécharger le gpx</span>
+            <span class="text-caractere">
+                {% for gpx in offre.gpxs %}
+                    <a href="{{ gpx.url }}">Télécharger</a>
+                {% endfor %}
+            </span>
         </div>
     </div>
 {% endif %}
