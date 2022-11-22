@@ -8,6 +8,7 @@ use AcMarche\Pivot\Entity\TypeOffre;
 use AcMarche\Pivot\Entity\UrnDefinitionEntity;
 use AcMarche\Pivot\Spec\UrnList;
 use Doctrine\ORM\NonUniqueResultException;
+use Psr\Cache\InvalidArgumentException;
 use Symfony\Contracts\Cache\CacheInterface;
 use VisitMarche\ThemeTail\Inc\PivotMetaBox;
 use VisitMarche\ThemeTail\Inc\Theme;
@@ -411,20 +412,11 @@ class WpRepository
      */
     public function getOffres(array $typesOffre, int $category, string $language): array
     {
-        $keyName = '';
-        foreach ($typesOffre as $typeOffre) {
-            $keyName .= $typeOffre->urn.'-';
-        }
-        $cacheKey = Cache::generateKey(Cache::OFFRES.'-'.$keyName);
+        $pivotRepository = PivotContainer::getPivotRepository(WP_DEBUG);
+        $offres = $pivotRepository->fetchOffres($typesOffre);
+        $this->setLinkOnOffres($offres, $category, $language);
 
-        return $this->cache->get($cacheKey, function () use ($typesOffre, $category, $language) {
-            $pivotRepository = PivotContainer::getPivotRepository(WP_DEBUG);
-
-            $offres = $pivotRepository->fetchOffres($typesOffre);
-            $this->setLinkOnOffres($offres, $category, $language);
-
-            return $offres;
-        });
+        return $offres;
     }
 
     /**
@@ -449,16 +441,14 @@ class WpRepository
         );
     }
 
-    public function getOffreByCgtAndParse(string $codeCgt, string $class, ?string $cacheKeyPlus = null): ?Offre
+    /**
+     * @throws InvalidArgumentException
+     */
+    public function getOffreByCgtAndParse(string $codeCgt): ?Offre
     {
-        $cacheKey = Cache::generateKey(Cache::OFFRE.'-'.$codeCgt.'-'.$class);
+        $pivotRepository = PivotContainer::getPivotRepository(WP_DEBUG);
 
-        return $this->cache->get($cacheKey, function () use ($codeCgt, $class, $cacheKeyPlus) {
-
-            $pivotRepository = PivotContainer::getPivotRepository(WP_DEBUG);
-
-            return $pivotRepository->fetchOffreByCgtAndParse($codeCgt, $class, $cacheKeyPlus);
-        });
+        return $pivotRepository->fetchOffreByCgtAndParse($codeCgt);
     }
 
     public function getUrnDefinition(string $urnName): ?UrnDefinitionEntity

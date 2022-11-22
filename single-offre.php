@@ -25,7 +25,7 @@ if (!str_contains($codeCgt, "-")) {
 }
 
 try {
-    $offre = $wpRepository->getOffreByCgtAndParse($codeCgt, Offre::class);
+    $offre = $wpRepository->getOffreByCgtAndParse($codeCgt);
 } catch (Exception $e) {
     get_header();
     Twig::rend500Page();
