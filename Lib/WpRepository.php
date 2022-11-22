@@ -362,7 +362,7 @@ class WpRepository
                 $pivotRepository = PivotContainer::getPivotRepository();
                 $offres = $pivotRepository->fetchSameOffres($offerRefer, 10);
             }
-            $this->setLinkOnOffres($offres, $category->term_id, $language);
+            PostUtils::setLinkOnOffres($offres, $category->term_id, $language);
             $recommandations = PostUtils::convertRecommandationsToArray($offres);
             $count = count($recommandations);
 
@@ -415,31 +415,9 @@ class WpRepository
     {
         $pivotRepository = PivotContainer::getPivotRepository(WP_DEBUG);
         $offres = $pivotRepository->fetchOffres($typesOffre);
-        $this->setLinkOnOffres($offres, $category, $language);
+        PostUtils::setLinkOnOffres($offres, $category, $language);
 
         return $offres;
-    }
-
-    /**
-     * @param array|Offre[] $offres
-     * @param int $categoryId
-     * @param string $language
-     * @return void
-     */
-    private function setLinkOnOffres(array $offres, int $categoryId, string $language)
-    {
-        array_map(
-            function ($offre) use ($categoryId, $language) {
-                $urlCat = get_category_link($categoryId);
-                $offre->url = RouterPivot::getUrlOffre($offre, $categoryId);
-                if (count($offre->images) == 0) {
-                    $offre->images = [get_template_directory_uri().'/assets/tartine/bg_home.jpg'];
-                }
-                $postUtils = new PostUtils();
-                $postUtils->tagsOffre($offre, $language);
-            },
-            $offres
-        );
     }
 
     /**

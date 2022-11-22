@@ -138,4 +138,26 @@ class PostUtils
             $offres
         );
     }
+
+    /**
+     * @param array|Offre[] $offres
+     * @param int $categoryId
+     * @param string $language
+     * @return void
+     */
+    public static function setLinkOnOffres(array $offres, int $categoryId, string $language)
+    {
+        array_map(
+            function ($offre) use ($categoryId, $language) {
+                $urlCat = get_category_link($categoryId);
+                $offre->url = RouterPivot::getUrlOffre($offre, $categoryId);
+                if (count($offre->images) == 0) {
+                    $offre->images = [get_template_directory_uri().'/assets/tartine/bg_home.jpg'];
+                }
+                $postUtils = new PostUtils();
+                $postUtils->tagsOffre($offre, $language);
+            },
+            $offres
+        );
+    }
 }
