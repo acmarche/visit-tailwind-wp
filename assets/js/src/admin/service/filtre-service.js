@@ -76,26 +76,3 @@ export function addFiltreRequest(categoryId, typeOffreId, withChildren) {
     formData.append('withChildren', withChildren);
     return axios.post(url, formData);
 }
-
-/**
- * @param {string} categoryId
- * @returns {Promise}
- */
-export function fetchCategory(categoryId) {
-    const params = {};
-    const url = `wp-json/wp/v2/categories/${categoryId}`;
-    return axios.get(url, {
-        params
-    });
-}
-
-/**
- * @param {string} language
- * @param {int} categoryId
- * @param {int} filtre
- * @returns {Promise}
- */
-export function fetchOffres(language, categoryId, filtre) {
-    const url = `${language}/wp-json/pivot/offres/${categoryId}/${filtre}`;
-    return axios.get(url, {});
-}

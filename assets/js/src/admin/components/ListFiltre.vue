@@ -27,7 +27,7 @@ async function removeFiltre(id) {
     <tbody>
     <tr v-for="filtre in filtres">
       <td class="ooktitle column-booktitle has-row-actions column-primary">
-        {{ filtre.nom }}
+        {{ filtre.name }}
       </td>
       <td class="ooktitle column-booktitle has-row-actions column-primary">
         {{ filtre.urn }}

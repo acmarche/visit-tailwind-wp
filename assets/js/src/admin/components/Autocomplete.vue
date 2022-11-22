@@ -36,7 +36,7 @@ function setResult(selectedTypeOffre) {
         @click="setResult(typeOffre)"
         style="cursor: pointer;"
         class="hover:bg-gray-50 px-2 py-2 text-green-700">
-      {{ typeOffre.nom }} <span class="text-gray-400">({{ typeOffre.urn }})</span>
+      {{ typeOffre.name }} <span class="text-gray-400">({{ typeOffre.urn }})</span>
     </li>
   </ul>
 
