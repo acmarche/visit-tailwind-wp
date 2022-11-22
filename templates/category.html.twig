@@ -6,11 +6,14 @@
     {% include '@VisitTail/category/_filtres.html.twig' %}
     {% if countArticles > 0 %}
         {% include '@VisitTail/category/_posts.html.twig' %}
-        {% include '@VisitTail/category/_offres_alpine.html.twig' %}
+        {% if filterSelected == null %}
+            {% include '@VisitTail/category/_offres_alpine.html.twig' %}
+        {% endif %}
     {% else %}
         <p>Aucun article trouvé</p>
     {% endif %}
-    <noscript>
+
+    {% if filterSelected == null %} <noscript>  {% endif %}
         {% include '@VisitTail/category/_offres.html.twig' %}
-    </noscript>
+    {% if filterSelected == null %}  </noscript> {% endif %}
 </main>

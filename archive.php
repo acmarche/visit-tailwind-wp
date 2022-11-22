@@ -46,13 +46,14 @@ $image = $wpRepository->categoryImage($category);
 $children = $wpRepository->getChildrenOfCategory($category->cat_ID);
 $offres = [];
 
-$filterSelected = $_GET[RouterPivot::PARAM_FILTRE] ?? null;
+$filterSelected = htmlentities($_GET[RouterPivot::PARAM_FILTRE]) ?? null;
+
 if ($filterSelected) {
     $typeOffreRepository = PivotContainer::getTypeOffreRepository(WP_DEBUG);
     $filtres = $typeOffreRepository->findByUrn($filterSelected);
     if ([] !== $filtres) {
         $filtres = [$filtres[0]];
-        $categoryName=$filtres[0]->name;
+        $categoryName = $filtres[0]->name;
     }
 } else {
     $filtres = $wpRepository->getCategoryFilters($cat_ID);
@@ -91,6 +92,7 @@ Twig::rendPage(
         'urlBack' => $urlBack,
         'children' => $children,
         'filtres' => $filtres,
+        'filterSelected' => $filterSelected,
         'nameBack' => $nameBack,
         'categoryName' => $categoryName,
         'posts' => $posts,
