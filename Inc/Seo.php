@@ -105,7 +105,7 @@ class Seo
         $language = LocaleHelper::getSelectedLanguage();
         $wpRepository = new WpRepository();
         try {
-            $offre = $wpRepository->getOffreByCgtAndParse($codeCgt, Offre::class);
+            $offre = $wpRepository->getOffreByCgtAndParse($codeCgt);
         } catch (\Exception $exception) {
             $base = self::baseTitle('');
             self::$metas['title'] = "Error 500 ".$base;

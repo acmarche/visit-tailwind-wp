@@ -43,11 +43,11 @@ class Cache
 
         return self::$instanceObject;
     }
-
     public static function generateKey(string $cacheKey): string
     {
         $keyUnicode = new UnicodeString($cacheKey);
 
         return sanitize_title($keyUnicode->ascii()->toString());
     }
+
 }

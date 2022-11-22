@@ -352,7 +352,8 @@ class WpRepository
 
     public function recommandationsByOffre(Offre $offerRefer, WP_Term $category, string $language): array
     {
-        $cacheKey = Cache::generateKey(Cache::SEE_ALSO_OFFRES.'-'.$offerRefer->codeCgt.'-'.$category->term_id);
+        $key = Cache::SEE_ALSO_OFFRES.'-'.$offerRefer->codeCgt.'-'.$category->term_id;
+        $cacheKey = Cache::generateKey($key);
 
         return $this->cache->get($cacheKey, function () use ($offerRefer, $category, $language) {
             if (count($offerRefer->see_also)) {
