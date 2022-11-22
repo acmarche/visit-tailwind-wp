@@ -5,15 +5,13 @@
     {% include '@VisitTail/category/_children.html.twig' %}
     {% include '@VisitTail/category/_filtres.html.twig' %}
     {% if countArticles > 0 %}
-        {% include '@VisitTail/category/_posts.html.twig' %}
         {% if filterSelected == null %}
             {% include '@VisitTail/category/_offres_alpine.html.twig' %}
         {% endif %}
+        {% if filterSelected == null %} <noscript>  {% endif %}
+           {% include '@VisitTail/category/_offres.html.twig' %}
+        {% if filterSelected == null %}  </noscript> {% endif %}
     {% else %}
-        <p>Aucun article trouvé</p>
+        <p class="px-4 mt-2">Aucun article trouvé</p>
     {% endif %}
-
-    {% if filterSelected == null %} <noscript>  {% endif %}
-        {% include '@VisitTail/category/_offres.html.twig' %}
-    {% if filterSelected == null %}  </noscript> {% endif %}
 </main>
