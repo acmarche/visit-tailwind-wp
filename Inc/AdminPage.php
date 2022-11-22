@@ -56,7 +56,7 @@ class AdminPage
     private static function filtresRender()
     {
         $pivotRepository = PivotContainer::getTypeOffreRepository(WP_DEBUG);
-        $filters = $pivotRepository->findWithChildren();
+        $filters = $pivotRepository->findWithChildren(true);
 
         $category = get_category_by_slug('offres');
         $categoryUrl = get_category_link($category);
