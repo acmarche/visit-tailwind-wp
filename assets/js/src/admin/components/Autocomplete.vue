@@ -16,7 +16,7 @@ function onChange() {
 }
 
 function setResult(selectedTypeOffre) {
-  searchText.value = selectedTypeOffre.nom
+  searchText.value = selectedTypeOffre.name
   typesOffre.value = []
   emit('update-post', selectedTypeOffre)
 }
