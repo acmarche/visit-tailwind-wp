@@ -137,14 +137,12 @@ class ElasticData
                 array_map(
                     function ($offre) use ($category, $language) {
                         $offre->url = RouterPivot::getUrlOffre($offre, $category->cat_ID);
-                        $offre->name = $offre->nameByLanguage($language);
                     },
                     $offres
                 );
-            }
-
-            foreach ($offres as $offre) {
-                $datas[] = $this->createDocumentElasticFromOffre($offre, $language);
+                foreach ($offres as $offre) {
+                    $datas[] = $this->createDocumentElasticFromOffre($offre, $language);
+                }
             }
         }
 
