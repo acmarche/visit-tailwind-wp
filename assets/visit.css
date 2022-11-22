@@ -2800,6 +2800,16 @@ img, video, iframe {
      object-fit: cover;
 }
 
+.object-none {
+  -o-object-fit: none;
+     object-fit: none;
+}
+
+.object-center {
+  -o-object-position: center;
+     object-position: center;
+}
+
 .p-4 {
   padding: 1rem;
 }
