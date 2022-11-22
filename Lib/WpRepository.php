@@ -238,7 +238,9 @@ class WpRepository
 
             //bug parent is a proxy
             if ($unsetParent) {
-                unset($typeOffre->parent);
+                if ($typeOffre->parent) {
+                    $typeOffre->parent = $typeOffreRepository->find($typeOffre->parent->id);
+                }
             }
 
             $typeOffre->withChildren = $categoryUrn['withChildren'];
@@ -255,7 +257,9 @@ class WpRepository
                 $children = $typeOffreRepository->findByParent($typeOffre->id, $filterCount);
                 foreach ($children as $typeOffreChild) {
                     //bug parent is a proxy
-                    unset($typeOffreChild->parent);
+                    if ($typeOffreChild->parent) {
+                        $typeOffreChild->parent = $typeOffreRepository->find($typeOffreChild->parent->id);
+                    }
                     $allFiltres[] = $typeOffreChild;
                 }
             }
