@@ -2,7 +2,7 @@
     <h3 class="font-montserrat-semi-bold text-cta-light text-md border-bottom">
         {{ 'article.pois'|trans }}
     </h3>
-    <ul class="pt-6 grid grid-cols-1 gap-2 xl:grid-cols-[repeat(3,minmax(0,1fr))]">
+    <ul class="pt-6 grid grid-cols-1 gap-2 xl:grid-cols-[repeat(3,minmax(0,1fr))] mb-6">
         {% for item in offre.pois %}
             <li class=" rounded-lg shadow-lg">
                 <a href="{{ item.url }}" class="group grid grid-cols-1 xl:grid-cols-2 overflow-hidden xl:block">
