@@ -1,19 +1,22 @@
-{% set  data =  specs['urn:cat:accueil'] %}
-{% if data.items > 0 %}
+{% set  data =  specs['urn:cat:accueil'] ?? [] %}
+{% if data|length > 0 and data.items > 0 %}
     {% include '@VisitTail/offre/_specification_line.html.twig' %}
 {% endif %}
 
-{% set  data =  specs['urn:cat:eqpsrv'] %}
-{% if data.items > 0 %}
+{% set  data =  specs['urn:cat:eqpsrv'] ?? [] %}
+{% if data|length > 0 and data.items > 0 %}
     {% include '@VisitTail/offre/_specification_line.html.twig' %}
 {% endif %}
 
-{% set  data =  specs['urn:cat:classlab'] %}
-{% if data.items > 0 %}
+{% set  data =  specs['urn:cat:classlab'] ?? [] %}
+{% if data|length > 0 and data.items > 0 %}
     {% include '@VisitTail/offre/_specification_line.html.twig' %}
 {% endif %}
 
-{% set  data =  specs['urn:cat:tarif'] %}
-{% if data.items > 0 %}
+{% set  data =  specs['urn:cat:tarif'] ?? [] %}
+{% if data|length > 0 and data.items > 0 %}
     {% include '@VisitTail/offre/_specification_line.html.twig' %}
 {% endif %}
+
+
+{# % include '@VisitTail/offre/_all_specifications.html.twig' % #}
