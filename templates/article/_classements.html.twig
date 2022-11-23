@@ -1,0 +1,8 @@
+<div class="grid grid-cols-[20rem,1fr]">
+    {% for classement in offre.classements %}
+        <span class="font-montserrat-semi-bold text-cta-dark">
+                {{ classement.urnDefinition.labelByLanguage(locale) }}
+            </span>
+        <span class="text-caractere">{{ classement.data|format_pivot_value }}</span>
+    {% endfor %}
+</div>
