@@ -49,7 +49,7 @@
 /* J'ajoute ici car commande npx tailwindcss ne prend pas ce qui est entre <style> */
 
 .bg-home-img {
-  background-image: url('/wp-content/themes/visittail/assets/images/home_ville2.jpg');
+  background-image: url('/wp-content/themes/visittail/assets/images/home_neige3.jpg');
 }
 
 li.nav-top-xl {
@@ -2033,8 +2033,8 @@ img, video, iframe {
   height: max-content;
 }
 
-.h-36 {
-  height: 9rem;
+.h-44 {
+  height: 11rem;
 }
 
 .h-12 {
@@ -2798,11 +2798,6 @@ img, video, iframe {
 .object-cover {
   -o-object-fit: cover;
      object-fit: cover;
-}
-
-.object-none {
-  -o-object-fit: none;
-     object-fit: none;
 }
 
 .object-center {
