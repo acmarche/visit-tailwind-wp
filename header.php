@@ -31,11 +31,13 @@ $localeSf = LocaleHelper::getCurrentLanguageSf();
 wp_body_open();
 $menu = new Menu();
 $items = $menu->getMenuTop();
+$icons = $menu->getIcones();
 
 Twig::rendPage(
     '@VisitTail/header/_header.html.twig',
     [
         'items' => $items,
+        'icones' => $icons,
         'locale' => $locale,
     ]
 );

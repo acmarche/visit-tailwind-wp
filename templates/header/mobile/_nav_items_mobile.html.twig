@@ -6,12 +6,13 @@
           : 'top-full'
       "
         id="menu-organise">
+
     <ul
             class="flex flex-col items-center justify-center h-full mt-3 box-border">
         <li
                 class="border-b border-white/50 mb-2 xl:hidden py-1 initial w-full xl:w-auto flex flex-col xl:basis-full font-montserrat-semi-bold leading-10 xl:leading-8 text-white">
             <h3 class="flex justify-between items-center ml-6 mr-6 whitespace-nowrap">
-                <span>{{ items.sorganiser.name }}</span>
+                <span>{{ 'menu.name'|trans }}</span>
                 <button @click="menuMobileIsOpen=false">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                          stroke="currentColor"
@@ -21,17 +22,31 @@
                 </button>
             </h3>
         </li>
-        <li class="before:triangle before:left-10 hover:text-cta-light mt-4">
+        {% for icone in icones %}
+            <li class="hover:text-cta-light mt-4">
+                <a href="{{ icone.url }}" class="p-2">{{ icone.name }}</a>
+            </li>
+        {% endfor %}
+        <li class="hover:text-cta-light mt-4">
+            <a href="{{ items.inspirations.url }}" class="p-2">{{ items.inspirations.name }}</a>
+        </li>
+        <li class="hover:text-cta-light mt-4">
+            <a href="{{ items.agenda.url }}" class="p-2">{{ items.agenda.name }}</a>
+        </li>
+        <li class="hover:text-cta-light mt-4">
             <a href="{{ items.decouvrir.url }}" class="p-2">{{ items.decouvrir.name }}</a>
         </li>
-        <li class="hover:text-cta-light">
+        <li class="hover:text-cta-light mt-4">
             <a href="{{ items.savourer.url }}" class="p-2">{{ items.savourer.name }}</a>
         </li>
-        <li class="hover:text-cta-light">
+        <li class="hover:text-cta-light mt-4">
             <a href="{{ items.bouger.url }}" class="p-2">{{ items.bouger.name }}</a>
         </li>
-        <li class="hover:text-cta-light">
+        <li class="hover:text-cta-light mt-4">
             <a href="{{ items.sejourner.url }}" class="p-2">{{ items.sejourner.name }}</a>
+        </li>
+        <li class="hover:text-cta-light mt-4 mb-6">
+            <a href="{{ items.mice.url }}" class="p-2">{{ items.mice.name }}</a>
         </li>
     </ul>
 </nav>

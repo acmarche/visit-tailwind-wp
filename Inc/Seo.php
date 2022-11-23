@@ -138,7 +138,7 @@ class Seo
 
     private static function metaHomePage(): void
     {
-        $home = self::translate('homepage.title');
+        $home = self::translate('homepage.name');
         self::$metas['title'] = self::baseTitle($home);
         self::$metas['description'] = get_bloginfo('description', 'display');
         self::$metas['keywords'] = 'Commune, Ville, Marche, Marche-en-Famenne, Famenne, Tourisme, Horeca, Visit';
