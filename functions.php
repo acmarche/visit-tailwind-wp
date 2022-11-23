@@ -18,6 +18,14 @@ use VisitMarche\ThemeTail\Inc\ShortCodes;
 use VisitMarche\ThemeTail\Lib\RouterPivot;
 
 /**
+ * Template sf
+ */
+if (WP_DEBUG === false) {
+  //  HtmlErrorRenderer::setTemplate(get_template_directory().'/error500.php');
+} else {
+    Debug::enable();
+}
+/**
  * Initialisation du thème
  */
 new SetupTheme();
@@ -65,11 +73,3 @@ new AdminBar();
  * Ajax for admin
  */
 new Ajax();
-/**
- * Template sf
- */
-if (WP_DEBUG === false) {
-    HtmlErrorRenderer::setTemplate(get_template_directory().'/error500.php');
-} else {
-    Debug::enable();
-}
