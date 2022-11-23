@@ -34,6 +34,7 @@ if ($parent) {
 }
 
 $posts = $wpRepository->getPostsByCatId($cat_ID);
+
 $category_order = get_term_meta($cat_ID, CategoryMetaBox::KEY_NAME_ORDER, true);
 if ('manual' === $category_order) {
     $posts = AcSort::getSortedItems($cat_ID, $posts);
@@ -46,9 +47,10 @@ $image = $wpRepository->categoryImage($category);
 $children = $wpRepository->getChildrenOfCategory($category->cat_ID);
 $offres = [];
 
-$filterSelected = htmlentities($_GET[RouterPivot::PARAM_FILTRE]) ?? null;
+$filterSelected = $_GET[RouterPivot::PARAM_FILTRE] ?? null;
 
 if ($filterSelected) {
+    $filterSelected = htmlentities($filterSelected);
     $typeOffreRepository = PivotContainer::getTypeOffreRepository(WP_DEBUG);
     $filtres = $typeOffreRepository->findByUrn($filterSelected);
     if ([] !== $filtres) {
@@ -63,7 +65,7 @@ if ([] !== $filtres) {
     $filtres = RouterPivot::setRoutesToFilters($filtres, $cat_ID);
 
     try {
-        $offres = $wpRepository->getOffres($filtres, $cat_ID, $language);
+        $offres = $wpRepository->getOffres($filtres);
     } catch (InvalidArgumentException|\Exception $e) {
         dump($e->getMessage());
     }
@@ -73,13 +75,13 @@ if ([] !== $filtres) {
         $filtreTout->id = 0;
         $filtres = [$filtreTout, ...$filtres];
     }
+    PostUtils::setLinkOnOffres($offres, $cat_ID, $language);
     //fusion offres et articles
     $postUtils = new PostUtils();
-    //  $posts = $postUtils->convertPostsToArray($posts);
+    $posts = $postUtils->convertPostsToArray($posts);
     $offres = $postUtils->convertOffresToArray($offres, $cat_ID, $language);
-    // $offres = array_merge($posts, $offres);
+    $offres = [...$posts, ...$offres];
 }
-$countArticles = count($posts) + count($offres);
 Twig::rendPage(
     '@VisitTail/category.html.twig',
     [
@@ -95,10 +97,9 @@ Twig::rendPage(
         'filterSelected' => $filterSelected,
         'nameBack' => $nameBack,
         'categoryName' => $categoryName,
-        'posts' => $posts,
         'offres' => $offres,
         'bgcat' => $bgcat,
-        'countArticles' => $countArticles,
+        'countArticles' => count($offres)
     ]
 );
 get_footer();

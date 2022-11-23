@@ -3,7 +3,9 @@
 namespace VisitMarche\ThemeTail\Lib;
 
 use AcMarche\Pivot\DependencyInjection\PivotContainer;
+use AcMarche\Pivot\Entities\Label;
 use AcMarche\Pivot\Entities\Offre\Offre;
+use AcMarche\Pivot\Entities\Tag;
 use AcMarche\Pivot\Entity\TypeOffre;
 use AcMarche\Pivot\Entity\UrnDefinitionEntity;
 use AcMarche\Pivot\Spec\UrnList;
@@ -35,10 +37,12 @@ class WpRepository
     {
         $tags = [];
         foreach (get_the_category($postId) as $category) {
-            $tags[] = [
-                'name' => $category->name,
-                'url' => get_category_link($category),
-            ];
+            $label = new Label();
+            $label->lang = 'fr';
+            $label->value = $category->name;
+            $tag = new Tag('urn', [$label]);
+            $tag->url = get_category_link($category);
+            $tags[] = $tag;
         }
 
         return $tags;
@@ -363,7 +367,7 @@ class WpRepository
                 $offres = $pivotRepository->fetchSameOffres($offerRefer, 10);
             }
             PostUtils::setLinkOnOffres($offres, $category->term_id, $language);
-            $recommandations = PostUtils::convertRecommandationsToArray($offres);
+            $recommandations = PostUtils::convertRecommandationsToArray($offres, $language);
             $count = count($recommandations);
 
             if ($count > 3) {
@@ -411,13 +415,11 @@ class WpRepository
      * @return Offre[]
      * @throws \Psr\Cache\InvalidArgumentException
      */
-    public function getOffres(array $typesOffre, int $category, string $language): array
+    public function getOffres(array $typesOffre): array
     {
         $pivotRepository = PivotContainer::getPivotRepository(WP_DEBUG);
-        $offres = $pivotRepository->fetchOffres($typesOffre);
-        PostUtils::setLinkOnOffres($offres, $category, $language);
 
-        return $offres;
+        return $pivotRepository->fetchOffres($typesOffre);
     }
 
     /**

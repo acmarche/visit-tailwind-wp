@@ -4,6 +4,7 @@ namespace VisitMarche\ThemeTail\Lib;
 
 use AcMarche\Pivot\Entities\Offre\Offre;
 use AcMarche\Pivot\Spec\UrnTypeList;
+use CommonItem;
 use WP_Post;
 
 class PostUtils
@@ -17,40 +18,70 @@ class PostUtils
 
     /**
      * @param WP_Post[] $posts
-     * @return array
+     * @return array|CommonItem[]
      */
     public function convertPostsToArray(array $posts): array
     {
         return array_map(
-            fn($post) => $this->postToArray($post),
+            function ($post) {
+                $this->tagsPost($post);
+
+                return new CommonItem(
+                    $post->ID,
+                    $post->post_title,
+                    $post->post_excerpt,
+                    $post->thumbnail_url,
+                    $post->permalink,
+                    $post->tags
+                );
+            },
             $posts
         );
     }
 
-    public function postToArray(WP_Post $post): array
+    /**
+     * @param Offre[] $offres
+     * @param int $categoryId
+     * @param string $language
+     * @return array|CommonItem[]
+     */
+    public function convertOffresToArray(array $offres, int $categoryId, string $language): array
     {
-        $this->tagsPost($post);
+        return array_map(
+            function ($offre) use ($categoryId, $language) {
+                $name = $offre->nameByLanguage($language);
+                $description = null;
+                if ((is_countable($offre->descriptions) ? \count($offre->descriptions) : 0) > 0) {
+                    $tmp = $offre->descriptionsByLanguage($language);
+                    if (count($tmp) == 0) {
+                        $tmp = $offre->descriptions;
+                    }
+                    $description = $tmp[0]->value;
+                }
+                $this->tagsOffre($offre, $language);
+                $image = $offre->firstImage();
+                if (!$image) {
+                    $image = get_template_directory_uri().'/assets/tartine/bg_home.jpg';
+                }
 
-        return [
-            'id' => $post->ID,
-            'url' => $post->permalink,
-            'nom' => $post->post_title,
-            'description' => $post->post_excerpt,
-            'tags' => $post->tags,
-            'image' => $post->thumbnail_url,
-        ];
-    }
+                $item = new CommonItem(
+                    $offre->codeCgt, $name, $description, $image, $offre->url, $offre->tagsFormatted
+                );
 
-    public static function getImage(WP_Post $post): ?string
-    {
-        if (has_post_thumbnail($post)) {
-            $images = wp_get_attachment_image_src(get_post_thumbnail_id($post), 'original');
-            if ($images) {
-                return $images[0];
-            }
-        }
+                $item->locality = $offre->adresse1->localiteByLanguage('fr');//ajax
 
-        return null;
+                if ($offre->typeOffre->idTypeOffre == UrnTypeList::evenement()->typeId) {
+                    $item->dateEvent = $offre->dateEvent;//ajax
+                    if (!$offre->firstImage()) {
+                        $item->image = get_template_directory_uri().'/assets/tartine/bg_events.png';
+                    }
+                }
+
+                return $item;
+
+            },
+            $offres
+        );
     }
 
     public function tagsOffre(Offre $offre, string $language, ?string $urlCat = null)
@@ -68,75 +99,42 @@ class PostUtils
 
     public function tagsPost(WP_Post $post)
     {
-        $tags = $this->wpRepository->tagsOfPost($post->ID);
-        $post->tags = array_map(
-            fn($category) => $category['name'],
-            $tags
-        );
+        $post->tags = $this->wpRepository->tagsOfPost($post->ID);
     }
 
-    public static function convertRecommandationsToArray(array $offres): array
+    /**
+     * @param array $offres
+     * @param string $language
+     * @return array|CommonItem[]
+     */
+    public static function convertRecommandationsToArray(array $offres, string $language): array
     {
         $recommandations = [];
         foreach ($offres as $offre) {
-            $recommandations[] = [
-                'name' => $offre->name(),
-                'url' => $offre->url,
-                'excerpt' => '',
-                'image' => $offre->firstImage(),
-                'tags' => $offre->tags,
-            ];
+            (new PostUtils)->tagsOffre($offre, $language);
+            $image = $offre->firstImage();
+            if (!$image) {
+                $image = get_template_directory_uri().'/assets/tartine/bg_home.jpg';
+            }
+            $item = new CommonItem(
+                $offre->codeCgt, $offre->name(), '', $image, $offre->url, $offre->tags
+            );
+            $recommandations[] = $item;
         }
 
         return $recommandations;
     }
 
-    /**
-     * @param Offre[] $offres
-     * @param int $categoryId
-     * @param string $language
-     * @return array
-     */
-    public function convertOffresToArray(array $offres, int $categoryId, string $language): array
+    public static function getImage(WP_Post $post): ?string
     {
-        return array_map(
-            function ($offre) use ($categoryId, $language) {
-                $url = RouterPivot::getUrlOffre($offre, $categoryId);
-                $name = $offre->nameByLanguage($language);
-                $description = null;
-                if ((is_countable($offre->descriptions) ? \count($offre->descriptions) : 0) > 0) {
-                    $tmp = $offre->descriptionsByLanguage($language);
-                    if (count($tmp) == 0) {
-                        $tmp = $offre->descriptions;
-                    }
-                    $description = $tmp[0]->value;
-                }
-                $this->tagsOffre($offre, $language);
-                $image = $offre->firstImage();
+        if (has_post_thumbnail($post)) {
+            $images = wp_get_attachment_image_src(get_post_thumbnail_id($post), 'original');
+            if ($images) {
+                return $images[0];
+            }
+        }
 
-                $data = [
-                    'id' => $offre->codeCgt,
-                    'url' => $url,
-                    'name' => $name,
-                    'locality' => $offre->adresse1->localiteByLanguage('fr'),
-                    'dateEvent' => $offre->dateEvent,
-                    'description' => $description,
-                    'tags' => $offre->tagsFormatted,
-                    'image' => $image,
-                ];
-
-                if ($offre->typeOffre->idTypeOffre == UrnTypeList::evenement()->typeId) {
-                    $data['dateEvent'] = $offre->dateEvent;
-                    if (!$offre->image) {
-                        $offre->image = get_template_directory_uri().'/assets/tartine/bg_home.jpg';
-                    }
-                }
-
-                return $data;
-
-            },
-            $offres
-        );
+        return null;
     }
 
     /**
@@ -149,13 +147,7 @@ class PostUtils
     {
         array_map(
             function ($offre) use ($categoryId, $language) {
-                $urlCat = get_category_link($categoryId);
                 $offre->url = RouterPivot::getUrlOffre($offre, $categoryId);
-                if (count($offre->images) == 0) {
-                    $offre->images = [get_template_directory_uri().'/assets/tartine/bg_home.jpg'];
-                }
-                $postUtils = new PostUtils();
-                $postUtils->tagsOffre($offre, $language);
             },
             $offres
         );

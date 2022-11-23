@@ -3,6 +3,7 @@
 namespace VisitMarche\ThemeTail\Lib;
 
 use AcMarche\Pivot\DependencyInjection\PivotContainer;
+use CommonItem;
 use VisitMarche\ThemeTail\Inc\Theme;
 use VisitMarche\ThemeTail\Lib\Elasticsearch\Data\ElasticData;
 use WP_Error;
@@ -73,6 +74,13 @@ class ApiData
         return rest_ensure_response($data);
     }
 
+    /**
+     * @param int $filtreSelected
+     * @param int $currentCategoryId
+     * @return array|CommonItem[]
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Psr\Cache\InvalidArgumentException
+     */
     private static function getOffres(int $filtreSelected, int $currentCategoryId): array
     {
         $offres = $filtres = [];
@@ -92,19 +100,17 @@ class ApiData
 
         if ([] !== $filtres) {
             if (in_array($currentCategoryId, Theme::CATEGORIES_AGENDA)) {
-                $offres = $wpRepository->getEvents(typeOffre:  $typeOffreSelected);
+                $offres = $wpRepository->getEvents(typeOffre: $typeOffreSelected);
             } else {
-                $offres = $wpRepository->getOffres($filtres,$currentCategoryId,$language);
+                $offres = $wpRepository->getOffres($filtres, $currentCategoryId, $language);
             }
         }
-
-        $offres = $postUtils->convertOffresToArray($offres, $currentCategoryId, $language);
-        //$posts = $wpRepository->getPostsByCatId($currentCategoryId);
+        PostUtils::setLinkOnOffres($offres, $currentCategoryId, $language);
+        $posts = $wpRepository->getPostsByCatId($currentCategoryId);
         //fusion offres et articles
-        //$posts = $postUtils->convertPostsToArray($posts);
+        $posts = $postUtils->convertPostsToArray($posts);
+        $offres = $postUtils->convertOffresToArray($offres, $currentCategoryId, $language);
 
-        return $offres;
-
-        //return array_merge($posts, $offres);
+        return [...$posts, ...$offres];
     }
 }
