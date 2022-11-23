@@ -96,12 +96,14 @@ class PostUtils
     {
         $tags = [];
         foreach ($offre->tags as $tag) {
+
             $tag->name = $tag->labelByLanguage($language);
             if ($urlCat) {
                 $tag->url = $urlCat.'?'.RouterPivot::PARAM_FILTRE.'='.$tag->urn;
             }
             $tags[] = $tag;
         }
+        //pour ne pas ecraser la valeur initiale
         $offre->tagsFormatted = $tags;
 
         return $tags;
@@ -125,6 +127,7 @@ class PostUtils
         }
 
         $post->tags = $tags;
+        $post->tagsFormatted = $tags;
 
         return $tags;
     }

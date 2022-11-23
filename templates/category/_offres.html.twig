@@ -14,7 +14,7 @@
                         {{ item.description|remove_html|u.truncate(170, '...') }}
                     </span>
                     <div class="text-cta-light my-1 flex gap-1 block font-montserrat-medium text-xs xl:text-base">
-                        {% for tag in item.tags|slice(0, 1) %}
+                        {% for tag in item.tags|slice(0, 2) %}
                             <span>{{ tag.name }}</span>
                         {% endfor %}
                     </div>

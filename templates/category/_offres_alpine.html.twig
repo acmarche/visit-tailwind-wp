@@ -17,7 +17,7 @@
                     </span>
                     </template>
                     <div class="text-cta-light my-1 flex gap-1 block font-montserrat-medium text-xs xl:text-base">
-                        <template x-for="tag in item.tags.slice(1,2)">
+                        <template x-for="tag in item.tags.slice(0,2)">
                             <span x-text="tag.name"></span>
                         </template>
                     </div>
