@@ -20,24 +20,25 @@ class GpxViewer
 
     public function renderWithPlugin(string $codeCgt, string $url): string
     {
-        $fileName = $codeCgt.'xml';
+        $fileName = $codeCgt.'.xml';
         $filePath = ABSPATH.$this->folder_gpx.$fileName;
         if (!$this->writeTmpFile($filePath, $url)) {
             $this->elevation($filePath);
         }
         $urlLocal = '/'.$this->folder_gpx.$fileName;
-        $gpx = gpx_view(array(
-                'src' => $urlLocal,
-                'name' => 'Gpx',
-                'color' => '#00ff00',
-                'width' => '5',
-                'distance_unit' => 'km',
-                "height_unit" => "m",
-                "step_min" => "10",
-                "icon_url" => RouterPivot::getUrlSite()."/wp-content/plugins/gpx-viewer/images/",
-                'download_button' => true,
-            )
-        );
+        $options = [
+            'src' => $urlLocal,
+            'name' => 'Gpx',
+            'color' => '#00ff00',
+            'width' => '5',
+            'distance_unit' => 'km',
+            "height_unit" => "m",
+            "step_min" => "10",
+            "icon_url" => RouterPivot::getUrlSite()."/wp-content/plugins/gpx-viewer/images/",
+            'download_button' => true,
+        ];
+
+        $gpx = gpx_view($options);
 
         return $gpx;
     }
