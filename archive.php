@@ -39,7 +39,6 @@ $category_order = get_term_meta($cat_ID, CategoryMetaBox::KEY_NAME_ORDER, true);
 if ('manual' === $category_order) {
     $posts = AcSort::getSortedItems($cat_ID, $posts);
 }
-
 $icone = $wpRepository->categoryIcone($category);
 $bgcat = $wpRepository->categoryBgColor($category);
 $image = $wpRepository->categoryImage($category);
@@ -76,12 +75,14 @@ if ([] !== $filtres) {
         $filtres = [$filtreTout, ...$filtres];
     }
     PostUtils::setLinkOnOffres($offres, $cat_ID, $language);
-    //fusion offres et articles
-    $postUtils = new PostUtils();
-    $posts = $postUtils->convertPostsToArray($posts);
-    $offres = $postUtils->convertOffresToArray($offres, $cat_ID, $language);
-    $offres = [...$posts, ...$offres];
 }
+//fusion offres et articles
+$postUtils = new PostUtils();
+$posts = $postUtils->convertPostsToArray($posts);
+
+$offres = $postUtils->convertOffresToArray($offres, $cat_ID, $language);
+$offres = [...$posts, ...$offres];
+
 Twig::rendPage(
     '@VisitTail/category.html.twig',
     [
@@ -99,7 +100,7 @@ Twig::rendPage(
         'categoryName' => $categoryName,
         'offres' => $offres,
         'bgcat' => $bgcat,
-        'countArticles' => count($offres)
+        'countArticles' => count($offres),
     ]
 );
 get_footer();
