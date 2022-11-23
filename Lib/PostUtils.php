@@ -4,7 +4,7 @@ namespace VisitMarche\ThemeTail\Lib;
 
 use AcMarche\Pivot\Entities\Offre\Offre;
 use AcMarche\Pivot\Spec\UrnTypeList;
-use CommonItem;
+use VisitMarche\ThemeTail\Entity\CommonItem;
 use WP_Post;
 
 class PostUtils

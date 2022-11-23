@@ -1,10 +1,12 @@
 <?php
 
+namespace VisitMarche\ThemeTail\Entity;
+
 use AcMarche\Pivot\Entities\Tag;
 
 class CommonItem
 {
-    public int $id = 0;
+    public ?string $id = null;
     public ?string $url = null;
     public ?string $name = null;
     public ?string $description = null;
@@ -17,8 +19,14 @@ class CommonItem
     public ?string $locality = null;
     public array $dateEvent = [];
 
-    public function __construct(int $id, string $name, ?string $description, ?string $image, ?string $url, array $tags)
-    {
+    public function __construct(
+        string $id,
+        string $name,
+        ?string $description,
+        ?string $image,
+        ?string $url,
+        array $tags
+    ) {
         $this->id = $id;
         $this->name = $name;
         $this->description = $description;
