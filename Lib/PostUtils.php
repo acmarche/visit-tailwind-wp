@@ -2,7 +2,9 @@
 
 namespace VisitMarche\ThemeTail\Lib;
 
+use AcMarche\Pivot\Entities\Label;
 use AcMarche\Pivot\Entities\Offre\Offre;
+use AcMarche\Pivot\Entities\Tag;
 use AcMarche\Pivot\Spec\UrnTypeList;
 use VisitMarche\ThemeTail\Entity\CommonItem;
 use WP_Post;
@@ -84,7 +86,13 @@ class PostUtils
         );
     }
 
-    public function tagsOffre(Offre $offre, string $language, ?string $urlCat = null)
+    /**
+     * @param Offre $offre
+     * @param string $language
+     * @param string|null $urlCat
+     * @return array|Tag[]
+     */
+    public function tagsOffre(Offre $offre, string $language, ?string $urlCat = null): array
     {
         $tags = [];
         foreach ($offre->tags as $tag) {
@@ -95,11 +103,30 @@ class PostUtils
             $tags[] = $tag;
         }
         $offre->tagsFormatted = $tags;
+
+        return $tags;
     }
 
-    public function tagsPost(WP_Post $post)
+    /**
+     * @param WP_Post $post
+     * @return array|Tag[]
+     */
+    public static function tagsPost(WP_Post $post): array
     {
-        $post->tags = $this->wpRepository->tagsOfPost($post->ID);
+        $tags = [];
+        foreach (get_the_category($post) as $category) {
+            $label = new Label();
+            $label->lang = 'fr';
+            $label->value = $category->name;
+            $tag = new Tag('urn', [$label]);
+            $tag->name = $category->name;
+            $tag->url = get_category_link($category);
+            $tags[] = $tag;
+        }
+
+        $post->tags = $tags;
+
+        return $tags;
     }
 
     /**

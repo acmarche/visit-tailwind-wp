@@ -33,21 +33,6 @@ class WpRepository
         return get_category_by_slug($slug);
     }
 
-    public function tagsOfPost(int $postId): array
-    {
-        $tags = [];
-        foreach (get_the_category($postId) as $category) {
-            $label = new Label();
-            $label->lang = 'fr';
-            $label->value = $category->name;
-            $tag = new Tag('urn', [$label]);
-            $tag->url = get_category_link($category);
-            $tags[] = $tag;
-        }
-
-        return $tags;
-    }
-
     /**
      * @param int $catId
      * @return WP_Post[]
@@ -142,7 +127,7 @@ class WpRepository
                 'excerpt' => $post->post_excerpt,
                 'url' => get_permalink($post->ID),
                 'image' => $image,
-                'tags' => self::tagsOfPost($post->ID),
+                'tags' => PostUtils::tagsPost($post),
             ];
         }
 

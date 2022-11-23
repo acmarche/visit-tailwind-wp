@@ -16,7 +16,7 @@ $currentCategory = get_category_by_slug($slugs[array_key_last($slugs)]);
 $urlBack = get_category_link($currentCategory);
 
 $bgcat = $wpRepository->categoryBgColor($currentCategory);
-$tags = $wpRepository->tagsOfPost($post->ID);
+$tags = PostUtils::tagsPost($post);
 
 $recommandations = $wpRepository->recommandationsByPost($post);
 $recommandations = array_slice($recommandations, 0, 3);
