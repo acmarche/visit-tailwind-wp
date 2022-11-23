@@ -85,18 +85,29 @@ class Twig
                 $variables,
             );
         } catch (LoaderError|RuntimeError|SyntaxError $e) {
+            $url = RouterPivot::getCurrentUrl();
+            $error = $e->getMessage();
+            if ($e->getLine()) {
+                $error .= $e->getLine();
+            }
+            if ($e->getFile()) {
+                $error .= $e->getFile();
+            }
+            Mailer::sendError('Error page: '.$templatePath, $url.' \n '.$error);
             echo $twig->render(
                 '@VisitTail/errors/500.html.twig',
                 [
                     'message' => $e->getMessage()." ligne ".$e->getLine()." file ".$e->getFile(),
                     'error' => $e,
                     'name' => "La page n'a pas pu être chargée",
-                    'tags' => [],
-                    'relations' => [],
+                    'excerpt' => null,
+                    'image' => get_template_directory_uri().'/assets/images/error500.jpg',
+                    'urlBack' => '/',
+                    'imagePosition' => 'bottom center',
+                    'categoryName' => 'Accueil',
+                    'nameBack' => 'Acceuil',
                 ]
             );
-            $url = RouterPivot::getCurrentUrl();
-            Mailer::sendError('Error page: '.$templatePath, $url.' \n '.$e->getMessage());
         }
     }
 
