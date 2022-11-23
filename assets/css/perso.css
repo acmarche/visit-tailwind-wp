@@ -1,0 +1,12 @@
+.flicki2ty-viewport {
+  height: 500px !important;
+}
+.carous2el img {
+  display: block;
+  height: 200px;
+}
+@media screen and ( min-width: 768px ) {
+  .carous2el img {
+    height: 400px;
+  }
+}

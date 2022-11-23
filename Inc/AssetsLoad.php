@@ -9,6 +9,7 @@ class AssetsLoad
         add_action('wp_enqueue_scripts', fn() => $this->mainAssets());
         add_action('wp_enqueue_scripts', fn() => $this->leaflet());
         add_action('wp_enqueue_scripts', fn() => $this->leafletElevation());
+        add_action('wp_enqueue_scripts', fn() => $this->slider());
         add_filter('script_loader_tag', fn($tag, $handle, $src) => $this->addAsModule($tag, $handle, $src), 10, 3);
         add_filter('script_loader_tag', fn($tag, $handle, $src) => $this->addDefer($tag, $handle, $src), 10, 3);
     }
@@ -18,6 +19,11 @@ class AssetsLoad
         wp_enqueue_style(
             'visitmarche-css',
             get_template_directory_uri().'/assets/visit.css',
+        );
+
+        wp_enqueue_style(
+            'visitmarche-perso-css',
+            get_template_directory_uri().'/assets/css/perso.css',
         );
 
         wp_enqueue_script(
@@ -101,6 +107,22 @@ class AssetsLoad
         );
     }
 
+    function slider() {
+
+        wp_enqueue_script(
+            'slider-flickity-js',
+            'https://unpkg.com/flickity@2/dist/flickity.pkgd.min.js',
+            [],
+            false,
+            false
+        );
+        wp_enqueue_style(
+            'flickity-css',
+            'https://unpkg.com/flickity@2/dist/flickity.min.css',
+        );
+
+    }
+
     /**
      * Pour vue
      * @param $tag
@@ -119,7 +141,7 @@ class AssetsLoad
 
     function addDefer($tag, $handle, $src)
     {
-        if (!in_array($handle, ['alpine-js', 'menuMobile-js', 'searchXl-js', 'refreshOffres-js', 'share-js'])) {
+        if (!in_array($handle, ['alpine-js', 'menuMobile-js', 'searchXl-js', 'refreshOffres-js', 'share-js','slider-js'])) {
             return $tag;
         }
 
