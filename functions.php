@@ -21,7 +21,7 @@ use VisitMarche\ThemeTail\Lib\RouterPivot;
  * Template sf
  */
 if (WP_DEBUG === false) {
-  //  HtmlErrorRenderer::setTemplate(get_template_directory().'/error500.php');
+    HtmlErrorRenderer::setTemplate(get_template_directory().'/error500.php');
 } else {
     Debug::enable();
 }
@@ -73,3 +73,7 @@ new AdminBar();
  * Ajax for admin
  */
 new Ajax();
+/**
+ * Gpx viewer
+ */
+new ShortCodes();
