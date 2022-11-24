@@ -1,4 +1,4 @@
-<div class="grid grid-cols-[20rem,1fr]">
+<div class="grid grid-cols-1 xl:grid-cols-[20rem,1fr] gap-2">
     {% for classement in offre.classements %}
         <span class="font-montserrat-semi-bold text-cta-dark">
                 {{ classement.urnDefinition.labelByLanguage(locale) }}
