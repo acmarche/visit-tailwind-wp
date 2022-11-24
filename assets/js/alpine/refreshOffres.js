@@ -5,9 +5,14 @@ document.addEventListener('alpine:init', () => {
             language: '',
             isLoading: false,
             offres: [],
-            async initOffres(categoryId) {
+            async initOffres(categoryId, language) {
                 this.isLoading = true
+                this.language = language
                 this.currentCategory = categoryId
+                //pour mode dev
+                //if (this.language === 'fr')
+                //    this.language = ''
+                console.log(this.language)
                 this.launchRefresh(null)
             },
             async changeOffres(f) {
@@ -20,7 +25,7 @@ document.addEventListener('alpine:init', () => {
                 if (e !== null) {
                     this.filtreSelected = e.target.dataset.filtre
                 }
-                const url = `https://visitmarche.be/${this.language}/wp-json/pivot/offres/${this.currentCategory}/${this.filtreSelected}`;
+                const url = `https://visit.marche.be/${this.language}/wp-json/pivot/offres/${this.currentCategory}/${this.filtreSelected}`;
                 console.log(url)
                 this.offres = await fetch(url)
                     .then(function (response) {

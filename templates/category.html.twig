@@ -1,7 +1,7 @@
 {% include '@VisitTail/article/_header_article.html.twig' %}
 {% include '@VisitTail/article/_cadre.html.twig' %}
 <main class="container px-4 mt-2 xl:mt-4 mx-auto mb-8"
-      x-data="refreshOffres" x-init="initOffres({{ category.cat_ID }})">
+      x-data="refreshOffres" x-init="initOffres({{ category.cat_ID}},'{{ locale }}')">
     {% include '@VisitTail/category/_children.html.twig' %}
     {% include '@VisitTail/category/_filtres.html.twig' %}
     {% if countArticles > 0 %}

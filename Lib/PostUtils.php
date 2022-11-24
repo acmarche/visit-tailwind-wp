@@ -56,7 +56,7 @@ class PostUtils
                 if ((is_countable($offre->descriptions) ? \count($offre->descriptions) : 0) > 0) {
                     $tmp = $offre->descriptionsByLanguage($language);
                     if (count($tmp) == 0) {
-                        $tmp = $offre->descriptions;
+                        $tmp = $offre->descriptionsByLanguage();//force fr
                     }
                     $description = $tmp[0]->value;
                 }
