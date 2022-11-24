@@ -20,6 +20,7 @@
         </aside>
     </article>
     {% if gpxMap != null %}
+        {% include '@VisitTail/offre/_gpx_appli.html.twig' %}
         {% include '@VisitTail/map/_gpx.html.twig' %}
         {% include '@VisitTail/map/_pois.html.twig' %}
     {% else %}
