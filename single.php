@@ -2,6 +2,7 @@
 
 namespace VisitMarche\ThemeTail;
 
+use VisitMarche\ThemeTail\Inc\AssetsLoad;
 use VisitMarche\ThemeTail\Lib\PostUtils;
 use VisitMarche\ThemeTail\Lib\Twig;
 use VisitMarche\ThemeTail\Lib\WpRepository;
@@ -26,6 +27,11 @@ $content = apply_filters('the_content', $content);
 $content = str_replace(']]>', ']]&gt;', $content);
 
 $nameBack = $currentCategory->name;
+
+if (preg_match('#gpx_viewer#', $post->post_content)) {
+   AssetsLoad::enqueueLeaflet();
+   AssetsLoad::enqueueElevation();
+}
 
 get_header();
 Twig::rendPage(
