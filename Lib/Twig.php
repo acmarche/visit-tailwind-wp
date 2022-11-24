@@ -6,6 +6,7 @@ use AcMarche\Pivot\DependencyInjection\PivotContainer;
 use AcMarche\Pivot\Entities\Offre\Offre;
 use AcMarche\Pivot\Entities\Specification\SpecData;
 use AcMarche\Pivot\Spec\SpecTypeEnum;
+use AcMarche\Pivot\Utils\UrnToSkip;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\String\UnicodeString;
@@ -300,15 +301,7 @@ class Twig
         return new TwigFilter(
             'pivot_check_display',
             function (SpecData $specData): bool {
-                $useless = array(
-                    'urn:val:class:michstar:nc',
-                    'urn:val:class:michfour:nc',
-                    'urn:val:class:gaultmiltoq:nc',
-                    'urn:fld:attestincendie:dateech',
-                    'urn:fld:idautor',
-                    'urn:fld:dateech',
-                );
-                if (in_array($specData->urn, $useless)) {
+                if (in_array($specData->urn, UrnToSkip::urns)) {
                     return false;
                 }
                 $language = LocaleHelper::getSelectedLanguage();

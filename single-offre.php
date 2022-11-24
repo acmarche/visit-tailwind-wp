@@ -64,7 +64,7 @@ foreach ($offre->pois as $poi) {
 $gpxMap = null;
 if (count($offre->gpxs) > 0) {
     $gpxViewer = new GpxViewer();
-    $gpxMap = $gpxViewer->renderWithPlugin($offre->codeCgt, $offre->gpxs[0]->url);
+    $gpxMap = $gpxViewer->renderWithPlugin($offre, $offre->gpxs[0]);
 }
 $specs = $wpRepository->groupSpecifications($offre);
 Twig::rendPage(
