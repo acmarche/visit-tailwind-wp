@@ -2,6 +2,8 @@
 
 namespace VisitMarche\ThemeTail\Lib;
 
+use AcMarche\Pivot\Entities\Offre\Offre;
+use AcMarche\Pivot\Entities\Specification\Gpx;
 use Exception;
 use phpGPX\Models\Point;
 use phpGPX\phpGPX;
@@ -16,13 +18,13 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 class GpxViewer
 {
-    private string $folder_gpx = 'var/gpx/';
+    public string $folder_gpx = 'var/gpx/';
 
-    public function renderWithPlugin(string $codeCgt, string $url): string
+    public function renderWithPlugin(Offre $offre, Gpx $gpx): string
     {
-        $fileName = $codeCgt.'.xml';
+        $fileName = $gpx->codeCgt.'.'.phpGPX::XML_FORMAT;
         $filePath = ABSPATH.$this->folder_gpx.$fileName;
-        if (!$this->writeTmpFile($filePath, $url)) {
+        if (!$this->writeTmpFile($filePath, $gpx->url)) {
             $this->elevation($filePath);
         }
         $urlLocal = '/'.$this->folder_gpx.$fileName;
@@ -45,10 +47,10 @@ class GpxViewer
 
     public function elevation(string $pathName)
     {
-        $gpx = new phpGPX();
-        $file = $gpx->load($pathName);
+        $phpGPX = new phpGPX();
+        $fileGpx = $phpGPX->load($pathName);
         $locations = [];
-        foreach ($file->tracks as $track) {
+        foreach ($fileGpx->tracks as $track) {
             // Statistics for whole track
             $stats = $track->stats;
             foreach ($track->segments as $segment) {
@@ -60,18 +62,38 @@ class GpxViewer
         }
         $elevationsString = $this->requestElevation($locations);
         $elevations = json_decode($elevationsString);
+        $elevationOk = false;
 
-        foreach ($file->tracks as $track) {
+        foreach ($fileGpx->tracks as $track) {
             // Statistics for whole track
             $stats = $track->stats;
             foreach ($track->segments as $segment) {
                 // Statistics for segment of track
                 foreach ($segment->getPoints() as $point) {
-                    $this->findSegment($point, $elevations->results);
+                    $elevationOk = $this->findSegment($point, $elevations->results);
                 }
             }
         }
-        $file->save($pathName, phpGPX::XML_FORMAT);
+        $fileGpx->metadata->description = htmlentities($fileGpx->metadata->description);
+        $fileGpx->metadata->author->name = htmlentities($fileGpx->metadata->author->name);
+
+        if ($elevationOk) {
+            $fileGpx->save($pathName, phpGPX::XML_FORMAT);
+        }
+    }
+
+    private function isXmlValid(string $value): bool
+    {
+        $prev = libxml_use_internal_errors(true);
+        $doc = simplexml_load_string($value);
+        $errors = libxml_get_errors();
+        foreach ($errors as $error) {
+            dump($error);
+        }
+        libxml_clear_errors();
+        libxml_use_internal_errors($prev);
+
+        return false !== $doc && empty($errors);
     }
 
     private function findSegment(Point $point, array $elevations): bool
