@@ -3,9 +3,7 @@
 namespace VisitMarche\ThemeTail\Lib;
 
 use AcMarche\Pivot\DependencyInjection\PivotContainer;
-use AcMarche\Pivot\Entities\Label;
 use AcMarche\Pivot\Entities\Offre\Offre;
-use AcMarche\Pivot\Entities\Tag;
 use AcMarche\Pivot\Entity\TypeOffre;
 use AcMarche\Pivot\Entity\UrnDefinitionEntity;
 use AcMarche\Pivot\Spec\UrnList;

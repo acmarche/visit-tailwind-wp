@@ -55,7 +55,9 @@ class PivotCategoriesTable extends WP_List_Table
         $categoryFiltres = PivotMetaBox::getMetaPivotTypesOffre($item->term_id);
         $urns = [];
         foreach ($categoryFiltres as $data) {
-            $urns[] = $data['urn'];
+            if (isset($data['urn'])) {
+                $urns[] = $data['urn'];
+            }
         }
 
         return join(',', $urns);

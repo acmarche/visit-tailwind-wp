@@ -4,8 +4,8 @@ namespace VisitMarche\ThemeTail\Inc;
 
 use AcMarche\Pivot\DependencyInjection\PivotContainer;
 use VisitMarche\ThemeTail\Lib\PivotCategoriesTable;
+use VisitMarche\ThemeTail\Lib\SyncPivot;
 use VisitMarche\ThemeTail\Lib\Twig;
-use VisitMarche\ThemeTail\Lib\WpRepository;
 
 class AdminPage
 {
@@ -74,17 +74,10 @@ class AdminPage
 
     private static function categoriesFiltresRender()
     {
-        $categories = [];
-        $wpRepository = new WpRepository();
-        foreach ($wpRepository->getCategoriesFromWp() as $category) {
-            $filtres = $wpRepository->getCategoryFilters($category->term_id, false, false);
-            if (count($filtres) > 0) {
-                $categories[] = $category;
-            } else {
-                $categoryFiltres = PivotMetaBox::getMetaPivotTypesOffre($category->term_id);
-                $categories[] = $category;
-            }
-        }
+        $syncPivot = new SyncPivot();
+        $syncPivot->cleanFiltres();
+        $syncPivot->syncUrns();
+        $categories = $syncPivot->categoriesWithFiltre();
         $pivotOffresTable = new PivotCategoriesTable();
         $pivotOffresTable->data = $categories;
         ?>
