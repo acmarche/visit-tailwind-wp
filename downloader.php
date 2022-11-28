@@ -1,10 +1,7 @@
 <?php
 namespace VisitMarche\ThemeTail;
 
-    echo 'File not found';
-
 use phpGPX\phpGPX;
-use Symfony\Component\ErrorHandler\Debug;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
@@ -13,8 +10,6 @@ define('ABSPATH', dirname(__DIR__).'/../../../');//ovh
 
 require_once ABSPATH.'vendor/autoload.php';
 
-    return;
-Debug::enable();
 $codeCgt = $_GET['codecgt'];
 $filePath = ABSPATH.'var/gpx/'.$codeCgt.'.'.phpGPX::XML_FORMAT;
 if (is_readable($filePath)) {
