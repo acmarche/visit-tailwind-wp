@@ -51,28 +51,6 @@ class Searcher
     }
 
     /**
-     * @throws \Exception
-     */
-    public function dump(): bool|string
-    {
-        $url = 'https://www.hotton.be/';
-
-        try {
-            $response = $this->httpClient->request(
-                'GET',
-                $url, [
-                    'timeout' => 2.5,
-                ]
-            );
-
-            return $response->getContent();
-        } catch (ClientException|ClientExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface|TransportExceptionInterface $exception) {
-            Mailer::sendError('search', 'erreur '.$exception->getMessage());
-            throw  new \Exception($exception->getMessage(), $exception->getCode(), $exception);
-        }
-    }
-
-    /**
      * @param string $wp_query
      *
      * @return ResultSet
