@@ -9,12 +9,18 @@ $searcher = new Searcher();
 $keyword = get_search_query();
 $hits = [];
 if ($keyword) {
-    $results = $searcher->searchFromWww($keyword);
-    $hits = json_decode($results, null, 512, JSON_THROW_ON_ERROR);
+    try {
+
+        $results = $searcher->searchFromWww($keyword);
+        dump($results);
+        $hits = json_decode($results, null, 512, JSON_THROW_ON_ERROR);
+    } catch (Exception $exception) {
+        Mailer::sendError('visit error search', $exception->getMessage());
+    }
 }
 if (isset($hits['error'])) {
     Twig::rend500Page();
-    Mailer::sendError('wp error search', $hits['error']);
+    Mailer::sendError('visit error search', $hits['error']);
     get_footer();
 
     return;
