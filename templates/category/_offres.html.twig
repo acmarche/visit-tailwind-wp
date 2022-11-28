@@ -13,7 +13,7 @@
                     <span class="text-caractere text-sm font-montserrat-light">
                         {{ item.description|remove_html|u.truncate(170, '...') }}
                     </span>
-                    <div class="text-cta-light my-1 flex gap-1 block font-montserrat-medium text-xs xl:text-base">
+                    <div class="text-cta-light my-1 flex gap-1 block font-montserrat-light text-xs">
                         {% for tag in item.tags|slice(0, 2) %}
                             <span>{{ tag.name }}</span>
                         {% endfor %}
