@@ -39,7 +39,7 @@ class Searcher
             $response = $this->httpClient->request(
                 'GET',
                 $url, [
-
+                    'timeout' => 2.5,
                 ]
             );
 
