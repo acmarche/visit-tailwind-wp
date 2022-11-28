@@ -3,9 +3,10 @@
 namespace VisitMarche\ThemeTail;
 
 use phpGPX\phpGPX;
+use Symfony\Component\ErrorHandler\Debug;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
-
+Debug::enable();
 define('ABSPATH', dirname(__DIR__).'/../../');
 require_once ABSPATH.'vendor/autoload.php';
 
