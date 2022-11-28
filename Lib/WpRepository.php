@@ -98,7 +98,7 @@ class WpRepository
         return $children;
     }
 
-    private function getSamePosts(int $postId): array
+    public function getSamePosts(int $postId): array
     {
         $categories = get_the_category($postId);
         $args = [
@@ -331,7 +331,7 @@ class WpRepository
         if (0 === \count($recommandations)) {
             $searcher = new Searcher();
             global $wp_query;
-            $recommandations = $searcher->searchRecommandations($wp_query);
+           // $recommandations = $searcher->searchRecommandations($wp_query);
         }
 
         return $recommandations;
