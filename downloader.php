@@ -13,7 +13,6 @@ require_once ABSPATH.'vendor/autoload.php';
 
 $codeCgt = $_GET['codecgt'];
 $filePath = PATHGPX.'var/gpx/'.$codeCgt.'.'.phpGPX::XML_FORMAT;
-var_dump($filePath);
 
 if (is_readable($filePath)) {
     $response = new BinaryFileResponse($filePath);
