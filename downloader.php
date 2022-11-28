@@ -7,7 +7,9 @@ use Symfony\Component\ErrorHandler\Debug;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 Debug::enable();
+
 define('ABSPATH', dirname(__DIR__).'/../../');
+dd(ABSPATH);
 require_once ABSPATH.'vendor/autoload.php';
 
 $codeCgt = $_GET['codecgt'];
