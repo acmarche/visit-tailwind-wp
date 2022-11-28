@@ -10,7 +10,6 @@ $keyword = get_search_query();
 $hits = [];
 if ($keyword) {
     try {
-
         $results = $searcher->searchFromWww($keyword);
         dump($results);
         $hits = json_decode($results, null, 512, JSON_THROW_ON_ERROR);
