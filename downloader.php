@@ -7,8 +7,10 @@ use phpGPX\phpGPX;
 use Symfony\Component\ErrorHandler\Debug;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
-    return;
+
 define('ABSPATH', dirname(__DIR__).'/../../');
+
+return;
 dd(ABSPATH);
 require_once ABSPATH.'vendor/autoload.php';
 
