@@ -8,6 +8,8 @@ get_header();
 $searcher = new Searcher();
 $keyword = get_search_query();
 $hits = [];
+
+dump($results = $searcher->searchFromWww($keyword));
 if ($keyword) {
     try {
         $results = $searcher->searchFromWww($keyword);
