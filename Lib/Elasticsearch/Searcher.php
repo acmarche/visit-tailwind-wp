@@ -55,7 +55,7 @@ class Searcher
      */
     public function dump(): bool|string
     {
-        $url = 'https://cst.marche.be/';
+        $url = 'https://www.hotton.be/';
 
         try {
             $response = $this->httpClient->request(
