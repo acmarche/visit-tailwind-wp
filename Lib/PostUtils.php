@@ -11,13 +11,6 @@ use WP_Post;
 
 class PostUtils
 {
-    private WpRepository $wpRepository;
-
-    public function __construct()
-    {
-        $this->wpRepository = new WpRepository();
-    }
-
     /**
      * @param WP_Post[] $posts
      * @return array|CommonItem[]
