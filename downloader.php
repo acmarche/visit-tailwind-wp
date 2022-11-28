@@ -7,11 +7,12 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 //define('ABSPATH', dirname(__DIR__).'/../../');//local
 define('ABSPATH', dirname(__DIR__).'/../../../');//ovh
+define('PATHGPX', dirname(__DIR__).'/../../');//ovh
 
 require_once ABSPATH.'vendor/autoload.php';
 
 $codeCgt = $_GET['codecgt'];
-$filePath = ABSPATH.'var/gpx/'.$codeCgt.'.'.phpGPX::XML_FORMAT;
+$filePath = PATHGPX.'var/gpx/'.$codeCgt.'.'.phpGPX::XML_FORMAT;
 if (is_readable($filePath)) {
     $response = new BinaryFileResponse($filePath);
     $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT);
