@@ -19,6 +19,8 @@ if ($keyword) {
         Twig::rend500Page();
         Mailer::sendError('visit error search', $exception->getMessage());
         get_footer();
+
+        return;
     }
 }
 if (isset($hits['error'])) {
