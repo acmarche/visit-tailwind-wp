@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 define('ABSPATH', dirname(__DIR__).'/../../');
-
+var_dump(ABSPATH);
 return;
 dd(ABSPATH);
 require_once ABSPATH.'vendor/autoload.php';
