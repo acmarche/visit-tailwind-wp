@@ -1,13 +1,13 @@
 <?php
 namespace VisitMarche\ThemeTail;
 
-    echo 'File not found';   return;
+    echo 'File not found';
 
 use phpGPX\phpGPX;
 use Symfony\Component\ErrorHandler\Debug;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
-
+    return;
 define('ABSPATH', dirname(__DIR__).'/../../');
 dd(ABSPATH);
 require_once ABSPATH.'vendor/autoload.php';
