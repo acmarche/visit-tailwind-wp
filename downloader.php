@@ -20,5 +20,5 @@ if (is_readable($filePath)) {
 
     return $response->send();
 } else {
-    echo 'File not found2';
+    echo 'File not found';
 }
