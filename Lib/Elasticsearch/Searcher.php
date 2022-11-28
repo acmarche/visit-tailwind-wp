@@ -55,7 +55,7 @@ class Searcher
      */
     public function dump(): bool|string
     {
-        $url = 'https://www.marche.be/api/actus.php';
+        $url = 'https://cst.marche.be/';
 
         try {
             $response = $this->httpClient->request(
