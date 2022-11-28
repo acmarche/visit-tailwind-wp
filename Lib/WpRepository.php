@@ -331,7 +331,7 @@ class WpRepository
         if (0 === \count($recommandations)) {
             $searcher = new Searcher();
             global $wp_query;
-           // $recommandations = $searcher->searchRecommandations($wp_query);
+            $recommandations = $searcher->searchRecommandations($wp_query);
         }
 
         return $recommandations;
