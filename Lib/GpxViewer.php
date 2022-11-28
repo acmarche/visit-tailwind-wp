@@ -32,11 +32,11 @@ class GpxViewer
         $options = [
             'src' => $urlLocal,
             'name' => 'Gpx',
-            'color' => '#00ff00',
-            'width' => '5',
+            'color' => '#fd8383',
+            'width' => '3',
             'distance_unit' => 'km',
             "height_unit" => "m",
-            "step_min" => "10",
+            "step_min" => "300",
             "icon_url" => RouterPivot::getUrlSite()."/wp-content/plugins/gpx-viewer/images/",
             'download_button' => true,
         ];
