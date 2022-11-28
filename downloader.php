@@ -8,12 +8,12 @@ use Symfony\Component\ErrorHandler\Debug;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
-define('ABSPATH', dirname(__DIR__).'/../../');
-var_dump(ABSPATH);
-return;
-dd(ABSPATH);
+//define('ABSPATH', dirname(__DIR__).'/../../');//local
+define('ABSPATH', dirname(__DIR__).'/../../../');//ovh
+
 require_once ABSPATH.'vendor/autoload.php';
 
+    return;
 Debug::enable();
 $codeCgt = $_GET['codecgt'];
 $filePath = ABSPATH.'var/gpx/'.$codeCgt.'.'.phpGPX::XML_FORMAT;
