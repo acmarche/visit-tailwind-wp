@@ -9,7 +9,7 @@ $searcher = new Searcher();
 $keyword = get_search_query();
 $hits = [];
 
-dump($results = $searcher->searchFromWww($keyword));
+dump($results = $searcher->dump());
 if ($keyword) {
     try {
         $results = $searcher->searchFromWww($keyword);
