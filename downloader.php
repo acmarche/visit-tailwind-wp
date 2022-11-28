@@ -13,12 +13,13 @@ require_once ABSPATH.'vendor/autoload.php';
 
 $codeCgt = $_GET['codecgt'];
 $filePath = PATHGPX.'var/gpx/'.$codeCgt.'.'.phpGPX::XML_FORMAT;
-var_dump(PATHGPX.'var/gpx/'.$codeCgt.'.'.phpGPX::XML_FORMAT);
+var_dump($filePath);
+
 if (is_readable($filePath)) {
     $response = new BinaryFileResponse($filePath);
     $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT);
 
     return $response->send();
 } else {
-    echo 'File not found';
+    echo 'File not found2';
 }
