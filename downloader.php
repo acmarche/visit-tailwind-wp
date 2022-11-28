@@ -1,6 +1,7 @@
 <?php
 
-namespace VisitMarche\ThemeTail;
+    echo 'File not found';   return;
+
 
 use phpGPX\phpGPX;
 use Symfony\Component\ErrorHandler\Debug;
