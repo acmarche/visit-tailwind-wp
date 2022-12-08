@@ -6,6 +6,7 @@ use AcMarche\Pivot\DependencyInjection\PivotContainer;
 use AcMarche\Pivot\Entity\TypeOffre;
 use AcSort;
 use Psr\Cache\InvalidArgumentException;
+use Symfony\Component\HttpFoundation\Request;
 use VisitMarche\ThemeTail\Inc\CategoryMetaBox;
 use VisitMarche\ThemeTail\Lib\LocaleHelper;
 use VisitMarche\ThemeTail\Lib\PostUtils;
@@ -46,7 +47,8 @@ $image = $wpRepository->categoryImage($category);
 $children = $wpRepository->getChildrenOfCategory($category->cat_ID);
 $offres = [];
 
-$filterSelected = $_GET[RouterPivot::PARAM_FILTRE] ?? null;
+$request = Request::createFromGlobals();
+$filterSelected = $request->get(RouterPivot::PARAM_FILTRE, null);
 
 if ($filterSelected) {
     $filterSelected = htmlentities($filterSelected);
