@@ -125,6 +125,7 @@ class GpxViewer
                 'POST',
                 $url, [
                     'body' => $data,
+                    'timeout' => 2.5,
                 ]
             );
 
