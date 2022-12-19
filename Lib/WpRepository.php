@@ -352,12 +352,18 @@ class WpRepository
             PostUtils::setLinkOnOffres($offres, $category->term_id, $language);
             $recommandations = PostUtils::convertRecommandationsToArray($offres, $language);
             $count = count($recommandations);
+            $data = [];
+
+            if ($count === 0) {
+                return $data;
+            }
 
             if ($count > 3) {
                 $count = 3;
             }
+
             $keys = array_rand($recommandations, $count);
-            $data = [];
+
             foreach ($keys as $key) {
                 $data[] = $recommandations[$key];
             }
