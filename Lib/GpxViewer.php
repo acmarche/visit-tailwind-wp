@@ -61,10 +61,8 @@ class GpxViewer
                 }
             }
         }
-        $locations = $this->requestElevations($locations);
-        echo json_encode($locations);
-        dd($locations);
-        $elevations = json_decode($elevationsString);
+        //$locations = $this->requestElevations($locations);
+        $elevations = $this->requestElevations($locations);
         $elevationOk = false;
 
         foreach ($fileGpx->tracks as $track) {
@@ -73,7 +71,7 @@ class GpxViewer
             foreach ($track->segments as $segment) {
                 // Statistics for segment of track
                 foreach ($segment->getPoints() as $point) {
-                    $elevationOk = $this->findSegment($point, $elevations->results);
+                    $elevationOk = $this->findSegment($point, $elevations);
                 }
             }
         }
@@ -102,8 +100,8 @@ class GpxViewer
     private function findSegment(Point $point, array $elevations): bool
     {
         foreach ($elevations as $elevation) {
-            if ($elevation->latitude === $point->latitude && $elevation->longitude == $point->longitude) {
-                $point->elevation = $elevation->elevation;
+            if ($elevation['latitude'] === $point->latitude && $elevation['longitude'] == $point->longitude) {
+                $point->elevation = $elevation['elevation'];
 
                 return true;
             }
@@ -114,7 +112,7 @@ class GpxViewer
 
     public function requestElevations(array $locations): array
     {
-        $urlBase = 'https://api.opentopodata.org/v1/test-dataset';
+        $urlBase = 'https://api.opentopodata.org/v1/eudem25m';
         $headers = [
             'headers' => ['Accept' => 'application/json', 'Content-Type' => 'application/json'],
         ];
