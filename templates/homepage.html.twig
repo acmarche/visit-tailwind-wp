@@ -3,7 +3,8 @@ ajour aussi dans le head prefetch de l'url d'img de fond
 <link rel="prefetch" href="hero.jpg" as="image">
 -->
 <main>
-    <div class="bg-home-img bg-no-repeat bg-cover bg-center h-[50rem]">
+    <div class="bg-home-img bg-no-repeat bg-cover bg-center h-[50rem]"
+    style="background-image: url('/wp-content/themes/visittail/assets/images/bg/{{ bgimg }}');">
         <div class="relative bg-home-color pt-4 xl:py-24 h-full">
             <div class="flex flex-col justify-center items-center w-full pt-60">
                 {% include '@VisitTail/homepage/_search_home.html.twig' %}

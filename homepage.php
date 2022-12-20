@@ -43,6 +43,20 @@ $inspirations = array_slice($inspirations, 0, 4);
 $events = array_slice($events, 0, 4);
 $menu = new Menu();
 $icones = $menu->getIcones();
+$imgs = [
+    'home_ville2.jpg',
+    '201114DJI_0750.jpg',
+    '210911Chateau Hargimont HDR.jpg',
+    '210911Paysage matinal HDR.jpg',
+    '220213220213DJI_0057.jpg',
+    '221125221112DJI_0037.jpg',
+    '201114DJI_affinity0741.jpg',
+    '210911DJI_0563.jpg',
+    '220115DJI_0385 (2).jpg',
+    '220305DJI_0135-HDR.jpg',
+];
+$img = array_rand($imgs);
+$bgImg = $imgs[$img];
 
 Twig::rendPage(
     '@VisitTail/homepage.html.twig',
@@ -53,6 +67,7 @@ Twig::rendPage(
         'urlInspiration' => $urlInspiration,
         'intro' => $intro,
         'icones' => $icones,
+        'bgimg' => $bgImg,
     ]
 );
 get_footer();
