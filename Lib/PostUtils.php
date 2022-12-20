@@ -4,6 +4,7 @@ namespace VisitMarche\ThemeTail\Lib;
 
 use AcMarche\Pivot\Entities\Label;
 use AcMarche\Pivot\Entities\Offre\Offre;
+use AcMarche\Pivot\Entities\Specification\SpecData;
 use AcMarche\Pivot\Entities\Tag;
 use AcMarche\Pivot\Spec\UrnTypeList;
 use VisitMarche\ThemeTail\Entity\CommonItem;
@@ -51,8 +52,9 @@ class PostUtils
                     if (count($tmp) == 0) {
                         $tmp = [$offre->descriptionsByLanguage()];//force fr
                     }
-                    dump($tmp);
-                    $description = $tmp[0]['value'];
+                    if ($tmp[0] instanceof SpecData) {
+                        $description = $tmp[0]->value;
+                    }
                 }
                 $this->tagsOffre($offre, $language);
                 $image = $offre->firstImage();
