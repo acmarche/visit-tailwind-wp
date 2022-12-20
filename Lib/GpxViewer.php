@@ -61,7 +61,9 @@ class GpxViewer
                 }
             }
         }
-        $elevationsString = $this->requestElevation($locations);
+        $locations = $this->requestElevations($locations);
+        echo json_encode($locations);
+        dd($locations);
         $elevations = json_decode($elevationsString);
         $elevationOk = false;
 
@@ -110,7 +112,91 @@ class GpxViewer
         return false;
     }
 
-    public function requestElevation(array $locations): string
+    public function requestElevations(array $locations): array
+    {
+        $urlBase = 'https://api.opentopodata.org/v1/test-dataset';
+        $headers = [
+            'headers' => ['Accept' => 'application/json', 'Content-Type' => 'application/json'],
+        ];
+        $httpClient = HttpClient::createForBaseUri($urlBase, $headers);
+
+        foreach ($locations as $key => $location) {
+            try {
+                $elevationsString = $this->requestElevation($httpClient, $urlBase, $location);
+                if ($result = json_decode($elevationsString)) {
+                    if ($result->status == 'OK') {
+                        $location['elevation'] = $result->results[0]->elevation;
+                    }
+                } else {
+                    $location['elevation'] = 0;
+                }
+            } catch (Exception $e) {
+                dump($e);
+                $location['elevation'] = 0;
+            }
+            $locations[$key] = $location;
+        }
+
+        return $locations;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function requestElevation($httpClient, $urlBase, array $location): string
+    {
+        try {
+            $response = $httpClient->request(
+                'GET',
+                $urlBase, [
+                    'query' => [
+                        'locations' => $location['latitude'].','.$location['longitude'],
+                    ],
+                    'timeout' => 2.5,
+                ]
+            );
+
+            return $response->getContent();
+        } catch (ClientException|ClientExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface|TransportExceptionInterface $exception) {
+            Mailer::sendError('elevation', 'el '.$exception->getMessage());
+            throw  new Exception($exception->getMessage(), $exception->getCode(), $exception);
+        }
+    }
+
+    /**
+     * Calculates the great-circle distance between two points, with
+     * the Vincenty formula.
+     * @param float $latitudeFrom Latitude of start point in [deg decimal]
+     * @param float $longitudeFrom Longitude of start point in [deg decimal]
+     * @param float $latitudeTo Latitude of target point in [deg decimal]
+     * @param float $longitudeTo Longitude of target point in [deg decimal]
+     * @param float $earthRadius Mean earth radius in [m]
+     * @return float Distance between points in [m] (same as earthRadius)
+     */
+    private function vincentyGreatCircleDistance(
+        $latitudeFrom,
+        $longitudeFrom,
+        $latitudeTo,
+        $longitudeTo,
+        $earthRadius = 6371000
+    ) {
+        // convert from degrees to radians
+        $latFrom = deg2rad($latitudeFrom);
+        $lonFrom = deg2rad($longitudeFrom);
+        $latTo = deg2rad($latitudeTo);
+        $lonTo = deg2rad($longitudeTo);
+
+        $lonDelta = $lonTo - $lonFrom;
+        $a = pow(cos($latTo) * sin($lonDelta), 2) +
+            pow(cos($latFrom) * sin($latTo) - sin($latFrom) * cos($latTo) * cos($lonDelta), 2);
+        $b = sin($latFrom) * sin($latTo) + cos($latFrom) * cos($latTo) * cos($lonDelta);
+
+        $angle = atan2(sqrt($a), $b);
+
+        return $angle * $earthRadius;
+    }
+
+    public function requestElevationBroken(array $locations): string
     {
         $url = 'https://api.open-elevation.com/api/v1/lookup';
         $headers = [
@@ -139,7 +225,7 @@ class GpxViewer
     public function writeTmpFile(string $filePath, string $url): bool
     {
         if (is_readable($filePath)) {
-            return true;
+            return false;
         }
         try {
             $filesystem = new Filesystem();
