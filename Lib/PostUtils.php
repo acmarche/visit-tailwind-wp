@@ -51,6 +51,7 @@ class PostUtils
                     if (count($tmp) == 0) {
                         $tmp = [$offre->descriptionsByLanguage()];//force fr
                     }
+                    dump($tmp);
                     $description = $tmp[0]['value'];
                 }
                 $this->tagsOffre($offre, $language);
