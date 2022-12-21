@@ -61,8 +61,16 @@ class GpxViewer
                 }
             }
         }
-        //$locations = $this->requestElevations($locations);
-        $elevations = $this->requestElevations($locations);
+        $tab = $this->findElevations($locations);
+        $missing = $tab['missing'];
+        $locations = $tab['locations'];
+        if (count($missing) > 0) {
+            $this->requestElevations($missing);
+            $tab = $this->findElevations($locations);
+            $missing = $tab['missing'];
+            $locations = $tab['locations'];
+        }
+
         $elevationOk = false;
 
         foreach ($fileGpx->tracks as $track) {
@@ -71,7 +79,7 @@ class GpxViewer
             foreach ($track->segments as $segment) {
                 // Statistics for segment of track
                 foreach ($segment->getPoints() as $point) {
-                    $elevationOk = $this->findSegment($point, $elevations);
+                    $elevationOk = $this->findSegment($point, $locations);
                 }
             }
         }
@@ -83,22 +91,11 @@ class GpxViewer
         }
     }
 
-    private function isXmlValid(string $value): bool
-    {
-        $prev = libxml_use_internal_errors(true);
-        $doc = simplexml_load_string($value);
-        $errors = libxml_get_errors();
-        foreach ($errors as $error) {
-            dump($error);
-        }
-        libxml_clear_errors();
-        libxml_use_internal_errors($prev);
-
-        return false !== $doc && empty($errors);
-    }
-
-    private function findSegment(Point $point, array $elevations): bool
-    {
+    private
+    function findSegment(
+        Point $point,
+        array $elevations
+    ): bool {
         foreach ($elevations as $elevation) {
             if ($elevation['latitude'] === $point->latitude && $elevation['longitude'] == $point->longitude) {
                 $point->elevation = $elevation['elevation'];
@@ -110,39 +107,123 @@ class GpxViewer
         return false;
     }
 
-    public function requestElevations(array $locations): array
+    public
+    function requestElevations(
+        array $locations
+    ): array {
+        $tmps = [];
+        foreach ($locations as $location) {
+            $tmps[] = [$location['latitude'], $location['longitude']];
+            if (count($tmps) > 60) {
+                dump('launch');
+                $tmp = $this->launchRequest($tmps);
+                if (count($tmp) > 0) {
+                    $results[] = $tmp;
+                }
+                $tmps = [];
+            }
+        }
+        $tmp = $this->launchRequest($tmps);
+        if (count($tmp) > 0) {
+            $results[] = $tmp;
+        }
+
+        global $wpdb;
+        foreach ($results as $result) {
+            foreach ($result as $elevation) {
+                $wpdb->insert('pivot_elevation', array(
+                    'latitude' => $elevation['latitude'],
+                    'longitude' => $elevation['longitude'],
+                    'elevation' => $elevation['elevation'],
+                ));
+            }
+        }
+
+        return $results;
+    }
+
+    private function launchRequest(array $coordinates): array
     {
-        $urlBase = 'https://api.opentopodata.org/v1/eudem25m';
+        $urlBase = "https://api.opentopodata.org/v1/eudem25m";
         $headers = [
             'headers' => ['Accept' => 'application/json', 'Content-Type' => 'application/json'],
         ];
         $httpClient = HttpClient::createForBaseUri($urlBase, $headers);
+        $query = '';
+        foreach ($coordinates as $coordinate) {
+            $query .= implode(',', $coordinate).'|';
+        }
+        $query = substr($query, 0, -1);
+        $results = [];
+        try {
+            $response = $httpClient->request(
+                'POST',
+                $urlBase, [
+                    'json' => [
+                        'locations' => $query,
+                        'interpolation' => 'bilinear',
+                    ],
+                    'timeout' => 2.5,
+                ]
+            );
 
-        foreach ($locations as $key => $location) {
+            $responseString = $response->getContent();
+
             try {
-                $elevationsString = $this->requestElevation($httpClient, $urlBase, $location);
-                if ($result = json_decode($elevationsString)) {
+                if ($result = json_decode($responseString)) {
                     if ($result->status == 'OK') {
-                        $location['elevation'] = $result->results[0]->elevation;
+                        foreach ($result->results as $result) {
+                            $results[] = [
+                                'latitude' => $result->location->lat,
+                                'longitude' => $result->location->lng,
+                                'elevation' => $result->elevation,
+                            ];
+                        }
                     }
-                } else {
-                    $location['elevation'] = 0;
                 }
-            } catch (Exception $e) {
-                dump($e);
-                $location['elevation'] = 0;
+            } catch (Exception $exception) {
+                Mailer::sendError('elevation', 'el '.$exception->getMessage());
+                dump($exception->getMessage());
             }
-            $locations[$key] = $location;
+        } catch (ClientException|ClientExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface|TransportExceptionInterface $exception) {
+            Mailer::sendError('elevation', 'el '.$exception->getMessage());
+            dump($exception->getMessage());
         }
 
-        return $locations;
+        return $results;
+    }
+
+    private function findElevations(array $locations)
+    {
+        global $wpdb;
+        $missing = [];
+        foreach ($locations as $key => $location) {
+            if ($result = $wpdb->get_row(
+                $wpdb->prepare(
+                    "SELECT * FROM `pivot_elevation` WHERE `latitude`=%s AND `longitude`=%s",
+                    $location['latitude'],
+                    $location['longitude']
+                )
+            )) {
+                $location['elevation'] = (float)$result->elevation;
+                $locations[$key] = $location;
+            } else {
+                $missing[] = $location;
+            }
+        }
+
+        return ['locations' => $locations, 'missing' => $missing];
     }
 
     /**
      * @throws Exception
      */
-    public function requestElevation($httpClient, $urlBase, array $location): string
-    {
+    private
+    function requestElevation(
+        $httpClient,
+        $urlBase,
+        array $location
+    ): string {
         try {
             $response = $httpClient->request(
                 'GET',
@@ -150,65 +231,6 @@ class GpxViewer
                     'query' => [
                         'locations' => $location['latitude'].','.$location['longitude'],
                     ],
-                    'timeout' => 2.5,
-                ]
-            );
-
-            return $response->getContent();
-        } catch (ClientException|ClientExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface|TransportExceptionInterface $exception) {
-            Mailer::sendError('elevation', 'el '.$exception->getMessage());
-            throw  new Exception($exception->getMessage(), $exception->getCode(), $exception);
-        }
-    }
-
-    /**
-     * Calculates the great-circle distance between two points, with
-     * the Vincenty formula.
-     * @param float $latitudeFrom Latitude of start point in [deg decimal]
-     * @param float $longitudeFrom Longitude of start point in [deg decimal]
-     * @param float $latitudeTo Latitude of target point in [deg decimal]
-     * @param float $longitudeTo Longitude of target point in [deg decimal]
-     * @param float $earthRadius Mean earth radius in [m]
-     * @return float Distance between points in [m] (same as earthRadius)
-     */
-    private function vincentyGreatCircleDistance(
-        $latitudeFrom,
-        $longitudeFrom,
-        $latitudeTo,
-        $longitudeTo,
-        $earthRadius = 6371000
-    ) {
-        // convert from degrees to radians
-        $latFrom = deg2rad($latitudeFrom);
-        $lonFrom = deg2rad($longitudeFrom);
-        $latTo = deg2rad($latitudeTo);
-        $lonTo = deg2rad($longitudeTo);
-
-        $lonDelta = $lonTo - $lonFrom;
-        $a = pow(cos($latTo) * sin($lonDelta), 2) +
-            pow(cos($latFrom) * sin($latTo) - sin($latFrom) * cos($latTo) * cos($lonDelta), 2);
-        $b = sin($latFrom) * sin($latTo) + cos($latFrom) * cos($latTo) * cos($lonDelta);
-
-        $angle = atan2(sqrt($a), $b);
-
-        return $angle * $earthRadius;
-    }
-
-    public function requestElevationBroken(array $locations): string
-    {
-        $url = 'https://api.open-elevation.com/api/v1/lookup';
-        $headers = [
-            'headers' => ['Accept' => 'application/json', 'Content-Type' => 'application/json'],
-        ];
-
-        $httpClient = HttpClient::create($headers);
-        $data = json_encode(['locations' => $locations]);
-
-        try {
-            $response = $httpClient->request(
-                'POST',
-                $url, [
-                    'body' => $data,
                     'timeout' => 2.5,
                 ]
             );
@@ -295,4 +317,107 @@ class GpxViewer
 
         return $attachments[0];
     }
+
+
+    private function requestElevationsGet(array $locations): array
+    {
+        $urlBase = 'https://api.opentopodata.org/v1/eudem25m';
+        $headers = [
+            'headers' => ['Accept' => 'application/json', 'Content-Type' => 'application/json'],
+        ];
+        $httpClient = HttpClient::createForBaseUri($urlBase, $headers);
+
+        foreach ($locations as $key => $location) {
+            try {
+                $elevationsString = $this->requestElevation($httpClient, $urlBase, $location);
+                if ($result = json_decode($elevationsString)) {
+                    if ($result->status == 'OK') {
+                        $location['elevation'] = $result->results[0]->elevation;
+                    }
+                } else {
+                    $location['elevation'] = 0;
+                }
+            } catch (Exception $e) {
+                dump($e);
+                $location['elevation'] = 0;
+            }
+            $locations[$key] = $location;
+        }
+
+        return $locations;
+    }
+
+    private function requestElevationBroken(array $locations): string
+    {
+        $url = 'https://api.open-elevation.com/api/v1/lookup';
+        $headers = [
+            'headers' => ['Accept' => 'application/json', 'Content-Type' => 'application/json'],
+        ];
+
+        $httpClient = HttpClient::create($headers);
+        $data = json_encode(['locations' => $locations]);
+
+        try {
+            $response = $httpClient->request(
+                'POST',
+                $url, [
+                    'body' => $data,
+                    'timeout' => 2.5,
+                ]
+            );
+
+            return $response->getContent();
+        } catch (ClientException|ClientExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface|TransportExceptionInterface $exception) {
+            Mailer::sendError('elevation', 'el '.$exception->getMessage());
+            throw  new Exception($exception->getMessage(), $exception->getCode(), $exception);
+        }
+    }
+
+    private function isXmlValid(string $value): bool
+    {
+        $prev = libxml_use_internal_errors(true);
+        $doc = simplexml_load_string($value);
+        $errors = libxml_get_errors();
+        foreach ($errors as $error) {
+            dump($error);
+        }
+        libxml_clear_errors();
+        libxml_use_internal_errors($prev);
+
+        return false !== $doc && empty($errors);
+    }
+
+    /**
+     * Calculates the great-circle distance between two points, with
+     * the Vincenty formula.
+     * @param float $latitudeFrom Latitude of start point in [deg decimal]
+     * @param float $longitudeFrom Longitude of start point in [deg decimal]
+     * @param float $latitudeTo Latitude of target point in [deg decimal]
+     * @param float $longitudeTo Longitude of target point in [deg decimal]
+     * @param float $earthRadius Mean earth radius in [m]
+     * @return float Distance between points in [m] (same as earthRadius)
+     */
+    private function vincentyGreatCircleDistance(
+        $latitudeFrom,
+        $longitudeFrom,
+        $latitudeTo,
+        $longitudeTo,
+        $earthRadius = 6371000
+    ) {
+        // convert from degrees to radians
+        $latFrom = deg2rad($latitudeFrom);
+        $lonFrom = deg2rad($longitudeFrom);
+        $latTo = deg2rad($latitudeTo);
+        $lonTo = deg2rad($longitudeTo);
+
+        $lonDelta = $lonTo - $lonFrom;
+        $a = pow(cos($latTo) * sin($lonDelta), 2) +
+            pow(cos($latFrom) * sin($latTo) - sin($latFrom) * cos($latTo) * cos($lonDelta), 2);
+        $b = sin($latFrom) * sin($latTo) + cos($latFrom) * cos($latTo) * cos($lonDelta);
+
+        $angle = atan2(sqrt($a), $b);
+
+        return $angle * $earthRadius;
+    }
+
 }
