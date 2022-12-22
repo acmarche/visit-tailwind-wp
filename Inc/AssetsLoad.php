@@ -85,6 +85,13 @@ class AssetsLoad
 
     public function leafletElevation(): void
     {
+        wp_register_script(
+            'visitmarche-chartjs',
+            'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.1.1/chart.min.js',
+            [],
+            null
+        );
+
         wp_register_style(
             'visitmarche-leaflet-elevation-css',
             'https://unpkg.com/@raruto/leaflet-elevation/dist/leaflet-elevation.min.css',
