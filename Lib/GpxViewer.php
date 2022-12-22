@@ -26,7 +26,7 @@ class GpxViewer
         $fileName = $gpx->codeCgt.'.'.phpGPX::XML_FORMAT;
         $filePath = ABSPATH.$this->folder_gpx.$fileName;
         if (!$this->writeTmpFile($filePath, $gpx->url)) {
-            $this->elevation($filePath);
+            $this->elevation($filePath, $gpx);
         }
         $urlLocal = '/'.$this->folder_gpx.$fileName;
         $options = [
@@ -46,7 +46,7 @@ class GpxViewer
         return $gpx;
     }
 
-    public function elevation(string $pathName)
+    public function elevation(string $pathName, Gpx $gpx)
     {
         $phpGPX = new phpGPX();
         $fileGpx = $phpGPX->load($pathName);
@@ -70,6 +70,7 @@ class GpxViewer
             $missing = $tab['missing'];
             $locations = $tab['locations'];
         }
+        $gpx->data = $tab;
 
         $elevationOk = false;
 

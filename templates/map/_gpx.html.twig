@@ -1,1 +1,4 @@
 {{ gpxMap|raw }}
+<div id="data" data-points="{{ gpx.data|json_encode }}"></div>
+<canvas id="myChart" style="height: 250px;"></canvas>
+<script type="module" src="{{ template_uri() }}/assets/js/dist/js/grapJf-jf.js"></script>

@@ -61,10 +61,11 @@ foreach ($offre->pois as $poi) {
     $postUtils->tagsOffre($poi, $language, $urlcurrentCategory);
 }
 
-$gpxMap = null;
+$gpxMap = $gpx = null;
 if (count($offre->gpxs) > 0) {
     $gpxViewer = new GpxViewer();
-    $gpxMap = $gpxViewer->renderWithPlugin($offre, $offre->gpxs[0]);
+    $gpx = $offre->gpxs[0];
+    $gpxMap = $gpxViewer->renderWithPlugin($offre, $gpx);
 }
 $specs = $wpRepository->groupSpecifications($offre);
 Twig::rendPage(
@@ -84,6 +85,7 @@ Twig::rendPage(
         'nameBack' => $currentCategory->name,
         'specs' => $specs,
         'gpxMap' => $gpxMap,
+        'gpx' => $gpx,
     ]
 );
 get_footer();
