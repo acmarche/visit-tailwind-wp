@@ -91,11 +91,8 @@ class GpxViewer
         }
     }
 
-    private
-    function findSegment(
-        Point $point,
-        array $elevations
-    ): bool {
+    private function findSegment(Point $point, array $elevations): bool
+    {
         foreach ($elevations as $elevation) {
             if ($elevation['latitude'] === $point->latitude && $elevation['longitude'] == $point->longitude) {
                 $point->elevation = $elevation['elevation'];
@@ -107,10 +104,8 @@ class GpxViewer
         return false;
     }
 
-    public
-    function requestElevations(
-        array $locations
-    ): array {
+    public function requestElevations(array $locations): array
+    {
         $tmps = [];
         foreach ($locations as $location) {
             $tmps[] = [$location['latitude'], $location['longitude']];
@@ -245,7 +240,7 @@ class GpxViewer
     public function writeTmpFile(string $filePath, string $url): bool
     {
         if (is_readable($filePath)) {
-            return false;
+            return true;
         }
         try {
             $filesystem = new Filesystem();
