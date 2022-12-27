@@ -1672,7 +1672,7 @@ img, video, iframe {
 #app {
   display: grid;
   min-height: 100vh;
-  grid-template-rows: 1fr auto;
+  grid-template-rows: auto 1fr auto;
 }
 
 .sr-only {
@@ -2101,10 +2101,6 @@ img, video, iframe {
   min-height: 6rem;
 }
 
-.min-h-screen {
-  min-height: 100vh;
-}
-
 .min-h-\[20rem\] {
   min-height: 20rem;
 }
@@ -2242,10 +2238,6 @@ img, video, iframe {
   max-width: 32rem;
 }
 
-.max-w-none {
-  max-width: none;
-}
-
 .flex-1 {
   flex: 1 1 0%;
 }
@@ -2362,10 +2354,6 @@ img, video, iframe {
 
 .grid-cols-\[6rem\2c 1fr\] {
   grid-template-columns: 6rem 1fr;
-}
-
-.grid-cols-\[minmax\(0\2c 1fr\)\2c auto\] {
-  grid-template-columns: minmax(0,1fr) auto;
 }
 
 .grid-rows-2 {
@@ -2657,11 +2645,6 @@ img, video, iframe {
 
 .border-l-white\/50 {
   border-left-color: rgb(255 255 255 / 0.5);
-}
-
-.border-l-gray-300 {
-  --tw-border-opacity: 1;
-  border-left-color: rgb(209 213 219 / var(--tw-border-opacity));
 }
 
 .bg-party {
@@ -3940,11 +3923,6 @@ img, video, iframe {
   .xl\:text-xl {
     font-size: 1.25rem;
     line-height: 1.75rem;
-  }
-
-  .xl\:text-base {
-    font-size: 1rem;
-    line-height: 1.5rem;
   }
 
   .xl\:text-lg {
