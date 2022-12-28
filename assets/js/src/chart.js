@@ -1,7 +1,6 @@
 import {Chart} from 'chart.js/auto';
-import {getRelativePosition} from 'chart.js/helpers';
 
-export const runFunction1WhenPageLoads = () =>  {
+export const createChart = (marker) => {
 
     const ctx = document.getElementById('myChart').getContext('2d');
     const chartData = document.getElementById('data-chart');
@@ -35,6 +34,8 @@ export const runFunction1WhenPageLoads = () =>  {
 
     const myChart = new Chart(ctx, {
         type: 'line',
+        height: '150',
+        width: '150',
         data: {
             labels: metres.map(row => Math.floor(row)),
             datasets: [{
@@ -48,6 +49,19 @@ export const runFunction1WhenPageLoads = () =>  {
             }]
         },
         options: {
+            onClick: function (event, elements) {
+                if (elements.length > 0) {
+                    // To get the clicked element
+                    console.log(event)
+                    //      const clickedElement = this.getElementAtEvent(event);
+
+                    // To get the group id of the clicked element
+                    //    const groupIndex = clickedElement[0]._index;
+
+                    // To get the id of the clicked element with in the group
+                    //  const barIndex = clickedElement[0]._datasetIndex;
+                }
+            },
             responsive: true,
             plugins: {
                 legend: {
@@ -63,17 +77,17 @@ export const runFunction1WhenPageLoads = () =>  {
                 },
             },
             hover: {
-                mode: 'index',
-                intersec: false
+                mode: 'index',//point ?
+                //   intersec: false
             },
             onHover: (e) => {
-                const canvasPosition = getRelativePosition(e, myChart);
-                console.log(canvasPosition)
-                movePoint();
-                // Substitute the appropriate scale IDs
-                const dataX = chart.scales.x.getValueForPixel(canvasPosition.x);
-                const dataY = chart.scales.y.getValueForPixel(canvasPosition.y);
+                //const canvasPosition = getRelativePosition(e, myChart);
+                const lm = (myChart.getElementsAtEventForMode(e, 'nearest', {intersec: true}, true))
+                const index = lm[0].index
+                const coordinates = data[index]
+                movePoint(marker, coordinates);
             },
+            // For instance you can format Y axis
             scales: {
                 y: {
                     beginAtZero: true,
@@ -108,8 +122,7 @@ function distanceInMeter(lat1, lon1, lat2, lon2) {
     return d;
 }
 
-function movePoint(marker) {
-    console.log(marker);
-    var latlng = L.latLng(50.22627, 5.28039);
+function movePoint(marker, coordinates) {
+    const latlng = L.latLng(coordinates['latitude'], coordinates['longitude']);
     marker.setLatLng(latlng);
 }
