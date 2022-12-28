@@ -3,14 +3,15 @@
     <div id="openmap_offre" class="my-3 h-[25rem] xl:h-[35rem] w-4/5 mx-auto"
          data-latitude="{{ latitude }}"
          data-longitude="{{ longitude }}"
+         data-locations="{{ locations|json_encode }}"
          data-pois="{{ offre.pois|json_encode }}">
     </div>
-    {#
-    <script src="{{ template_uri() }}/assets/js/dist/js/appOl-jf.js" defer></script>
-    <link rel="stylesheet" href="{{ template_uri() }}/assets/js/dist/css/ol-jf.css"/>
-    #}
 
-    <script type="text/javascript" defer>
+    <script type="module" src="{{ template_uri() }}/assets/js/dist/js/mapJf-jf.js">
+
+    </script>
+
+   {#  <script ty22pe="text/javascript" defer type="module">
         const latitude = '{{ latitude }}';
         const longitude = '{{ longitude }}';
         const center = [latitude, longitude];
@@ -33,7 +34,7 @@
         })
             .addTo(map);
 
-        L.marker(center, {
+        const marker = L.marker(center, {
             title: name,
             draggable: true
         })
@@ -61,7 +62,7 @@
                 .bindPopup(poi.nom).addTo(map);
         });
 
-        let latlngs = JSON.parse('{{locations|json_encode}}');
+        let latlngs = JSON.parse('{{ locations|json_encode }}');
         const myStyle = {
             "color": "#487F89FF",
             "weight": 5,
@@ -69,6 +70,11 @@
         };
         L.polyline(latlngs, myStyle).addTo(map);
 
-    </script>
+        document.addEventListener("DOMContentLoaded", function () {
+            //     runFunction1WhenPageLoads;
+        });
+
+
+    </script>  #}
 
 {% endif %}

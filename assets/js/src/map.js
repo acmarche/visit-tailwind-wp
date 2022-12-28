@@ -1,4 +1,4 @@
-import {L} from 'leaflet'
+import L from 'leaflet'
 
 export var hello = function (who) {
 
@@ -19,6 +19,7 @@ export var hello = function (who) {
 
     const map = L.map('openmap_offre')
         .setView(center, zoom);
+
     L.tileLayer('https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
         minZoom: 1,
@@ -37,7 +38,7 @@ export var hello = function (who) {
 
     const LeafIcon = L.Icon.extend({
         options: {
-            shadowUrl: '{{ template_uri() }}/assets/images/leaf-shadow.png',
+            shadowUrl: '/wp-content/themes/visittail/assets/images/leaf-shadow.png',
             iconSize: [38, 95],
             shadowSize: [50, 64],
             iconAnchor: [22, 94],
@@ -46,7 +47,7 @@ export var hello = function (who) {
         }
     });
 
-    const greenIcon = new LeafIcon({iconUrl: 'https://visitmarche.be/wp-content/themes/visittail/assets/images/leaf-green.png'});
+    const greenIcon = new LeafIcon({iconUrl: '/wp-content/themes/visittail/assets/images/leaf-green.png'});
 
     pois.forEach(function (poi, index) {
         L.marker([poi.adresse1.latitude, poi.adresse1.longitude], {
@@ -56,7 +57,6 @@ export var hello = function (who) {
         })
             .bindPopup(poi.nom).addTo(map);
     });
-
 
     if (typeof locations === 'object' && locations.length > 0) {
         const myStyle = {
