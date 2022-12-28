@@ -4,6 +4,7 @@ namespace VisitMarche\ThemeTail;
 
 use Exception;
 use VisitMarche\ThemeTail\Inc\AssetsLoad;
+use VisitMarche\ThemeTail\Lib\GpxViewer;
 use VisitMarche\ThemeTail\Lib\LocaleHelper;
 use VisitMarche\ThemeTail\Lib\PostUtils;
 use VisitMarche\ThemeTail\Lib\RouterPivot;
@@ -57,9 +58,17 @@ foreach ($offre->pois as $poi) {
     $postUtils->tagsOffre($poi, $language, $urlcurrentCategory);
 }
 $gpxMap = $gpx = null;
-//  $gpxViewer = new GpxViewer();
-//   $gpx = $offre->gpxs[0];
-//   $gpxMap = $gpxViewer->renderWithPlugin($offre, $gpx);
+$locations = [];
+$gpxViewer = new GpxViewer();
+if (count($offre->gpxs) > 0) {
+    $gpx = $offre->gpxs[0];
+    $gpxViewer->renderWithPlugin($offre, $gpx);
+    if ($gpx && isset($gpx->data['locations'])) {
+        foreach ($gpx->data['locations'] as $location) {
+            $locations[] = [$location['latitude'], $location['longitude']];
+        }
+    }
+}
 
 $specs = $wpRepository->groupSpecifications($offre);
 Twig::rendPage(
@@ -80,6 +89,7 @@ Twig::rendPage(
         'specs' => $specs,
         'gpxMap' => $gpxMap,
         'gpx' => $gpx,
+        'locations' => $locations,
     ]
 );
 get_footer();

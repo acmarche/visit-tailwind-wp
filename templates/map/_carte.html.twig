@@ -60,6 +60,15 @@
             })
                 .bindPopup(poi.nom).addTo(map);
         });
+
+        let latlngs = JSON.parse('{{locations|json_encode}}');
+        const myStyle = {
+            "color": "#487F89FF",
+            "weight": 5,
+            "opacity": 1
+        };
+        L.polyline(latlngs, myStyle).addTo(map);
+
     </script>
 
 {% endif %}

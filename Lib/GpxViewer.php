@@ -21,13 +21,15 @@ class GpxViewer
 {
     public string $folder_gpx = 'var/gpx/';
 
-    public function renderWithPlugin(Offre $offre, Gpx $gpx): string
+    public function renderWithPlugin(Offre $offre, Gpx $gpx): ?string
     {
         $fileName = $gpx->codeCgt.'.'.phpGPX::XML_FORMAT;
         $filePath = ABSPATH.$this->folder_gpx.$fileName;
         if (!$this->writeTmpFile($filePath, $gpx->url)) {
             $this->elevation($filePath, $gpx);
         }
+
+        return null;
         $urlLocal = '/'.$this->folder_gpx.$fileName;
         $options = [
             'src' => $urlLocal,
@@ -241,7 +243,7 @@ class GpxViewer
     public function writeTmpFile(string $filePath, string $url): bool
     {
         if (is_readable($filePath)) {
-            return true;
+            return false;
         }
         try {
             $filesystem = new Filesystem();

@@ -1,8 +1,8 @@
 import Chart from 'chart.js/auto';
 
-const data = [];
-
 const ctx = document.getElementById('myChart').getContext('2d');
+const chartData = document.getElementById('data-chart');
+const data = JSON.parse(chartData.dataset.points);
 const distances = [];
 let current = 0;
 
@@ -56,7 +56,7 @@ const myChart = new Chart(ctx, {
             },
             title: {
                 display: true,
-                text: 'Chart.js Line Chart'
+                text: 'Elevations'
             }
         },
         hover: {

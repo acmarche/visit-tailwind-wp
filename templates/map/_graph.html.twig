@@ -1,0 +1,5 @@
+{% if gpx %}
+    <div id="data-chart" data-points="{{ gpx.data.locations|json_encode }}"></div>
+    <canvas id="myChart" style="height: 420px;"></canvas>
+    <script type="module" src="{{ template_uri() }}/assets/js/dist/js/grapJf-jf.js"></script>
+{% endif %}
