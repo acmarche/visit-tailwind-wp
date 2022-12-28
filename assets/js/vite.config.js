@@ -19,7 +19,8 @@ export default defineConfig({
             input: {
                 appFiltreAdmin: 'src/admin/admin.js',
                 appOl: 'src/ol.js',
-                grapJf: 'src/graph.js',
+                chartJf: 'src/chart.js',
+                mapJf: 'src/map.js',
             },
             output: {
                 assetFileNames: 'css/[name]-jf.css',
