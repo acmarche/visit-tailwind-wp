@@ -69,3 +69,6 @@ result:
   name: 'RESULTATEN VOOR'
 office:
   name: 'Gemeentelijk VVV-kantoor'
+Datums: 'Date(s)'
+until: 'tot'
+from: 'Van'
