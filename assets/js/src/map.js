@@ -1,4 +1,5 @@
 import L from 'leaflet'
+import {createChart} from './chart.js'
 
 export var hello = function (who) {
 
@@ -33,9 +34,6 @@ export var hello = function (who) {
     })
         .addTo(map);
 
-    console.log(latitude, longitude)
-    console.log("Hello " + who + "!")
-
     const LeafIcon = L.Icon.extend({
         options: {
             shadowUrl: '/wp-content/themes/visittail/assets/images/leaf-shadow.png',
@@ -67,8 +65,8 @@ export var hello = function (who) {
         L.polyline(locations, myStyle).addTo(map);
     }
 
+    createChart(marker);
     return "Hello " + who + "!";
 }
 
 hello('jf')
-//runFunction1WhenPageLoads()
