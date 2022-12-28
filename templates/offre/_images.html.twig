@@ -1,6 +1,8 @@
-<div class="carousel"
-     data-flickity='{ "imagesLoaded": true,"freeScroll": true,"wrapAround": true,"pageDots": false }'>
-    {% for media in offre.images %}
-        <img src="{{ media }}" alt="orange tree" loading="lazy"/>
-    {% endfor %}
-</div>
+{% if offre.images|length > 0 %}
+    <div class="carousel"
+         data-flickity='{ "imagesLoaded": true,"freeScroll": true,"wrapAround": true,"pageDots": false }'>
+        {% for media in offre.images %}
+            <img src="{{ media }}" alt="orange tree" loading="lazy"/>
+        {% endfor %}
+    </div>
+{% endif %}

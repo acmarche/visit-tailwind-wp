@@ -1,21 +1,24 @@
 {% if latitude and longitude %}
 
-    <div id="openmap_offre"  class="my-3 -z-10 h-[25rem] xl:h-[35rem] w-4/5 mx-auto"
+    <div id="openmap_offre" class="my-3 -z-10 h-[25rem] xl:h-[35rem] w-4/5 mx-auto"
          data-latitude="{{ latitude }}"
-         data-longitude="{{ longitude }}">
+         data-longitude="{{ longitude }}"
+         data-pois="[]">
     </div>
-{#
+    {#
     <script src="{{ template_uri() }}/assets/js/dist/js/appOl-jf.js" defer></script>
     <link rel="stylesheet" href="{{ template_uri() }}/assets/js/dist/css/ol-jf.css"/>
-#}
+    #}
 
-  <script type="text/javascript" defer>
+    <script type="text/javascript" defer>
         const latitude = '{{ latitude }}';
         const longitude = '{{ longitude }}';
         const center = [latitude, longitude];
         const map = L.map('openmap_offre')
             .setView(center, 15);
         const name = "{{ name|remove_html|raw }}";
+
+        const pois = document.getElementById('openmap_offre').dataset.pois;
 
         L.tileLayer('https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
@@ -29,6 +32,14 @@
             draggable: true
         })
             .addTo(map);
+
+        JSON.parse(pois).forEach(function (poi, index) {
+            L.marker([poi.adresse1.latitude, poi.adresse1.longitude], {
+                title: poi.nom,
+                draggable: true
+            })
+                .addTo(map);
+        });
     </script>
 
 {% endif %}
