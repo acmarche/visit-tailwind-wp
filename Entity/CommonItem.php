@@ -18,6 +18,8 @@ class CommonItem
 
     public ?string $locality = null;
     public array $dateEvent = [];
+    //for event
+    public bool $isPeriod = false;
 
     public function __construct(
         string $id,

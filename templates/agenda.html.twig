@@ -16,7 +16,10 @@
                         <div class="grid grid-cols-[6rem,1fr] xl:grid-cols-[8rem,1fr] my-2">
                             <div class="flex flex-col items-center justify-center border-x transition-all duration-700 group-hover:bg-cta-light group-hover:text-white">
                             <span class="font-montserrat-semi-bold text-xl">
-                                 {{ item.dateEvent["day"] }}
+                             {% if item.firstDate.isPeriod %}
+                                 >
+                             {% endif %}
+                                {{ item.dateEvent["day"] }}
                             </span>
                                 <span class="">{{ item.dateEvent["month"] }}</span>
                                 <span class="">{{ item.dateEvent["year"] }}</span>
