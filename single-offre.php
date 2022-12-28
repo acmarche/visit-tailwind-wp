@@ -2,10 +2,8 @@
 
 namespace VisitMarche\ThemeTail;
 
-use AcMarche\Pivot\Entities\Offre\Offre;
 use Exception;
 use VisitMarche\ThemeTail\Inc\AssetsLoad;
-use VisitMarche\ThemeTail\Lib\GpxViewer;
 use VisitMarche\ThemeTail\Lib\LocaleHelper;
 use VisitMarche\ThemeTail\Lib\PostUtils;
 use VisitMarche\ThemeTail\Lib\RouterPivot;
@@ -37,9 +35,7 @@ try {
 $latitude = $offre->getAdresse()->latitude ?? null;
 $longitude = $offre->getAdresse()->longitude ?? null;
 if ($latitude && $longitude) {
-    if (count($offre->gpxs) === 0) {
-        AssetsLoad::enqueueLeaflet();
-    }
+    AssetsLoad::enqueueLeaflet();
 }
 get_header();
 if (!$currentCategory = get_category_by_slug(get_query_var('category_name'))) {
@@ -60,13 +56,11 @@ foreach ($offre->pois as $poi) {
     $poi->image = $poi->firstImage();
     $postUtils->tagsOffre($poi, $language, $urlcurrentCategory);
 }
-
 $gpxMap = $gpx = null;
-if (count($offre->gpxs) > 0) {
-    $gpxViewer = new GpxViewer();
-    $gpx = $offre->gpxs[0];
-    $gpxMap = $gpxViewer->renderWithPlugin($offre, $gpx);
-}
+//  $gpxViewer = new GpxViewer();
+//   $gpx = $offre->gpxs[0];
+//   $gpxMap = $gpxViewer->renderWithPlugin($offre, $gpx);
+
 $specs = $wpRepository->groupSpecifications($offre);
 Twig::rendPage(
     '@VisitTail/offre.html.twig',
