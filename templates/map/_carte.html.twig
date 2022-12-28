@@ -1,9 +1,9 @@
 {% if latitude and longitude %}
 
-    <div id="openmap_offre" class="my-3 -z-10 h-[25rem] xl:h-[35rem] w-4/5 mx-auto"
+    <div id="openmap_offre" class="my-3 h-[25rem] xl:h-[35rem] w-4/5 mx-auto"
          data-latitude="{{ latitude }}"
          data-longitude="{{ longitude }}"
-         data-pois="[]">
+         data-pois="{{ offre.pois|json_encode }}">
     </div>
     {#
     <script src="{{ template_uri() }}/assets/js/dist/js/appOl-jf.js" defer></script>
@@ -14,12 +14,18 @@
         const latitude = '{{ latitude }}';
         const longitude = '{{ longitude }}';
         const center = [latitude, longitude];
-        const map = L.map('openmap_offre')
-            .setView(center, 15);
+        let zoom = 15;
         const name = "{{ name|remove_html|raw }}";
 
-        const pois = document.getElementById('openmap_offre').dataset.pois;
+        const poisString = document.getElementById('openmap_offre').dataset.pois;
+        const pois = JSON.parse(poisString);
 
+        if (typeof pois === 'object' && pois.length > 0) {
+            zoom = 13;
+        }
+
+        const map = L.map('openmap_offre')
+            .setView(center, zoom);
         L.tileLayer('https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
             minZoom: 1,
@@ -33,12 +39,26 @@
         })
             .addTo(map);
 
-        JSON.parse(pois).forEach(function (poi, index) {
+        const LeafIcon = L.Icon.extend({
+            options: {
+                shadowUrl: '{{ template_uri() }}/assets/images/leaf-shadow.png',
+                iconSize: [38, 95],
+                shadowSize: [50, 64],
+                iconAnchor: [22, 94],
+                shadowAnchor: [4, 62],
+                popupAnchor: [-3, -76]
+            }
+        });
+
+        const greenIcon = new LeafIcon({iconUrl: '{{ template_uri() }}/assets/images/leaf-green.png'});
+
+        pois.forEach(function (poi, index) {
             L.marker([poi.adresse1.latitude, poi.adresse1.longitude], {
                 title: poi.nom,
+                icon: greenIcon,
                 draggable: true
             })
-                .addTo(map);
+                .bindPopup(poi.nom).addTo(map);
         });
     </script>
 
