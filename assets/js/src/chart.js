@@ -78,14 +78,16 @@ export const createChart = (marker) => {
             },
             hover: {
                 mode: 'index',//point ?
-                //   intersec: false
             },
             onHover: (e) => {
                 //const canvasPosition = getRelativePosition(e, myChart);
-                const lm = (myChart.getElementsAtEventForMode(e, 'nearest', {intersec: true}, true))
+                const lm = (myChart.getElementsAtEventForMode(e, 'index', {intersec: false}, true))
+               // console.log(lm)
                 const index = lm[0].index
+              //  console.log(index)
                 const coordinates = data[index]
-                movePoint(marker, coordinates);
+              //  console.log(coordinates)
+                movePoint(marker, coordinates)
             },
             // For instance you can format Y axis
             scales: {
