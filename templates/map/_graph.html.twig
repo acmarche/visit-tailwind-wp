@@ -1,6 +1,6 @@
 {% if gpx %}
     <div id="data-chart" data-points="{{ gpx.data.locations|json_encode }}"></div>
-    <canvas id="myChart" style="height: 420px;"></canvas>
+    <canvas id="myChart" style="width:60vw; margin: auto;"></canvas>
     <script type="module" src="{{ template_uri() }}/assets/js/dist/js/chartJf-jf.js">
 
     </script>
