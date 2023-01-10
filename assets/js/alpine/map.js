@@ -1,3 +1,4 @@
+//draft
 document.addEventListener('alpine:init', () => {
     Alpine.data('map', () => ({
             latitude: false,
