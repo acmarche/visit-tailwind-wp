@@ -6,10 +6,8 @@ export const createChart = (marker) => {
     const chartData = document.getElementById('data-chart');
     const data = JSON.parse(chartData.dataset.points);
     const distances = [];
-    let current = 0;
 
     for (let i = 0; i < data.length - 1; i++) {
-        current = i;
         let firstElement = data[i];
         let secondElement = data[i + 1];
         let result = distanceInMeter(firstElement.latitude, firstElement.longitude, secondElement.latitude, secondElement.longitude);
@@ -72,10 +70,7 @@ export const createChart = (marker) => {
             x: {
                 ticks: {
                     callback: function(value)  {
-                        //     console.log(value)
-                        let formattedValue = `${parseInt(value) / 10} km`
-                        //       console.log(formattedValue)
-                        return formattedValue
+                        return `${parseInt(value) / 10} km`
                     }
                 }
             }
