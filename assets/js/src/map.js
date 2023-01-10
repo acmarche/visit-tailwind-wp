@@ -36,9 +36,9 @@ export var hello = function (who) {
 
     const LeafIcon = L.Icon.extend({
         options: {
-         //   shadowUrl: '/wp-content/themes/visittail/assets/images/leaf-shadow.png',
+            //   shadowUrl: '/wp-content/themes/visittail/assets/images/leaf-shadow.png',
             iconSize: [36, 36],
-          //  shadowSize: [50, 64],
+            //  shadowSize: [50, 64],
             iconAnchor: [22, 94],
             shadowAnchor: [4, 62],
             popupAnchor: [-3, -76]
@@ -65,7 +65,9 @@ export var hello = function (who) {
         L.polyline(locations, myStyle).addTo(map);
     }
 
-    createChart(marker);
+    if (chartData) {
+        createChart(marker);
+    }
     return "Hello " + who + "!";
 }
 
