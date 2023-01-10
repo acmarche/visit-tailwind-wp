@@ -48,7 +48,7 @@ export const createChart = (marker) => {
             },
             title: {
                 display: true,
-                text: 'Elevations'
+                text: 'Elevations en mètre'
             },
         },
         hover: {
@@ -82,7 +82,7 @@ export const createChart = (marker) => {
         data: {
             labels: metres.map(row => Math.floor(row)),
             datasets: [{
-                label: 'Elevation',
+                label: 'Elevation en mètre',
                 data: elevations,
                 borderWidth: 3,
                 borderColor: '#487F89FF',
