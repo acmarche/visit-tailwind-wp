@@ -364,8 +364,10 @@ class WpRepository
 
             $keys = array_rand($recommandations, $count);
 
-            foreach ($keys as $key) {
-                $data[] = $recommandations[$key];
+            if (is_array($keys)) {
+                foreach ($keys as $key) {
+                    $data[] = $recommandations[$key];
+                }
             }
 
             return $data;
