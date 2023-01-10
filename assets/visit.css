@@ -1847,6 +1847,10 @@ img, video, iframe {
   margin: 0.75rem;
 }
 
+.m-auto {
+  margin: auto;
+}
+
 .my-8 {
   margin-top: 2rem;
   margin-bottom: 2rem;
@@ -2212,6 +2216,10 @@ img, video, iframe {
 .w-max {
   width: -moz-max-content;
   width: max-content;
+}
+
+.w-52 {
+  width: 13rem;
 }
 
 .max-w-full {
@@ -3774,6 +3782,10 @@ img, video, iframe {
 
   .xl\:w-auto {
     width: auto;
+  }
+
+  .xl\:w-80 {
+    width: 20rem;
   }
 
   .xl\:w-\[22rem\] {

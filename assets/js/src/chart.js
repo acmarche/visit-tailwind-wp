@@ -34,7 +34,7 @@ export const createChart = (marker) => {
     };
 
     const options = {
-        responsive: false,
+        responsive: true,
         plugins: {
             legend: {
                 display: false
@@ -108,9 +108,8 @@ function distanceInMeter(lat1, lon1, lat2, lon2) {
         Math.sin(pi4 / 2) * Math.sin(pi4 / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
-    const d = R * c; // in metres
-
-    return d;
+     // in metres
+    return R * c;
 }
 
 function movePoint(marker, coordinates) {
