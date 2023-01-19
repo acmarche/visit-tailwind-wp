@@ -87,7 +87,9 @@ class GpxViewer
             }
         }
         $fileGpx->metadata->description = htmlentities($fileGpx->metadata->description);
-        $fileGpx->metadata->author->name = htmlentities($fileGpx->metadata->author->name);
+        if ($fileGpx->metadata->author) {
+            $fileGpx->metadata->author->name = htmlentities($fileGpx->metadata->author->name);
+        }
 
         if ($elevationOk) {
             $fileGpx->save($pathName, phpGPX::XML_FORMAT);
