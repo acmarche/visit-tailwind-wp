@@ -304,6 +304,11 @@ class Twig
                 if (in_array($specData->urn, UrnToSkip::urns)) {
                     return false;
                 }
+
+                if ($specData->value == 'urn:val:revet:0') {
+                    return false;
+                }
+
                 $language = LocaleHelper::getSelectedLanguage();
                 $text = (new UnicodeString($specData->urn));
                 if ($language == 'fr' && $text->startsWith('urn')) {
