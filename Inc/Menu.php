@@ -33,20 +33,25 @@ class Menu
                 'patrimoine' => get_category_by_slug('patrimoine'),
             ];
 
-            array_map(
-                function ($icone) {
-                    if ($icone) {
-                        $icone->url = get_category_link($icone);
-                        $icone->imageWhite = IconeEnum::iconeWhite($icone->slug);
-                    }
-
-                    return $icone;
-                },
-                $icones
-            );
+            foreach ($icones as $key => $icone) {
+                $icone->url = get_category_link($icone);
+                $icone->colorOver = $this->hoverColor($key);
+                $icone->imageWhite = IconeEnum::iconeWhite($icone->slug);
+            }
 
             return $icones;
         });
+    }
+
+    private function hoverColor(string $key): string
+    {
+        return match ($key) {
+            'arts' => 'hover:bg-art',
+            'balades' => 'hover:bg-walk',
+            'fetes' => 'hover:bg-party',
+            'gourmandises' => 'hover:bg-delicacy',
+            default => 'hover:bg-patrimony',
+        };
     }
 
     /**
