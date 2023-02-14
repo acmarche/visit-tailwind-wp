@@ -3,4 +3,7 @@
     {% if description.urn == 'urn:fld:descmarket' %}
         {{ description.value|raw }}
     {% endif %}
+    {% if description.urn == 'urn:fld:desccirc' %}
+        {{ description.value|raw }}
+    {% endif %}
 {% endfor %}
