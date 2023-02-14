@@ -2,7 +2,9 @@
     <div class="carousel"
          data-flickity='{ "imagesLoaded": true,"freeScroll": true,"wrapAround": true,"pageDots": false }'>
         {% for media in offre.images %}
-            <img src="{{ media }}" alt="orange tree" loading="lazy"/>
+            <div class="carousel-cell">
+                <img src="{{ media }}" alt="orange tree" loading="lazy"/>
+            </div>
         {% endfor %}
     </div>
 {% endif %}
