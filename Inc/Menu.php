@@ -24,7 +24,7 @@ class Menu
     {
         $language = LocaleHelper::getSelectedLanguage();
 
-        return $this->cache->get(Cache::ICONES_NAME.$language, function ($item) {
+        return $this->cache->get(Cache::ICONES_NAME.$language.time(), function ($item) {
             $icones = [
                 'arts' => get_category_by_slug('arts'),
                 'balades' => get_category_by_slug('balades'),
@@ -35,7 +35,7 @@ class Menu
 
             foreach ($icones as $key => $icone) {
                 $icone->url = get_category_link($icone);
-                $icone->colorOver = $this->hoverColor($key);
+                $icone->colorHover = $this->hoverColor($key);
                 $icone->imageWhite = IconeEnum::iconeWhite($icone->slug);
             }
 
