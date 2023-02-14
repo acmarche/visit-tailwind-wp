@@ -1,8 +1,10 @@
 <div class="grid grid-cols-1 xl:grid-cols-[20rem,1fr] gap-2">
     {% for classement in offre.classements %}
-        <span class="font-montserrat-semi-bold text-cta-dark">
+        {% if classement.data|pivot_check_display %}
+            <span class="font-montserrat-semi-bold text-cta-dark">
                 {{ classement.urnDefinition.labelByLanguage(locale) }}
             </span>
-        <span class="text-caractere">{{ classement.data|format_pivot_value }}</span>
+            <span class="text-caractere">{{ classement.data|format_pivot_value }}</span>
+        {% endif %}
     {% endfor %}
 </div>
