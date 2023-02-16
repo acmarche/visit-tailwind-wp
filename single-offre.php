@@ -2,6 +2,8 @@
 
 namespace VisitMarche\ThemeTail;
 
+use AcMarche\Pivot\Event\EventUtils;
+use AcMarche\Pivot\Utils\SortUtils;
 use Exception;
 use VisitMarche\ThemeTail\Inc\AssetsLoad;
 use VisitMarche\ThemeTail\Lib\GpxViewer;
@@ -31,6 +33,12 @@ try {
     get_footer();
 
     return;
+}
+
+if (count($offre->dates) > 0) {
+    if ($eventOk = EventUtils::isEventObsolete($offre)) {
+        $offre = $eventOk;
+    }
 }
 
 $latitude = $offre->getAdresse()->latitude ?? null;
