@@ -384,7 +384,13 @@ class WpRepository
         }
 
         $events = $pivotRepository->fetchEvents($removeObsolete, $filtres);
-
+        foreach ($events as $event) {
+            $firstDate = $event->firstDate();
+            if ($firstDate) {
+                $event->dateBegin = $firstDate->date_begin;
+                $event->dateEnd = $firstDate->date_end;
+            }
+        }
         foreach ($events as $event) {
             $event->locality = $event->getAdresse()->localite[0]->get('fr');
             $event->dateEvent = [
