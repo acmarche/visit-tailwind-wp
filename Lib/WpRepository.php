@@ -384,13 +384,7 @@ class WpRepository
         }
 
         $events = $pivotRepository->fetchEvents($removeObsolete, $filtres);
-        foreach ($events as $event) {
-            $firstDate = $event->firstDate();
-            if ($firstDate) {
-                $event->dateBegin = $firstDate->date_begin;
-                $event->dateEnd = $firstDate->date_end;
-            }
-        }
+        $data = [];
         foreach ($events as $event) {
             $event->locality = $event->getAdresse()->localite[0]->get('fr');
             $event->dateEvent = [
@@ -401,9 +395,10 @@ class WpRepository
             if (count($event->images) == 0) {
                 $event->images = [get_template_directory_uri().'/assets/tartine/bg_events.png'];
             }
+            $data[] = $event;
         }
 
-        return $events;
+        return $data;
     }
 
     /**
