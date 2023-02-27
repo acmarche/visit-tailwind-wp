@@ -14,7 +14,7 @@ if ($keyword) {
         $results = $searcher->searchFromWww($keyword);
         $hits = json_decode($results, null, 512, JSON_THROW_ON_ERROR);
     } catch (Exception $exception) {
-        Twig::rend500Page();
+        Twig::rend500Page($exception->getMessage());
         Mailer::sendError('visit error search', $exception->getMessage());
         get_footer();
 
@@ -22,7 +22,7 @@ if ($keyword) {
     }
 }
 if (isset($hits['error'])) {
-    Twig::rend500Page();
+    Twig::rend500Page($hits['error']);
     Mailer::sendError('visit error search', $hits['error']);
     get_footer();
 

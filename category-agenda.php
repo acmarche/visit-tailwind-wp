@@ -4,6 +4,7 @@ namespace VisitMarche\ThemeTail;
 
 use AcMarche\Pivot\DependencyInjection\PivotContainer;
 use AcMarche\Pivot\Entity\TypeOffre;
+use Psr\Cache\InvalidArgumentException;
 use VisitMarche\ThemeTail\Lib\LocaleHelper;
 use VisitMarche\ThemeTail\Lib\RouterPivot;
 use VisitMarche\ThemeTail\Lib\Twig;
@@ -40,8 +41,8 @@ try {
         },
         $events
     );
-} catch (\Exception $e) {
-    Twig::rend500Page();
+} catch (\Exception|InvalidArgumentException $e) {
+    Twig::rend500Page($e->getMessage());
     get_footer();
 
     return;

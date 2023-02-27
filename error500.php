@@ -12,7 +12,7 @@ use VisitMarche\ThemeTail\Lib\Twig;
 //$statusCode;  $statusText;
 //get_header();
 
-Twig::rend500Page();
+Twig::rend500Page(RouterPivot::getCurrentUrl());
 get_footer();
 
 try {

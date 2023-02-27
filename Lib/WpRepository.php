@@ -374,6 +374,10 @@ class WpRepository
         });
     }
 
+    /**
+     * @throws NonUniqueResultException
+     * @throws InvalidArgumentException
+     */
     public function getEvents(bool $removeObsolete = true, TypeOffre $typeOffre = null): array
     {
         $pivotRepository = PivotContainer::getPivotRepository(WP_DEBUG);

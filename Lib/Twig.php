@@ -112,7 +112,7 @@ class Twig
         }
     }
 
-    public static function rend500Page(): void
+    public static function rend500Page(?string $message): void
     {
         $twig = self::LoadTwig();
 
@@ -125,6 +125,7 @@ class Twig
                 'imagePosition' => 'bottom center',
                 'categoryName' => 'Accueil',
                 'nameBack' => 'Acceuil',
+                'message'=>$message
             ]
         );
     }

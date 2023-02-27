@@ -29,7 +29,7 @@ try {
     $offre = $wpRepository->getOffreByCgtAndParse($codeCgt);
 } catch (Exception $e) {
     get_header();
-    Twig::rend500Page();
+    Twig::rend500Page($e->getMessage());
     get_footer();
 
     return;
