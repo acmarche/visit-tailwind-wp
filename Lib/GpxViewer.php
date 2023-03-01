@@ -2,7 +2,6 @@
 
 namespace VisitMarche\ThemeTail\Lib;
 
-use AcMarche\Pivot\Entities\Offre\Offre;
 use AcMarche\Pivot\Entities\Specification\Gpx;
 use Exception;
 use phpGPX\Models\Point;
@@ -21,31 +20,13 @@ class GpxViewer
 {
     public string $folder_gpx = 'var/gpx/';
 
-    public function renderWithPlugin(Offre $offre, Gpx $gpx): ?string
+    public function renderWithPlugin(Gpx $gpx): void
     {
         $fileName = $gpx->codeCgt.'.'.phpGPX::XML_FORMAT;
         $filePath = ABSPATH.$this->folder_gpx.$fileName;
         if (!$this->writeTmpFile($filePath, $gpx->url)) {
             $this->elevation($filePath, $gpx);
         }
-
-        return null;
-        $urlLocal = '/'.$this->folder_gpx.$fileName;
-        $options = [
-            'src' => $urlLocal,
-            'name' => 'Gpx',
-            'color' => '#fd8383',
-            'width' => '3',
-            'distance_unit' => 'km',
-            "height_unit" => "m",
-            "step_min" => "300",
-            "icon_url" => RouterPivot::getUrlSite()."/wp-content/plugins/gpx-viewer/images/",
-            'download_button' => true,
-        ];
-
-        $gpx = gpx_view($options);
-
-        return $gpx;
     }
 
     public function elevation(string $pathName, Gpx $gpx)
@@ -90,7 +71,6 @@ class GpxViewer
         if ($fileGpx->metadata->author) {
             $fileGpx->metadata->author->name = htmlentities($fileGpx->metadata->author->name);
         }
-
         if ($elevationOk) {
             $fileGpx->save($pathName, phpGPX::XML_FORMAT);
         }
@@ -115,7 +95,6 @@ class GpxViewer
         foreach ($locations as $location) {
             $tmps[] = [$location['latitude'], $location['longitude']];
             if (count($tmps) > 60) {
-                dump('launch');
                 $tmp = $this->launchRequest($tmps);
                 if (count($tmp) > 0) {
                     $results[] = $tmp;
@@ -193,7 +172,7 @@ class GpxViewer
         return $results;
     }
 
-    private function findElevations(array $locations)
+    private function findElevations(array $locations): array
     {
         global $wpdb;
         $missing = [];
@@ -213,33 +192,6 @@ class GpxViewer
         }
 
         return ['locations' => $locations, 'missing' => $missing];
-    }
-
-    /**
-     * @throws Exception
-     */
-    private
-    function requestElevation(
-        $httpClient,
-        $urlBase,
-        array $location
-    ): string {
-        try {
-            $response = $httpClient->request(
-                'GET',
-                $urlBase, [
-                    'query' => [
-                        'locations' => $location['latitude'].','.$location['longitude'],
-                    ],
-                    'timeout' => 2.5,
-                ]
-            );
-
-            return $response->getContent();
-        } catch (ClientException|ClientExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface|TransportExceptionInterface $exception) {
-            Mailer::sendError('elevation', 'el '.$exception->getMessage());
-            throw  new Exception($exception->getMessage(), $exception->getCode(), $exception);
-        }
     }
 
     public function writeTmpFile(string $filePath, string $url): bool
@@ -297,7 +249,6 @@ class GpxViewer
                 'file2' => $file2,
             ]
         );
-
     }
 
     /**
@@ -318,6 +269,23 @@ class GpxViewer
         return $attachments[0];
     }
 
+    private function gpxView(string $fileName)
+    {
+        $urlLocal = '/'.$this->folder_gpx.$fileName;
+        $options = [
+            'src' => $urlLocal,
+            'name' => 'Gpx',
+            'color' => '#fd8383',
+            'width' => '3',
+            'distance_unit' => 'km',
+            "height_unit" => "m",
+            "step_min" => "300",
+            "icon_url" => RouterPivot::getUrlSite()."/wp-content/plugins/gpx-viewer/images/",
+            'download_button' => true,
+        ];
+
+        $gpx = gpx_view($options);
+    }
 
     private function requestElevationsGet(array $locations): array
     {
@@ -345,6 +313,32 @@ class GpxViewer
         }
 
         return $locations;
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function requestElevation(
+        $httpClient,
+        $urlBase,
+        array $location
+    ): string {
+        try {
+            $response = $httpClient->request(
+                'GET',
+                $urlBase, [
+                    'query' => [
+                        'locations' => $location['latitude'].','.$location['longitude'],
+                    ],
+                    'timeout' => 2.5,
+                ]
+            );
+
+            return $response->getContent();
+        } catch (ClientException|ClientExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface|TransportExceptionInterface $exception) {
+            Mailer::sendError('elevation', 'el '.$exception->getMessage());
+            throw  new Exception($exception->getMessage(), $exception->getCode(), $exception);
+        }
     }
 
     private function requestElevationBroken(array $locations): string
