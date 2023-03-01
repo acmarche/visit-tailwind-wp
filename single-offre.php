@@ -70,7 +70,7 @@ $locations = [];
 $gpxViewer = new GpxViewer();
 if (count($offre->gpxs) > 0) {
     $gpx = $offre->gpxs[0];
-    $gpxViewer->renderWithPlugin($offre, $gpx);
+    $gpxViewer->renderWithPlugin($gpx);
     if ($gpx && isset($gpx->data['locations'])) {
         foreach ($gpx->data['locations'] as $location) {
             $locations[] = [$location['latitude'], $location['longitude']];
