@@ -1,4 +1,4 @@
 {% if gpx %}
-    <div id="data-chart" data-points="{{ gpx.data.locations|json_encode }}"></div>
+    <div id="data-chart" data-points="{{ gpx.data.locations|json_encode }}" data-metres="{{ gpx.data.metres|json_encode }}"></div>
     <canvas id="myChart" class="m-auto" style="width: 520px;"></canvas>
 {% endif %}

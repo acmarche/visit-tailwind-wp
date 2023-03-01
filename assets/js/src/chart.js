@@ -5,33 +5,14 @@ export const createChart = (marker) => {
     const ctx = document.getElementById('myChart').getContext('2d');
     const chartData = document.getElementById('data-chart');
     const data = JSON.parse(chartData.dataset.points);
-    const distances = [];
-
-    for (let i = 0; i < data.length - 1; i++) {
-        let firstElement = data[i];
-        let secondElement = data[i + 1];
-        let result = distanceInMeter(firstElement.latitude, firstElement.longitude, secondElement.latitude, secondElement.longitude);
-        distances.push(result);
-    }
-
-    const metres = [];
-    for (let i = 0; i < data.length - 1; i++) {
-        let precedent = 0;
-        if (i > 0) {
-            precedent = parseFloat(metres[i - 1]);
-        }
-        const total = parseFloat(distances[i]) + precedent;
-        metres.push(total);
-    }
+    const miles = JSON.parse(chartData.dataset.metres);
 
     const elevations = [];
     data.forEach(item => {
         elevations.push(item.elevation);
     });
 
-    const footer = (tooltipItems) => {
-        return 'Sum: ';
-    };
+    //miles.forEach(element => console.log(element))
 
     const options = {
         responsive: true,
@@ -42,9 +23,6 @@ export const createChart = (marker) => {
             tooltip: {
                 mode: 'index',
                 intersect: false,
-                callbacks: {
-                    footer: footer,
-                }
             },
             title: {
                 display: true,
@@ -52,7 +30,7 @@ export const createChart = (marker) => {
             },
         },
         hover: {
-            mode: 'index',//point ?
+            mode: 'index',
         },
         onHover: (e) => {
             const lm = (myChart.getElementsAtEventForMode(e, 'index', {intersec: false}, true))
@@ -65,12 +43,12 @@ export const createChart = (marker) => {
             y: {
                 beginAtZero: true,
                 min: 200,
-                max: 350
+                max: 400
             },
             x: {
                 ticks: {
-                    callback: function(value)  {
-                        return `${parseInt(value) / 10} km`
+                    callback: function (value, index, ticks) {
+                        return miles[index] + ' km'
                     }
                 }
             }
@@ -80,7 +58,7 @@ export const createChart = (marker) => {
     const myChart = new Chart(ctx, {
         type: 'line',
         data: {
-            labels: metres.map(row => Math.floor(row)),
+            labels: miles,
             datasets: [{
                 label: 'Elevation en mètre',
                 data: elevations,
@@ -93,23 +71,6 @@ export const createChart = (marker) => {
         },
         options: options
     });
-
-}
-
-function distanceInMeter(lat1, lon1, lat2, lon2) {
-    const R = 6371e3; // metres
-    const pi1 = lat1 * Math.PI / 180; // φ, λ in radians
-    const pi2 = lat2 * Math.PI / 180;
-    const pi3 = (lat2 - lat1) * Math.PI / 180;
-    const pi4 = (lon2 - lon1) * Math.PI / 180;
-
-    const a = Math.sin(pi3 / 2) * Math.sin(pi3 / 2) +
-        Math.cos(pi1) * Math.cos(pi2) *
-        Math.sin(pi4 / 2) * Math.sin(pi4 / 2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-     // in metres
-    return R * c;
 }
 
 function movePoint(marker, coordinates) {

@@ -53,8 +53,46 @@ class GpxViewer
             $missing = $tab['missing'];
             $locations = $tab['locations'];
         }
-        $gpx->data = $tab;
+        $a = 1;
+        $distances = [0 => 0];
+        $countLocations = count($locations);
+        foreach ($locations as $location) {
+            $b = $a + 1;
+            if ($b == $countLocations) {
+                break;
+            }
+            $distances[] = $this->vincentyGreatCircleDistance(
+                $locations[$a]['latitude'],
+                $locations[$a]['longitude'],
+                $locations[$b]['latitude'],
+                $locations[$b]['longitude']
+            );
+            $a++;
+        }
+        $tab['distances'] = $distances;
 
+        $a = 0;
+        $metres = [0 => $distances[$a]];
+        $countDistances = count($distances);
+        $a++;
+        foreach ($distances as $distance) {
+            $b = $a + 1;
+            if ($b == $countDistances) {
+                break;
+            }
+            $precedent = $a - 1;
+            $cal = $metres[$precedent] + $distances[$b];
+            $metres[$a] = $cal;
+            $a++;
+        }
+
+        foreach ($metres as $key => $metre) {
+            $metres[$key] = number_format(number_format($metre, 0, '.', '') / 1000, 2, '.', '');
+        }
+
+        $tab['metres'] = $metres;
+
+        $gpx->data = $tab;
         $elevationOk = false;
 
         foreach ($fileGpx->tracks as $track) {
@@ -388,16 +426,16 @@ class GpxViewer
      * @param float $longitudeFrom Longitude of start point in [deg decimal]
      * @param float $latitudeTo Latitude of target point in [deg decimal]
      * @param float $longitudeTo Longitude of target point in [deg decimal]
-     * @param float $earthRadius Mean earth radius in [m]
-     * @return float Distance between points in [m] (same as earthRadius)
+     * @param int $earthRadius Mean earth radius in [m]
+     * @return float|int Distance between points in [m] (same as earthRadius)
      */
     private function vincentyGreatCircleDistance(
-        $latitudeFrom,
-        $longitudeFrom,
-        $latitudeTo,
-        $longitudeTo,
-        $earthRadius = 6371000
-    ) {
+        float $latitudeFrom,
+        float $longitudeFrom,
+        float $latitudeTo,
+        float $longitudeTo,
+        int $earthRadius = 6371000
+    ): float|int {
         // convert from degrees to radians
         $latFrom = deg2rad($latitudeFrom);
         $lonFrom = deg2rad($longitudeFrom);
