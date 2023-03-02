@@ -310,7 +310,7 @@ class WpRepository
     {
         $video = null;
         if ($imageId = get_term_meta($category->term_id, 'video', true)) {
-            $video = esc_url(wp_get_attachment_image_url(($imageId), 'full'));
+            $video = esc_url(wp_get_attachment_url(($imageId)));
         }
 
         return $video;
