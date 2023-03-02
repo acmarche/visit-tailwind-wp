@@ -44,7 +44,7 @@ $icone = $wpRepository->categoryIcone($category);
 $bgcat = $wpRepository->categoryBgColor($category);
 $image = $wpRepository->categoryImage($category);
 $video = $wpRepository->categoryVideo($category);
-
+dump($video);
 $children = $wpRepository->getChildrenOfCategory($category->cat_ID);
 $offres = [];
 
