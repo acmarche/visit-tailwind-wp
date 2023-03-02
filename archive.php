@@ -43,6 +43,7 @@ if ('manual' === $category_order) {
 $icone = $wpRepository->categoryIcone($category);
 $bgcat = $wpRepository->categoryBgColor($category);
 $image = $wpRepository->categoryImage($category);
+$video = $wpRepository->categoryVideo($category);
 
 $children = $wpRepository->getChildrenOfCategory($category->cat_ID);
 $offres = [];
@@ -91,6 +92,7 @@ Twig::rendPage(
         'name' => $categoryName,
         'excerpt' => $category->description,
         'image' => $image,
+        'video' => $video,
         'bgCat' => $bgcat,
         'icone' => $icone,
         'category' => $category,
