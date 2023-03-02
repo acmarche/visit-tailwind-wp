@@ -306,6 +306,16 @@ class WpRepository
         return $image;
     }
 
+    public function categoryVideo(WP_Term $category): ?string
+    {
+        $video = null;
+        if ($imageId = get_term_meta($category->term_id, 'video', true)) {
+            $video = esc_url(wp_get_attachment_image_url(($imageId), 'full'));
+        }
+
+        return $video;
+    }
+
     public function categoryBgColor(WP_Term $category): string
     {
         return IconeEnum::bgColor($category->slug);
