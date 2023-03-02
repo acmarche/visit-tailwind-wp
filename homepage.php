@@ -4,6 +4,7 @@ namespace VisitMarche\ThemeTail;
 
 use AcSort;
 use Exception;
+use SortLink;
 use VisitMarche\ThemeTail\Inc\CategoryMetaBox;
 use VisitMarche\ThemeTail\Inc\Menu;
 use VisitMarche\ThemeTail\Lib\RouterPivot;
@@ -38,7 +39,10 @@ try {
 } catch (Exception $exception) {
     $events = [];
 }
-
+$sortLink = false;
+if (current_user_can( 'edit_post', 2 )) {
+    $sortLink = SortLink::linkSortArticles(2);
+}
 $inspirations = array_slice($inspirations, 0, 4);
 $events = array_slice($events, 0, 4);
 $menu = new Menu();
@@ -68,6 +72,7 @@ Twig::rendPage(
         'intro' => $intro,
         'icones' => $icones,
         'bgimg' => $bgImg,
+        'sortLink' => $sortLink,
     ]
 );
 get_footer();
