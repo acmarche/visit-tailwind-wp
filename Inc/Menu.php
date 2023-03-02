@@ -70,6 +70,11 @@ class Menu
                 'mice' => get_category_by_slug('mice'),
                 'inspirations' => get_category_by_slug('inspirations'),
                 'pratique' => get_category_by_slug('pratique'),
+                'arts' => get_category_by_slug('arts'),
+                'balades' => get_category_by_slug('balades'),
+                'fetes' => get_category_by_slug('fetes'),
+                'gourmandises' => get_category_by_slug('gourmandises'),
+                'patrimoine' => get_category_by_slug('patrimoine'),
                 'agenda' => get_category_by_slug('agenda'),
             ];
             $menu = array_map(
