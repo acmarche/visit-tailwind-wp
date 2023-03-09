@@ -2,7 +2,6 @@
 
 namespace VisitMarche\ThemeTail\Inc;
 
-use AcMarche\Pivot\Entities\Offre\Offre;
 use VisitMarche\ThemeTail\Lib\LocaleHelper;
 use VisitMarche\ThemeTail\Lib\PostUtils;
 use VisitMarche\ThemeTail\Lib\RouterPivot;
@@ -117,13 +116,16 @@ class Seo
             $base = self::baseTitle('');
             $label = $offre->typeOffre->labelByLanguage($language);
             self::$metas['title'] = $offre->nameByLanguage($language).' '.$label.' '.$base;
-            self::$metas['description'] = implode(
+            $description = implode(
                 ',',
                 array_map(
                     fn($description) => $description->value,
                     $offre->descriptionsByLanguage($language)
                 )
             );
+            if ($description) {
+                self::$metas['description'] = self::cleanString($description);
+            }
             $keywords = array_map(
                 fn($tag) => $tag->labelByLanguage($language),
                 $offre->tags
