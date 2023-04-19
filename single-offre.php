@@ -3,8 +3,6 @@
 namespace VisitMarche\ThemeTail;
 
 use AcMarche\Pivot\Event\EventUtils;
-use AcMarche\Pivot\Utils\SortUtils;
-use Exception;
 use VisitMarche\ThemeTail\Inc\AssetsLoad;
 use VisitMarche\ThemeTail\Lib\GpxViewer;
 use VisitMarche\ThemeTail\Lib\LocaleHelper;
@@ -27,7 +25,7 @@ if (!str_contains($codeCgt, "-")) {
 
 try {
     $offre = $wpRepository->getOffreByCgtAndParse($codeCgt);
-} catch (Exception $e) {
+} catch (\Exception $e) {
     get_header();
     Twig::rend500Page($e->getMessage());
     get_footer();
