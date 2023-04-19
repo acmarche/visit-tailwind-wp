@@ -44,6 +44,7 @@ $longitude = $offre->getAdresse()->longitude ?? null;
 if ($latitude && $longitude) {
     AssetsLoad::enqueueLeaflet();
 }
+AssetsLoad::enqueueSlider();
 get_header();
 if (!$currentCategory = get_category_by_slug(get_query_var('category_name'))) {
     $currentCategory = get_category_by_slug('non-classifiee');

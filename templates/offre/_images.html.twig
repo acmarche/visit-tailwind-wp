@@ -1,12 +1,24 @@
 {% if offre.images|length > 1 %}
-    <div class="carousel"
-         data-flickity='{ "imagesLoaded": true,"freeScroll": true,"wrapAround": true,"pageDots": false }'>
-        {% for media in offre.images %}
-            <div class="carousel-cell">
-                <img src="{{ media }}" alt="orange tree" loading="lazy"/>
-            </div>
-        {% endfor %}
+    <div class="swiper mySwiper">
+        <div class="swiper-wrapper">
+            {% for media in offre.images %}
+                <div class="swiper-slide">
+                    <img src="{{ media }}" alt="orange tree" loading="lazy"/>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="swiper-button-next"></div>
+        <div class="swiper-button-prev"></div>
     </div>
+    <!-- Initialize Swiper -->
+    <script>
+        var swiper = new Swiper(".mySwiper", {
+            navigation: {
+                nextEl: ".swiper-button-next",
+                prevEl: ".swiper-button-prev",
+            },
+        });
+    </script>
 {% elseif offre.images|length > 0 %}
     <img src="{{ offre.images[0] }}" alt="orange tree" loading="lazy"/>
 {% endif %}

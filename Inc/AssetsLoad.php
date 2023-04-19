@@ -114,20 +114,21 @@ class AssetsLoad
         );
     }
 
-    function slider() {
 
-        wp_enqueue_script(
-            'slider-flickity-js',
-            'https://unpkg.com/flickity@2/dist/flickity.pkgd.min.js',
+    public function slider(): void
+    {
+        wp_register_style(
+            'visitmarche-slider-css',
+            'https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css',
             [],
-            false,
-            false
+            null
         );
-        wp_enqueue_style(
-            'flickity-css',
-            'https://unpkg.com/flickity@2/dist/flickity.min.css',
+        wp_register_script(
+            'visitmarche-slider-js',
+            'https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js',
+            [],
+            null
         );
-
     }
 
     /**
@@ -148,7 +149,7 @@ class AssetsLoad
 
     function addDefer($tag, $handle, $src)
     {
-        if (!in_array($handle, ['alpine-js', 'menuMobile-js', 'searchXl-js', 'refreshOffres-js', 'share-js','slider-js'])) {
+        if (!in_array($handle, ['alpine-js', 'menuMobile-js', 'searchXl-js', 'refreshOffres-js', 'share-js'])) {
             return $tag;
         }
 
@@ -168,5 +169,11 @@ class AssetsLoad
         wp_enqueue_style('visitmarche-leaflet-elevation-css');
         wp_enqueue_script('visitmarche-leaflet-ui-js');
         wp_enqueue_script('visitmarche-leaflet-elevation-js');
+    }
+
+    public static function enqueueSlider()
+    {
+        wp_enqueue_style('visitmarche-slider-css');
+        wp_enqueue_script('visitmarche-slider-js');
     }
 }
