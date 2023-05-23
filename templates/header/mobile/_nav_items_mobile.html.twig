@@ -1,11 +1,11 @@
-<nav    x-cloak
-        class="xl:hidden fixed bg-cta-dark bottom-0 left-0 right-0 h-full w-full transition-all duration-500"
-        x-bind:class="
+<nav x-cloak
+     x-show=menuMobileIsOpen
+     class="xl:hidden fixed bg-cta-dark bottom-0 left-0 right-0 h-full w-full transition-all duration-500"
+     :class="
         menuMobileIsOpen
           ? 'top-0'
-          : 'top-full'
-      "
-        id="menu-organise">
+          : 'top-full'"
+     id="menu-organise">
 
     <ul
             class="flex flex-col items-center justify-center h-full mt-3 box-border">
