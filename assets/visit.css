@@ -3494,6 +3494,10 @@ img, video, iframe {
     margin-right: 1rem;
   }
 
+  .md\:w-56 {
+    width: 14rem;
+  }
+
   .md\:w-64 {
     width: 16rem;
   }
@@ -3516,16 +3520,8 @@ img, video, iframe {
     height: 15rem;
   }
 
-  .lg\:w-64 {
-    width: 16rem;
-  }
-
   .lg\:max-w-xs {
     max-width: 20rem;
-  }
-
-  .lg\:flex-wrap {
-    flex-wrap: wrap;
   }
 
   .lg\:text-left {
