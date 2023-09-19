@@ -1,15 +1,20 @@
 <footer data-template="{{ showTemplate() }}"
         class="flex flex-col justify-between bg-caractere p-5 pb-20 font-montserrat-light text-white xl:grid xl:grid-cols-4 xl:pb-5"
 >
-    <div class="flex gap-2">
-        <a href="/{{ locale }}" class="">
+    <div class="flex flex-wrap gap-2 w-64">
+        <a href="/{{ locale }}" class="hover:scale-125 transition-all duration-700">
             <img src="{{ template_uri() }}/assets/tartine/visit_logo.png"
-                 alt="logo visit" class="w-20 h-12"/>
+                 alt="logo visit" class="w22-20 h-12"/>
         </a>
-        <a href="https://www.marche.be" class=""
+        <a href="https://www.marche.be" class="hover:scale-125 transition-all duration-700"
            title="template">
             <img src="{{ template_uri() }}/assets/tartine/marche_logo.png"
-                 alt="logo ville" class="w-20 h-12"/>
+                 alt="logo ville" class="w22-20 h-12"/>
+        </a>
+        <a href="https://visitwallonia.be/" class="hover:scale-125 transition-all duration-700"
+           title="template">
+            <img src="{{ template_uri() }}/assets/tartine/VISITWalloniaBlanc.png"
+                 alt="logo visit wallonia" class="w22-20 h-12"/>
         </a>
     </div>
     <div class="border-l border-l-white/50 px-3">
