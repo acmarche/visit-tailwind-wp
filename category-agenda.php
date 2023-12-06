@@ -33,7 +33,7 @@ if ($filterSelected) {
     }
 }
 try {
-    $events = $wpRepository->getEvents(typeOffre: $filtre);
+    $events = $wpRepository->getEvents( $filtre);
 
     array_map(
         function ($event) use ($cat_ID, $language) {

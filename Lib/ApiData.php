@@ -100,7 +100,7 @@ class ApiData
 
         if ([] !== $filtres) {
             if (in_array($currentCategoryId, Theme::CATEGORIES_AGENDA)) {
-                $offres = $wpRepository->getEvents(typeOffre: $typeOffreSelected);
+                $offres = $wpRepository->getEvents( $typeOffreSelected);
             } else {
                 $offres = $wpRepository->getOffres($filtres);
             }

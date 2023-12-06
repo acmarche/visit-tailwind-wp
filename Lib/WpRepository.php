@@ -263,7 +263,7 @@ class WpRepository
     public static function getChildrenEvents(bool $filterCount): array
     {
         $filtreRepository = PivotContainer::getTypeOffreRepository(WP_DEBUG);
-        $parents = $filtreRepository->findByUrn(UrnList::EVENT_CINEMA->value);
+        $parents = $filtreRepository->findByUrn(UrnList::EVENTS->value);
 
         return $filtreRepository->findByParent($parents[0]->parent->id, $filterCount);
     }
@@ -388,7 +388,7 @@ class WpRepository
      * @throws NonUniqueResultException
      * @throws InvalidArgumentException
      */
-    public function getEvents(bool $removeObsolete = true, TypeOffre $typeOffre = null): array
+    public function getEvents(TypeOffre $typeOffre = null): array
     {
         $pivotRepository = PivotContainer::getPivotRepository(WP_DEBUG);
         if ($typeOffre) {
@@ -397,7 +397,7 @@ class WpRepository
             $filtres = $this->getChildrenEvents(true);
         }
 
-        $events = $pivotRepository->fetchEvents($removeObsolete, $filtres);
+        $events = $pivotRepository->fetchEvents($filtres);
         $data = [];
         foreach ($events as $event) {
             $event->locality = $event->getAdresse()->localite[0]->get('fr');
