@@ -9,6 +9,7 @@ use VisitMarche\ThemeTail\Lib\LocaleHelper;
 use VisitMarche\ThemeTail\Lib\RouterPivot;
 use VisitMarche\ThemeTail\Lib\Twig;
 use VisitMarche\ThemeTail\Lib\WpRepository;
+use WP_Term;
 
 get_header();
 
@@ -19,7 +20,10 @@ $language = LocaleHelper::getSelectedLanguage();
 $translator = LocaleHelper::iniTranslator();
 
 $wpRepository = new WpRepository();
-$image = $wpRepository->categoryImage($category);
+$image = null;
+if ($category instanceof WP_Term) {
+    $image = $wpRepository->categoryImage($category);
+}
 $filterSelected = $_GET[RouterPivot::PARAM_FILTRE] ?? null;
 $nameBack = $translator->trans('menu.home');
 $categorName = $category->name;
@@ -33,7 +37,7 @@ if ($filterSelected) {
     }
 }
 try {
-    $events = $wpRepository->getEvents( $filtre);
+    $events = $wpRepository->getEvents($filtre);
 
     array_map(
         function ($event) use ($cat_ID, $language) {
@@ -48,7 +52,7 @@ try {
     return;
 }
 
-$filtres = $wpRepository->getChildrenEvents(true);
+$filtres = $wpRepository->getAllFiltersEvent(true);
 if (count($filtres) > 1) {
     $labelAll = $translator->trans('filter.all');
     $filtreTout = new TypeOffre($labelAll, 0, 0, "ALL", "", "Type", null);

@@ -188,7 +188,7 @@ class WpRepository
     /**
      * @param int $categoryWpId
      * @param bool $flatWithChildren pour admin ne pas etendre enfants
-     * @param bool $filterCount
+     * @param bool $removeFilterEmpty
      * @param bool $unsetParent pour ajax
      * @return array|TypeOffre[]
      * @throws NonUniqueResultException
@@ -196,17 +196,17 @@ class WpRepository
     public static function getCategoryFilters(
         int $categoryWpId,
         bool $flatWithChildren = false,
-        bool $filterCount = true,
+        bool $removeFilterEmpty = true,
         bool $unsetParent = false
     ): array {
         if (in_array($categoryWpId, Theme::CATEGORIES_HEBERGEMENT)) {
-            return WpRepository::getChildrenHebergements($filterCount);
+            return WpRepository::getChildrenHebergements($removeFilterEmpty);
         }
         if (in_array($categoryWpId, Theme::CATEGORIES_AGENDA)) {
-            return WpRepository::getChildrenEvents($filterCount);
+            return WpRepository::getAllFiltersEvent($removeFilterEmpty);
         }
         if (in_array($categoryWpId, Theme::CATEGORIES_RESTAURATION)) {
-            return WpRepository::getChildrenRestauration($filterCount);
+            return WpRepository::getChildrenRestauration($removeFilterEmpty);
         }
 
         $categoryUrns = PivotMetaBox::getMetaPivotTypesOffre($categoryWpId);
@@ -242,7 +242,7 @@ class WpRepository
             }
 
             if ($categoryUrn['withChildren']) {
-                $children = $typeOffreRepository->findByParent($typeOffre->id, $filterCount);
+                $children = $typeOffreRepository->findByParent($typeOffre->id, $removeFilterEmpty);
                 foreach ($children as $typeOffreChild) {
                     //bug parent is a proxy
                     if ($typeOffreChild->parent) {
@@ -260,36 +260,36 @@ class WpRepository
      * @return TypeOffre[]
      * @throws NonUniqueResultException|\Exception
      */
-    public static function getChildrenEvents(bool $filterCount): array
+    public static function getAllFiltersEvent(bool $removeFilterEmpty): array
     {
         $filtreRepository = PivotContainer::getTypeOffreRepository(WP_DEBUG);
         $parents = $filtreRepository->findByUrn(UrnList::EVENTS->value);
 
-        return $filtreRepository->findByParent($parents[0]->parent->id, $filterCount);
+        return $filtreRepository->findByParent($parents[0]->parent->id, $removeFilterEmpty);
     }
 
     /**
      * @return TypeOffre[]
      * @throws NonUniqueResultException|\Exception
      */
-    public static function getChildrenRestauration(bool $filterCount): array
+    public static function getChildrenRestauration(bool $removeFilterEmpty): array
     {
         $filtreRepository = PivotContainer::getTypeOffreRepository(WP_DEBUG);
         $barVin = $filtreRepository->findOneByUrn(UrnList::BAR_VIN->value);
 
-        return $filtreRepository->findByParent($barVin->parent->id, $filterCount);
+        return $filtreRepository->findByParent($barVin->parent->id, $removeFilterEmpty);
     }
 
     /**
      * @return TypeOffre[]
      * @throws NonUniqueResultException
      */
-    public static function getChildrenHebergements(bool $filterCount): array
+    public static function getChildrenHebergements(bool $removeFilterEmpty): array
     {
         $filtreRepository = PivotContainer::getTypeOffreRepository(WP_DEBUG);
         $filtre = $filtreRepository->findOneByUrn(UrnList::HERGEMENT->value);
 
-        return $filtreRepository->findByParent($filtre->id, $filterCount);
+        return $filtreRepository->findByParent($filtre->id, $removeFilterEmpty);
     }
 
     public function categoryImage(WP_Term $category): string
@@ -394,7 +394,7 @@ class WpRepository
         if ($typeOffre) {
             $filtres = [$typeOffre];
         } else {
-            $filtres = $this->getChildrenEvents(true);
+            $filtres = $this->getAllFiltersEvent(true);
         }
 
         $events = $pivotRepository->fetchEvents($filtres);
