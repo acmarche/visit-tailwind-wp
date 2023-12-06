@@ -387,6 +387,7 @@ class WpRepository
     /**
      * @throws NonUniqueResultException
      * @throws InvalidArgumentException
+     * @return Offre[]
      */
     public function getEvents(TypeOffre $typeOffre = null): array
     {
