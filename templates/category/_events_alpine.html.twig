@@ -1,6 +1,5 @@
-
 <ul class="pt-6 grid grid-cols-1 gap-2 xl:gap-4 xl:grid-cols-[repeat(3,minmax(0,1fr))]"
-x-show="isLoading===false">
+    x-show="isLoading===false">
     <template x-for="item in offres" :key="item.id">
         <li class="rounded-lg shadow-lg">
             <a :href="item.url"
@@ -9,7 +8,8 @@ x-show="isLoading===false">
                      class="justify-self-center self-center h-48 w-full rounded-t-lg opacity-100 transition-all duration-700 group-hover:scale-105 group-hover:opacity-60 lg:h-60"/>
                 <div class="grid grid-cols-[6rem,1fr] xl:grid-cols-[8rem,1fr] my-2">
                     <div class="flex flex-col items-center justify-center border-x transition-all duration-700 group-hover:bg-cta-light group-hover:text-white">
-                            <span class="font-montserrat-semi-bold text-xl" x-text="item.isPeriod === true ? ' > ' + item.dateEvent.day : '' + item.dateEvent.day">
+                            <span class="font-montserrat-semi-bold text-xl"
+                                  x-text="item.isPeriod === true ? ' > ' + item.dateEvent.day : '' + item.dateEvent.day">
 
                             </span>
                         <span class="" x-text="item.dateEvent.month"></span>
