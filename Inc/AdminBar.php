@@ -4,6 +4,7 @@ namespace VisitMarche\ThemeTail\Inc;
 
 use SortLink;
 use VisitMarche\ThemeTail\Lib\RouterPivot;
+use WP_Admin_Bar;
 
 class AdminBar
 {
@@ -12,9 +13,10 @@ class AdminBar
         add_action('admin_bar_menu', fn($wp_admin_bar) => $this->customize_my_wp_admin_bar($wp_admin_bar), 100);
     }
 
-    public function customize_my_wp_admin_bar($wp_admin_bar): void
+    public function customize_my_wp_admin_bar(WP_Admin_Bar $wp_admin_bar): void
     {
         $codeCgt = get_query_var(RouterPivot::PARAM_OFFRE);
+
         if ($codeCgt) {
             $wp_admin_bar->add_menu(
                 [
@@ -30,12 +32,19 @@ class AdminBar
             if ($sortLink) {
                 $wp_admin_bar->add_menu(
                     [
-                        'id' => 'sort',
+                        'id' => 'pivot_sort',
                         'title' => 'Trier les articles',
                         'href' => $sortLink,
                     ]
                 );
             }
+            $wp_admin_bar->add_menu(
+                    [
+                        'id' => 'pivot_filters',
+                        'title' => 'Filtres Pivot',
+                        'href' => '/wp-admin/admin.php?page=category_filters&catID='.$cat_ID,
+                    ]
+                );
         }
     }
 }

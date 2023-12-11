@@ -10,7 +10,6 @@ use VisitMarche\ThemeTail\Inc\Ajax;
 use VisitMarche\ThemeTail\Inc\ApiRoutes;
 use VisitMarche\ThemeTail\Inc\AssetsLoad;
 use VisitMarche\ThemeTail\Inc\OpenGraph;
-use VisitMarche\ThemeTail\Inc\PivotMetaBox;
 use VisitMarche\ThemeTail\Inc\SecurityConfig;
 use VisitMarche\ThemeTail\Inc\Seo;
 use VisitMarche\ThemeTail\Inc\SetupTheme;
@@ -45,10 +44,6 @@ new ApiRoutes();
  * Ajout de routage pour pivot
  */
 new RouterPivot();
-/**
- * Pour enregistrer filtres pivot
- */
-new PivotMetaBox();
 /**
  * Balises pour le référencement
  */

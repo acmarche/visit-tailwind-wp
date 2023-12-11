@@ -114,7 +114,6 @@ class AssetsLoad
         );
     }
 
-
     public function slider(): void
     {
         wp_register_style(

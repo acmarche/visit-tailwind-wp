@@ -127,7 +127,7 @@ class ApiData
         try {
             $offres = $wpRepository->getAllOffresShorts();
             $offres2 = array_filter($offres, function (array $offre) use ($name) {
-                if (preg_match(strtoupper("#".$name."#"), strtoupper($offre['nom'])) ||
+                if (preg_match(strtoupper("#".$name."#"), strtoupper($offre['name'])) ||
                     preg_match(strtoupper("#".$name."#"), $offre['codeCgt'])) {
                     return true;
                 }
@@ -135,7 +135,7 @@ class ApiData
                 return false;
             });
 
-            return rest_ensure_response($offres2);
+            return rest_ensure_response(array_values($offres2));
         } catch (InvalidArgumentException $e) {
             return rest_ensure_response(['error' => $e->getMessage()]);
         }

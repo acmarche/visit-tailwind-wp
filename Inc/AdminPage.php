@@ -50,6 +50,22 @@ class AdminPage
             'pivot_offres',
             fn() => $this::allOffersRender(),
         );
+        add_submenu_page(
+            'pivot_home',
+            'Filtres sur une catégorie',
+            'Filtres sur une catégorie',
+            'edit_posts',
+            'category_filters',
+            fn() => $this::categoryFiltersRender(),
+        );
+        add_submenu_page(
+            'pivot_home',
+            'Offres sur une catégorie',
+            'Offres sur une catégorie',
+            'edit_posts',
+            'category_offers',
+            fn() => $this::categoryOffersRender(),
+        );
     }
 
     private static function homepageRender(): void
@@ -112,6 +128,74 @@ class AdminPage
             '@VisitTail/admin/offers_list.html.twig',
             [
                 'offers' => $offres,
+            ]
+        );
+    }
+
+    private static function categoryFiltersRender()
+    {
+        $catID = (int)$_GET['catID'];
+        if (!$catID) {
+
+        }
+        $category = get_category($catID);
+
+        wp_enqueue_script(
+            'vue-admin-js',
+            get_template_directory_uri().'/assets/js/dist/js/appFiltreAdmin-jf.js',
+            [],
+            wp_get_theme()->get('Version'),
+            true
+        );
+        wp_enqueue_style(
+            'vue-admin-css',
+            get_template_directory_uri().'/assets/js/dist/css/appFiltreAdmin-jf.css',
+            [],
+            wp_get_theme()->get('Version'),
+        );
+
+        $url = admin_url('admin.php?page=pivot_filtres');
+
+        Twig::rendPage(
+            '@VisitTail/admin/category_filters.html.twig',
+            [
+                'urlAdmin' => $url,
+                'category' => $category,
+                'catId' => $catID,
+            ]
+        );
+    }
+
+    private static function categoryOffersRender()
+    {
+        $catID = (int)$_GET['catID'];
+        if (!$catID) {
+
+        }
+        $category = get_category($catID);
+
+        wp_enqueue_script(
+            'vue-admin-js',
+            get_template_directory_uri().'/assets/js/dist/js/appFiltreAdmin-jf.js',
+            [],
+            wp_get_theme()->get('Version'),
+            true
+        );
+        wp_enqueue_style(
+            'vue-admin-css',
+            get_template_directory_uri().'/assets/js/dist/css/appFiltreAdmin-jf.css',
+            [],
+            wp_get_theme()->get('Version'),
+        );
+
+        $url = admin_url('admin.php?page=pivot_filtres');
+
+        Twig::rendPage(
+            '@VisitTail/admin/category_offers.html.twig',
+            [
+                'urlAdmin' => $url,
+                'category' => $category,
+                'catId' => $catID,
             ]
         );
     }

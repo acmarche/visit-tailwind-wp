@@ -2,7 +2,6 @@
 
 namespace VisitMarche\ThemeTail\Lib;
 
-use VisitMarche\ThemeTail\Inc\PivotMetaBox;
 use WP_List_Table;
 
 class PivotCategoriesTable extends WP_List_Table
@@ -52,7 +51,7 @@ class PivotCategoriesTable extends WP_List_Table
 
     function getFiltres(\WP_Term $item): string
     {
-        $categoryFiltres = PivotMetaBox::getMetaPivotTypesOffre($item->term_id);
+        $categoryFiltres = WpRepository::getMetaPivotTypesOffre($item->term_id);
         $urns = [];
         foreach ($categoryFiltres as $data) {
             if (isset($data['urn'])) {

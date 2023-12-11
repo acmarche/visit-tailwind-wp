@@ -3,6 +3,7 @@
 namespace VisitMarche\ThemeTail\Inc;
 
 use AcMarche\Pivot\DependencyInjection\PivotContainer;
+use VisitMarche\ThemeTail\Lib\WpRepository;
 
 class Ajax
 {
@@ -21,11 +22,11 @@ class Ajax
             $filtreRepository = PivotContainer::getTypeOffreRepository(WP_DEBUG);
             if ($filtre = $filtreRepository->find($id)) {
                 $urn = $filtre->urn;
-                $categoryFiltres = PivotMetaBox::getMetaPivotTypesOffre($categoryWpId);
+                $categoryFiltres = WpRepository::getMetaPivotTypesOffre($categoryWpId);
                 foreach ($categoryFiltres as $key => $data) {
                     if ($urn == $data['urn']) {
                         unset($categoryFiltres[$key]);
-                        update_term_meta($categoryWpId, PivotMetaBox::PIVOT_REFRUBRIQUE, $categoryFiltres);
+                        update_term_meta($categoryWpId, WpRepository::PIVOT_REFRUBRIQUE, $categoryFiltres);
                     }
                 }
             }
@@ -43,12 +44,12 @@ class Ajax
         $filtreRepository = PivotContainer::getTypeOffreRepository(WP_DEBUG);
 
         if ($categoryId > 0 && $typeOffreId > 0) {
-            $categoryFiltres = PivotMetaBox::getMetaPivotTypesOffre($categoryId);
+            $categoryFiltres = WpRepository::getMetaPivotTypesOffre($categoryId);
             $filtre = $filtreRepository->find($typeOffreId);
             if ($filtre) {
                 $meta = ['urn' => $filtre->urn, 'withChildren' => $withChildren];
                 $categoryFiltres[] = $meta;
-                update_term_meta($categoryId, PivotMetaBox::PIVOT_REFRUBRIQUE, $categoryFiltres);
+                update_term_meta($categoryId, WpRepository::PIVOT_REFRUBRIQUE, $categoryFiltres);
             }
         }
         echo json_encode($categoryFiltres);

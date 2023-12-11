@@ -16,11 +16,12 @@
         {% for offer in offers %}
             <tr>
                 <td>
-                    <span>{{ offer.name }}</span>
+                     <a href="https://pivotgest.tourismewallonie.be/PivotGest-4.0.0/detail.xhtml?codeCgt={{ offer.codeCgt }}" target="_blank">
+                         {{ offer.name }}
+                     </a>
                 </td>
                 <td>
                     {{ offer.codeCgt }}
-
                 </td>
                 <td> {{ offer.type }}</td>
             </tr>

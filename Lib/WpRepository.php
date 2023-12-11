@@ -11,7 +11,6 @@ use AcMarche\Pivot\Spec\UrnList;
 use Doctrine\ORM\NonUniqueResultException;
 use Psr\Cache\InvalidArgumentException;
 use Symfony\Contracts\Cache\CacheInterface;
-use VisitMarche\ThemeTail\Inc\PivotMetaBox;
 use VisitMarche\ThemeTail\Inc\Theme;
 use VisitMarche\ThemeTail\Lib\Elasticsearch\Searcher;
 use WP_Post;
@@ -21,6 +20,7 @@ use WP_Term;
 class WpRepository
 {
     private CacheInterface $cache;
+    public const PIVOT_REFRUBRIQUE = 'pivot_refrubrique';
 
     public function __construct()
     {
@@ -210,7 +210,7 @@ class WpRepository
             return WpRepository::getChildrenRestauration($removeFilterEmpty);
         }
 
-        $categoryUrns = PivotMetaBox::getMetaPivotTypesOffre($categoryWpId);
+        $categoryUrns = WpRepository::getMetaPivotTypesOffre($categoryWpId);
         $typeOffreRepository = PivotContainer::getTypeOffreRepository(WP_DEBUG);
         $allFiltres = [];
 
@@ -445,7 +445,7 @@ class WpRepository
         foreach ($tmp as $offre) {
             $offres[] = [
                 'codeCgt' => $offre->codeCgt,
-                'nom' => $offre->nom,
+                'name' => $offre->nom,
                 'type' => $offre->typeOffre->label[0]->value,
             ];
         }
@@ -480,5 +480,15 @@ class WpRepository
         }
 
         return $categories;
+    }
+
+    public static function getMetaPivotTypesOffre(int $wpCategoryId): array
+    {
+        $filtres = get_term_meta($wpCategoryId, self::PIVOT_REFRUBRIQUE, true);
+        if (!is_array($filtres)) {
+            return [];
+        }
+
+        return $filtres;
     }
 }
