@@ -2,6 +2,7 @@
 
 namespace VisitMarche\ThemeTail\Lib;
 
+use AcMarche\Pivot\Api\QueryDetailEnum;
 use AcMarche\Pivot\DependencyInjection\PivotContainer;
 use AcMarche\Pivot\Entities\Offre\Offre;
 use AcMarche\Pivot\Entity\TypeOffre;
@@ -385,9 +386,9 @@ class WpRepository
     }
 
     /**
-     * @throws NonUniqueResultException
-     * @throws InvalidArgumentException
      * @return Offre[]
+     * @throws InvalidArgumentException
+     * @throws NonUniqueResultException
      */
     public function getEvents(TypeOffre $typeOffre = null): array
     {
@@ -427,6 +428,29 @@ class WpRepository
         $pivotRepository = PivotContainer::getPivotRepository(WP_DEBUG);
 
         return $pivotRepository->fetchOffres($typesOffre);
+    }
+
+    /**
+     * @return array
+     * @throws InvalidArgumentException
+     */
+    public function getAllOffresShorts(): array
+    {
+        $offres = [];
+        $pivotRepository = PivotContainer::getPivotRepository(WP_DEBUG);
+        $responseJson = $pivotRepository->getAllDataFromRemote(true, QueryDetailEnum::QUERY_DETAIL_LVL_RESUME);
+
+        $tmp = json_decode($responseJson)->offre;
+
+        foreach ($tmp as $offre) {
+            $offres[] = [
+                'codeCgt' => $offre->codeCgt,
+                'nom' => $offre->nom,
+                'type' => $offre->typeOffre->label[0]->value,
+            ];
+        }
+
+        return $offres;
     }
 
     /**

@@ -76,6 +76,21 @@ class ApiRoutes
                 );
             }
         );
+
+        add_action(
+            'rest_api_init',
+            function () {
+                register_rest_route(
+                    'visit',
+                    'findshorts/(?P<name>[\w]+)',
+                    [
+                        'methods' => 'GET',
+                        'callback' => fn($args) => ApiData::findShortsByNameOrCode($args),
+                    ],
+                    true
+                );
+            }
+        );
     }
 
     /**

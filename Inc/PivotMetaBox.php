@@ -37,7 +37,7 @@ class PivotMetaBox
         );
         wp_enqueue_style(
             'vue-admin-css',
-            get_template_directory_uri().'/assets/js/dist/css/admin-jf.css',
+            get_template_directory_uri().'/assets/js/dist/css/appFiltreAdmin-jf.css',
             [],
             wp_get_theme()->get('Version'),
         );

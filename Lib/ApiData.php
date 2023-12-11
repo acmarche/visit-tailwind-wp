@@ -3,6 +3,7 @@
 namespace VisitMarche\ThemeTail\Lib;
 
 use AcMarche\Pivot\DependencyInjection\PivotContainer;
+use Psr\Cache\InvalidArgumentException;
 use VisitMarche\ThemeTail\Entity\CommonItem;
 use VisitMarche\ThemeTail\Inc\Theme;
 use VisitMarche\ThemeTail\Lib\Elasticsearch\Data\ElasticData;
@@ -12,7 +13,7 @@ use WP_REST_Request;
 use WP_REST_Response;
 
 /**
- * Enregistrement des routes pour les api pour les composants vue
+ * Enregistrement des routes pour les api pour les composants VueJs
  */
 class ApiData
 {
@@ -39,7 +40,12 @@ class ApiData
             return new WP_Error(500, 'missing param categoryId');
         }
 
-        $filtres = WpRepository::getCategoryFilters($categoryWpId, $flatWithChildren, $removeFilterEmpty, unsetParent: true);
+        $filtres = WpRepository::getCategoryFilters(
+            $categoryWpId,
+            $flatWithChildren,
+            $removeFilterEmpty,
+            unsetParent: true
+        );
 
         return rest_ensure_response($filtres);
     }
@@ -100,7 +106,7 @@ class ApiData
 
         if ([] !== $filtres) {
             if (in_array($currentCategoryId, Theme::CATEGORIES_AGENDA)) {
-                $offres = $wpRepository->getEvents( $typeOffreSelected);
+                $offres = $wpRepository->getEvents($typeOffreSelected);
             } else {
                 $offres = $wpRepository->getOffres($filtres);
             }
@@ -112,5 +118,26 @@ class ApiData
         $offres = $postUtils->convertOffresToArray($offres, $currentCategoryId, $language);
 
         return [...$posts, ...$offres];
+    }
+
+    public static function findShortsByNameOrCode(WP_REST_Request $request): \WP_Error|WP_HTTP_Response|WP_REST_Response
+    {
+        $name = $request->get_param('name');
+        $wpRepository = new WpRepository();
+        try {
+            $offres = $wpRepository->getAllOffresShorts();
+            $offres2 = array_filter($offres, function (array $offre) use ($name) {
+                if (preg_match(strtoupper("#".$name."#"), strtoupper($offre['nom'])) ||
+                    preg_match(strtoupper("#".$name."#"), $offre['codeCgt'])) {
+                    return true;
+                }
+
+                return false;
+            });
+
+            return rest_ensure_response($offres2);
+        } catch (InvalidArgumentException $e) {
+            return rest_ensure_response(['error' => $e->getMessage()]);
+        }
     }
 }
