@@ -125,7 +125,7 @@ class Twig
                 'imagePosition' => 'bottom center',
                 'categoryName' => 'Accueil',
                 'nameBack' => 'Acceuil',
-                'message'=>$message
+                'message' => $message,
             ]
         );
     }
