@@ -3,9 +3,11 @@
 namespace VisitMarche\ThemeTail\Inc;
 
 use AcMarche\Pivot\DependencyInjection\PivotContainer;
+use Psr\Cache\InvalidArgumentException;
 use VisitMarche\ThemeTail\Lib\PivotCategoriesTable;
 use VisitMarche\ThemeTail\Lib\SyncPivot;
 use VisitMarche\ThemeTail\Lib\Twig;
+use VisitMarche\ThemeTail\Lib\WpRepository;
 
 class AdminPage
 {
@@ -40,9 +42,17 @@ class AdminPage
             'pivot_categories_filtre',
             fn() => $this::categoriesFiltresRender(),
         );
+        add_submenu_page(
+            'pivot_home',
+            'Toutes les offres',
+            'Toutes les offres',
+            'edit_posts',
+            'pivot_offres',
+            fn() => $this::allOffersRender(),
+        );
     }
 
-    private static function homepageRender()
+    private static function homepageRender(): void
     {
         Twig::rendPage(
             '@VisitTail/admin/home.html.twig',
@@ -53,7 +63,7 @@ class AdminPage
 
     }
 
-    private static function filtresRender()
+    private static function filtresRender(): void
     {
         $pivotRepository = PivotContainer::getTypeOffreRepository(WP_DEBUG);
         $filters = $pivotRepository->findWithChildren(true);
@@ -72,7 +82,7 @@ class AdminPage
         );
     }
 
-    private static function categoriesFiltresRender()
+    private static function categoriesFiltresRender(): void
     {
         $syncPivot = new SyncPivot();
         $syncPivot->cleanFiltres();
@@ -88,5 +98,21 @@ class AdminPage
             ?>
         </div>
         <?php
+    }
+
+    private static function allOffersRender(): void
+    {
+        $wpRepository = new WpRepository();
+        try {
+            $offres = $wpRepository->getAllOffresShorts();
+        } catch (InvalidArgumentException $e) {
+            $offres = [];
+        }
+        Twig::rendPage(
+            '@VisitTail/admin/offers_list.html.twig',
+            [
+                'offers' => $offres,
+            ]
+        );
     }
 }

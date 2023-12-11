@@ -1,0 +1,29 @@
+<!--CONTENT-->
+<div class="wrap">
+    <h2>Toutes les {{ offers|length }} offres disponibles dans le catalogue de Pivot</h2>
+    <table class="wp-list-table widefat fixed striped table-view-list toplevel_page_pivot_list">
+        <tr>
+            <th scope="col" id="booktitle" class="manage-column column-booktitle column-primary">
+                Nom
+            </th>
+            <th scope="col" id="booktitle" class="manage-column column-booktitle column-primary">
+                Code cgt
+            </th>
+            <th scope="col" id="booktitle" class="manage-column column-booktitle column-primary">
+                Type
+            </th>
+        </tr>
+        {% for offer in offers %}
+            <tr>
+                <td>
+                    <span>{{ offer.name }}</span>
+                </td>
+                <td>
+                    {{ offer.codeCgt }}
+
+                </td>
+                <td> {{ offer.type }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+</div>
