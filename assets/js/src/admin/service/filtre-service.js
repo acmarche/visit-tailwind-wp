@@ -33,6 +33,19 @@ export function fetchFiltresByName(name) {
     });
 }
 
+/**
+ * @param {string} name
+ * @returns {Promise}
+ */
+export function fetchOffersByNameOrCode(name) {
+    const params = {};
+    name = replaceAccents(name)
+    const url = `wp-json/pivot/findbyname/${name.toLowerCase()}`;
+    return axios.get(url, {
+        params
+    });
+}
+
 function replaceAccents(name) {
     const translate = {
         é: "e",
