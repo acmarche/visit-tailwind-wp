@@ -25,7 +25,7 @@ document.addEventListener('alpine:init', () => {
                 if (e !== null) {
                     this.filtreSelected = e.target.dataset.filtre
                 }
-                const url = `https://visitmarche.be/wp-json/pivot/offres/${this.currentCategory}/${this.filtreSelected}`;
+                const url = `https://visit.marche.be/wp-json/pivot/offres/${this.currentCategory}/${this.filtreSelected}`;
                 console.log(url)
                 this.offres = await fetch(url)
                     .then(function (response) {
