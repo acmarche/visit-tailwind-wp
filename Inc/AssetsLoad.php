@@ -148,7 +148,7 @@ class AssetsLoad
 
     function addDefer($tag, $handle, $src)
     {
-        if (!in_array($handle, ['alpine-js', 'menuMobile-js', 'searchXl-js', 'refreshOffres-js', 'share-js','vue-admin-filters-js'])) {
+        if (!in_array($handle, ['alpine-js', 'menuMobile-js', 'searchXl-js', 'refreshOffres-js', 'share-js'])) {
             return $tag;
         }
 
