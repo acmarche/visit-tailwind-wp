@@ -1,21 +1,13 @@
 <div class="wrap">
-    <h2>Filtres Pivot sur la catégorie Wordpress {{ category.name }}</h2>
-    <table class="form-table">
-        <tr class="form-field">
-            <th scope="row" valign="top">
-                <label for="bottin_refrubrique">Références pivot</label>
-                <br>
-                <p class="description">
-                    <a href="{{ urlAdmin }}" target="_blank">
-                        Liste des références</a>
-                </p>
-                <br/>
-            </th>
-            <td>
-                <div id="filtres-box" data-category-id="{{ catID }}">
+    <h2 class="text-3xl">
+        Filtres Pivot sur la catégorie <strong><a href="{{ categoryUrl }}">{{ category.name }}</a></strong>
+    </h2>
+    <br/>
+    <a href="{{ urlAdmin }}" target="_blank">Consulter la liste des références</a>
 
-                </div>
-            </td>
-        </tr>
-    </table>
+    <br/>
+    <br/>
+    <div id="filtres-box" data-category-id="{{ catId }}">
+
+    </div>
 </div>

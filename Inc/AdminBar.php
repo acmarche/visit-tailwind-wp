@@ -39,12 +39,19 @@ class AdminBar
                 );
             }
             $wp_admin_bar->add_menu(
-                    [
-                        'id' => 'pivot_filters',
-                        'title' => 'Filtres Pivot',
-                        'href' => '/wp-admin/admin.php?page=category_filters&catID='.$cat_ID,
-                    ]
-                );
+                [
+                    'id' => 'pivot_category_filters',
+                    'title' => 'Filtres Pivot',
+                    'href' => '/wp-admin/admin.php?page=category_filters&catID='.$cat_ID,
+                ]
+            );
+            $wp_admin_bar->add_menu(
+                [
+                    'id' => 'pivot_category_offers',
+                    'title' => 'Offres Pivot',
+                    'href' => '/wp-admin/admin.php?page=category_offers&catID='.$cat_ID,
+                ]
+            );
         }
     }
 }

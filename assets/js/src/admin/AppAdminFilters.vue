@@ -2,7 +2,7 @@
 import {ref, onMounted} from 'vue'
 import {fetchFiltresByCategoryRequest} from '@/admin/service/filtre-service'
 import AddFilter from "@/admin/components/AddFilter.vue";
-import ListFiltre from "@/admin/components/ListFiltre.vue";
+import ListFilter from "@/admin/components/ListFilter.vue";
 
 const filtres = ref([])
 const categoryId = ref(0)
@@ -15,12 +15,12 @@ async function refreshFiltres() {
 }
 
 onMounted(async () => {
-  categoryId.value = Number(document.getElementById('filtres-box').getAttribute('data-category-id'));
+  categoryId.value = Number(document.getElementById('filters-box').getAttribute('data-category-id'));
   await refreshFiltres()
 })
 </script>
 
 <template>
   <AddFilter :categoryId="categoryId" @refresh-filtres="refreshFiltres"/>
-  <ListFiltre :categoryId="categoryId" :filtres="filtres" @refresh-filtres="refreshFiltres"/>
+  <ListFilter :categoryId="categoryId" :filtres="filtres" @refresh-filtres="refreshFiltres"/>
 </template>

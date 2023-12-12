@@ -17,7 +17,8 @@ export default defineConfig({
         },
         rollupOptions: {
             input: {
-                appFiltreAdmin: 'src/admin/admin.js',
+                appFiltersAdmin: 'src/admin/adminFilters.js',
+                appOffersAdmin: 'src/admin/adminOffers.js',
                 appOl: 'src/ol.js',
                 chartJf: 'src/chart.js',
                 mapJf: 'src/map.js',

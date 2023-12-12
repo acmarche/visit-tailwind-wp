@@ -16,7 +16,7 @@ class AdminPage
         add_action('admin_menu', fn($args) => $this::my_add_menu_items());
     }
 
-    function my_add_menu_items()
+    function my_add_menu_items(): void
     {
         add_menu_page(
             'pivot_home',
@@ -28,19 +28,11 @@ class AdminPage
         );
         add_submenu_page(
             'pivot_home',
-            'Pivot filtres',
-            'Filtres',
+            'Tous les filtres',
+            'Tous les filtres',
             'edit_posts',
             'pivot_filtres',
             fn() => $this::filtresRender(),
-        );
-        add_submenu_page(
-            'pivot_home',
-            'Catégories avec filtres',
-            'Catégories avec filtres',
-            'edit_posts',
-            'pivot_categories_filtre',
-            fn() => $this::categoriesFiltresRender(),
         );
         add_submenu_page(
             'pivot_home',
@@ -49,6 +41,14 @@ class AdminPage
             'edit_posts',
             'pivot_offres',
             fn() => $this::allOffersRender(),
+        );
+        add_submenu_page(
+            'pivot_home',
+            'Catégories avec filtres',
+            'Catégories avec filtres',
+            'edit_posts',
+            'pivot_categories_filtre',
+            fn() => $this::categoriesFiltresRender(),
         );
         add_submenu_page(
             'pivot_home',
@@ -76,7 +76,6 @@ class AdminPage
 
             ]
         );
-
     }
 
     private static function filtresRender(): void
@@ -132,24 +131,31 @@ class AdminPage
         );
     }
 
-    private static function categoryFiltersRender()
+    private static function categoryFiltersRender(): void
     {
-        $catID = (int)$_GET['catID'];
-        if (!$catID) {
+        if (!$catID = (int)$_GET['catID']) {
+            Twig::rendPage(
+                '@VisitTail/admin/error.html.twig',
+                [
+                    'message' => 'Vous devez passer par une catégorie pour accéder à cette page',
+                ]
+            );
 
+            return;
         }
         $category = get_category($catID);
+        $categoryUrl = get_category_link($category);
 
         wp_enqueue_script(
-            'vue-admin-js',
-            get_template_directory_uri().'/assets/js/dist/js/appFiltreAdmin-jf.js',
+            'vue-admin-filters-js',
+            get_template_directory_uri().'/assets/js/dist/js/appFiltersAdmin-jf.js',
             [],
             wp_get_theme()->get('Version'),
             true
         );
         wp_enqueue_style(
             'vue-admin-css',
-            get_template_directory_uri().'/assets/js/dist/css/appFiltreAdmin-jf.css',
+            get_template_directory_uri().'/assets/js/dist/css/index-jf.css',
             [],
             wp_get_theme()->get('Version'),
         );
@@ -160,41 +166,47 @@ class AdminPage
             '@VisitTail/admin/category_filters.html.twig',
             [
                 'urlAdmin' => $url,
+                'categoryUrl' => $categoryUrl,
                 'category' => $category,
                 'catId' => $catID,
             ]
         );
     }
 
-    private static function categoryOffersRender()
+    private static function categoryOffersRender(): void
     {
-        $catID = (int)$_GET['catID'];
-        if (!$catID) {
+        if (!$catID = (int)$_GET['catID']) {
+            Twig::rendPage(
+                '@VisitTail/admin/error.html.twig',
+                [
+                    'message' => 'Vous devez passer par une catégorie pour accéder à cette page',
+                ]
+            );
 
+            return;
         }
         $category = get_category($catID);
+        $categoryUrl = get_category_link($category);
 
         wp_enqueue_script(
-            'vue-admin-js',
-            get_template_directory_uri().'/assets/js/dist/js/appFiltreAdmin-jf.js',
+            'vue-admin-offers-js',
+            get_template_directory_uri().'/assets/js/dist/js/appOffersAdmin-jf.js',
             [],
             wp_get_theme()->get('Version'),
             true
         );
         wp_enqueue_style(
             'vue-admin-css',
-            get_template_directory_uri().'/assets/js/dist/css/appFiltreAdmin-jf.css',
+            get_template_directory_uri().'/assets/js/dist/css/index-jf.css',
             [],
             wp_get_theme()->get('Version'),
         );
 
-        $url = admin_url('admin.php?page=pivot_filtres');
-
         Twig::rendPage(
             '@VisitTail/admin/category_offers.html.twig',
             [
-                'urlAdmin' => $url,
                 'category' => $category,
+                'categoryUrl' => $categoryUrl,
                 'catId' => $catID,
             ]
         );

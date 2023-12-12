@@ -1,21 +1,10 @@
 <div class="wrap">
-    <h2>Offres Pivot sur la catégorie Wordpress {{ category.name }}</h2>
-    <table class="form-table">
-        <tr class="form-field">
-            <th scope="row" valign="top">
-                <label for="bottin_refrubrique">Références pivot</label>
-                <br>
-                <p class="description">
-                    <a href="{{ urlAdmin }}" target="_blank">
-                        Liste des références</a>
-                </p>
-                <br/>
-            </th>
-            <td>
-                <div id="filtres-box" data-category-id="{{ catID }}">
+    <h2>
+        Offres Pivot sur la catégorie <strong><a href="{{ categoryUrl }}">{{ category.name }}</a></strong>
+    </h2>
 
-                </div>
-            </td>
-        </tr>
-    </table>
+    <div id="offers-box" data-category-id="{{ catId }}">
+
+    </div>
+
 </div>
