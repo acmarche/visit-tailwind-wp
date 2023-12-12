@@ -3,7 +3,7 @@ export default {
     content: [
         "./index.html",
         "./src/**/*.{vue,js,ts,jsx,tsx}",
-        "./../../templates/**/*.{twig}",
+        "./../../templates/admin/**/*.{twig}",
     ],
     theme: {
         extend: {},

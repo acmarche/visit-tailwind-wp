@@ -10,8 +10,30 @@ class AssetsLoad
         add_action('wp_enqueue_scripts', fn() => $this->leaflet());
         add_action('wp_enqueue_scripts', fn() => $this->leafletElevation());
         add_action('wp_enqueue_scripts', fn() => $this->slider());
-        add_filter('script_loader_tag', fn($tag, $handle, $src) => $this->addAsModule($tag, $handle, $src), 10, 3);
-        add_filter('script_loader_tag', fn($tag, $handle, $src) => $this->addDefer($tag, $handle, $src), 10, 3);
+        add_filter(
+            'script_loader_tag',
+            fn($tag, $handle, $src) => $this->addScriptAsModule($tag, $handle, $src),
+            10,
+            3
+        );
+        add_filter(
+            'script_loader_tag',
+            fn($tag, $handle, $src) => $this->addScriptAsModulePreload($tag, $handle, $src),
+            10,
+            3
+        );
+        add_filter(
+            'style_loader_tag',
+            fn($tag, $handle, $src) => $this->addLinkAsModulePreload($tag, $handle, $src),
+            10,
+            3
+        );
+        add_filter(
+            'script_loader_tag',
+            fn($tag, $handle, $src) => $this->addScriptDefer($tag, $handle, $src),
+            10,
+            3
+        );
     }
 
     public function mainAssets(): void
@@ -130,23 +152,34 @@ class AssetsLoad
         );
     }
 
-    /**
-     * Pour vue
-     * @param $tag
-     * @param $handle
-     * @param $src
-     * @return mixed|string
-     */
-    function addAsModule($tag, $handle, $src)
+    function addScriptAsModule(string $tag, string $handle, string $src): string
     {
-        if (!in_array($handle, [])) {
+        if (!in_array($handle, ['vue-admin-filters-js'])) {
             return $tag;
         }
 
-        return '<script type="module" src="'.esc_url($src).'"></script>';
+        return '<script type="module" crossorigin src="'.esc_url($src).'"></script>';
     }
 
-    function addDefer($tag, $handle, $src)
+    function addScriptAsModulePreload(string $tag, string $handle, string $src): string
+    {
+        if (!in_array($handle, ['vue-admin-filters2-js'])) {
+            return $tag;
+        }
+
+        return '<script rel="modulepreload" crossorigin src="'.esc_url($src).'"></script>';
+    }
+
+    function addLinkAsModulePreload(string $tag, string $handle, string $src): string
+    {
+        if (!in_array($handle, ['vue-admin-filters2-js'])) {
+            return $tag;
+        }
+
+        return '<link rel="modulepreload" crossorigin href="'.esc_url($src).'"></script>';
+    }
+
+    function addScriptDefer(string $tag, string $handle, string $src): string
     {
         if (!in_array($handle, ['alpine-js', 'menuMobile-js', 'searchXl-js', 'refreshOffres-js', 'share-js'])) {
             return $tag;
@@ -155,7 +188,7 @@ class AssetsLoad
         return '<script src="'.esc_url($src).'" defer></script>';
     }
 
-    public static function enqueueLeaflet()
+    public static function enqueueLeaflet(): void
     {
         //todo test this
         //wp_add_inline_script();
@@ -163,14 +196,14 @@ class AssetsLoad
         wp_enqueue_script('visitmarche-leaflet-js');
     }
 
-    public static function enqueueElevation()
+    public static function enqueueElevation(): void
     {
         wp_enqueue_style('visitmarche-leaflet-elevation-css');
         wp_enqueue_script('visitmarche-leaflet-ui-js');
         wp_enqueue_script('visitmarche-leaflet-elevation-js');
     }
 
-    public static function enqueueSlider()
+    public static function enqueueSlider(): void
     {
         wp_enqueue_style('visitmarche-slider-css');
         wp_enqueue_script('visitmarche-slider-js');

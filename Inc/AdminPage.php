@@ -145,17 +145,21 @@ class AdminPage
         }
         $category = get_category($catID);
         $categoryUrl = get_category_link($category);
-
         wp_enqueue_script(
             'vue-admin-filters-js',
-            get_template_directory_uri().'/assets/js/dist/js/appFiltersAdmin-jf.js',
+            get_template_directory_uri().'/assets/js/dist/js/main-jf.js',
             [],
             wp_get_theme()->get('Version'),
-            true
+        );
+        wp_enqueue_style(
+            'vue-admin-filters2-js',
+            get_template_directory_uri().'/assets/js/dist/assets/AppFilters-6oGhWRV8.js',
+            [],
+            wp_get_theme()->get('Version'),
         );
         wp_enqueue_style(
             'vue-admin-css',
-            get_template_directory_uri().'/assets/js/dist/css/index-jf.css',
+            get_template_directory_uri().'/assets/js/dist/css/AppFilters-jf.css',
             [],
             wp_get_theme()->get('Version'),
         );
