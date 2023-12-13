@@ -1,20 +1,16 @@
-import axios from './AxiosInstance';
+import axios from './AxiosInstance.js';
 
 /**
  * @param {string} language
  * @param {int} categoryId
- * @param {int} flatWithChildren
- * @param {int} filterCount
  * @returns {Promise}
  */
-export function fetchFiltresByCategoryRequest(
+export function fetchOffersByCategoryRequest(
     language,
-    categoryId,
-    flatWithChildren = 0,
-    filterCount = 1
+    categoryId
 ) {
     const params = {};
-    const url = `${language}/wp-json/pivot/filtres_category/${categoryId}/${flatWithChildren}/${filterCount}`;
+    const url = `${language}/wp-json/pivot/category_offers/${categoryId}`;
     return axios.get(url, {
         params
     });
@@ -24,10 +20,10 @@ export function fetchFiltresByCategoryRequest(
  * @param {string} name
  * @returns {Promise}
  */
-export function fetchFiltresByName(name) {
+export function fetchOffersByNameOrCode(name) {
     const params = {};
     name = replaceAccents(name)
-    const url = `wp-json/pivot/filtres_name/${name.toLowerCase()}`;
+    const url = `wp-json/pivot/find-offers-by-name/${name.toLowerCase()}`;
     return axios.get(url, {
         params
     });
@@ -35,31 +31,29 @@ export function fetchFiltresByName(name) {
 
 /**
  * @param {int} categoryId
- * @param {int} id
+ * @param {string} codeCgt
  * @returns {Promise}
  */
-export function deleteFiltreRequest(categoryId, id) {
+export function deleteOfferRequest(categoryId, codeCgt) {
     const url = 'wp-admin/admin-ajax.php';
     const formData = new FormData();
-    formData.append('action', 'action_delete_filtre');
+    formData.append('action', 'action_delete_offer');
     formData.append('categoryId', categoryId);
-    formData.append('id', id);
+    formData.append('codeCgt', codeCgt);
     return axios.post(url, formData);
 }
 
 /**
  * @param {int} categoryId
- * @param {int} typeOffreId
- * @param {boolean} withChildren
+ * @param {string} codeCgt
  * @returns {Promise}
  */
-export function addFiltreRequest(categoryId, typeOffreId, withChildren) {
+export function addOfferRequest(categoryId, codeCgt) {
     const url = 'wp-admin/admin-ajax.php';
     const formData = new FormData();
-    formData.append('action', 'action_add_filtre');
+    formData.append('action', 'action_add_offer');
     formData.append('categoryId', categoryId);
-    formData.append('typeOffreId', typeOffreId);
-    formData.append('withChildren', withChildren);
+    formData.append('codeCgt', codeCgt);
     return axios.post(url, formData);
 }
 

@@ -1,6 +1,14 @@
 <!--CONTENT-->
 <div class="wrap">
     <h2>Toutes les {{ offers|length }} offres disponibles dans le catalogue de Pivot</h2>
+
+    {% if error %}
+        <h2>Erreur</h2>
+        <div class="notice-error error ">
+            <p>{{ message }}</p>
+        </div>
+    {% endif %}
+
     <table class="wp-list-table widefat fixed striped table-view-list toplevel_page_pivot_list">
         <tr>
             <th scope="col" id="booktitle" class="manage-column column-booktitle column-primary">
@@ -16,9 +24,10 @@
         {% for offer in offers %}
             <tr>
                 <td>
-                     <a href="https://pivotgest.tourismewallonie.be/PivotGest-4.0.0/detail.xhtml?codeCgt={{ offer.codeCgt }}" target="_blank">
-                         {{ offer.name }}
-                     </a>
+                    <a href="https://pivotgest.tourismewallonie.be/PivotGest-4.0.0/detail.xhtml?codeCgt={{ offer.codeCgt }}"
+                       target="_blank">
+                        {{ offer.name }}
+                    </a>
                 </td>
                 <td>
                     {{ offer.codeCgt }}

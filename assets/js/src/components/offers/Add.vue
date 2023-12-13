@@ -1,7 +1,7 @@
 <script setup>
 import {ref} from 'vue'
-import {addOfferRequest} from '@/admin/service/offer-service'
-import Autocomplete from "@/admin/components/Autocomplete.vue";
+import {addOfferRequest} from '@/service/offer-service.js'
+import Autocomplete from "@/components/offers/Autocomplete.vue";
 
 let selectedCodeCgt = null
 const answer = ref(null)
@@ -26,9 +26,9 @@ async function addOffer() {
   }
 }
 
-function onUpdateSelectedOffer(codeCgt) {
-  console.log('update'+ codeCgt)
-  selectedCodeCgt = codeCgt
+function onUpdateSelectedOffer(offer) {
+  console.log('update'+ offer.codeCgt)
+  selectedCodeCgt = offer.codeCgt
 }
 </script>
 

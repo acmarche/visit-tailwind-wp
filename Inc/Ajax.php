@@ -11,9 +11,11 @@ class Ajax
     {
         add_action('wp_ajax_action_delete_filtre', fn() => $this::actionDeleteFiltre());
         add_action('wp_ajax_action_add_filtre', fn() => $this::actionAddFiltre());
+        add_action('wp_ajax_action_add_offer', fn() => $this::actionAddOffer());
+        add_action('wp_ajax_action_delete_offer', fn() => $this::actionDeleteOffer());
     }
 
-    function actionDeleteFiltre()
+    function actionDeleteFiltre(): void
     {
         $categoryWpId = (int)$_POST['categoryId'];
         $id = (int)$_POST['id'];
@@ -35,7 +37,7 @@ class Ajax
         wp_die();
     }
 
-    function actionAddFiltre()
+    function actionAddFiltre(): void
     {
         $categoryFiltres = [];
         $categoryId = (int)$_POST['categoryId'];
@@ -53,6 +55,41 @@ class Ajax
             }
         }
         echo json_encode($categoryFiltres);
+        wp_die();
+    }
+
+    private static function actionAddOffer(): void
+    {
+        $categoryId = (int)$_POST['categoryId'];
+        $codeCgt = (string)$_POST['codeCgt'];
+        $codesCgt = [];
+        if ($categoryId > 0 && $codeCgt) {
+            $codesCgt = WpRepository::getMetaPivotOffres($categoryId);
+            if (!in_array($codeCgt, $codesCgt)) {
+                $codesCgt[] = $codeCgt;
+                update_term_meta($categoryId, WpRepository::PIVOT_REFOFFERS, $codesCgt);
+            }
+        }
+
+        echo json_encode($codesCgt);
+        wp_die();
+    }
+
+    private static function actionDeleteOffer(): void
+    {
+        $categoryId = (int)$_POST['categoryId'];
+        $codeCgt = (string)$_POST['codeCgt'];
+        $codesCgt = [];
+
+        if ($categoryId > 0 && $codeCgt) {
+            $codesCgt = WpRepository::getMetaPivotOffres($categoryId);
+            $key = array_search($codeCgt, $codesCgt);
+            if ($key !== false) {
+                unset($codesCgt[$key]);
+                update_term_meta($categoryId, WpRepository::PIVOT_REFOFFERS, $codesCgt);
+            }
+        }
+        echo json_encode($codesCgt);
         wp_die();
     }
 }

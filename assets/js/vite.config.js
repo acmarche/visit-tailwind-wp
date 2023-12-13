@@ -23,7 +23,7 @@ export default defineConfig({
                 categoryFilters: resolve(__dirname, 'index.html'),
                 categoryOffers: resolve(__dirname, 'index2.html'),
             }, output: {
-                assetFileNames: 'css/[name].css',
+                assetFileNames: 'css/pivot.css',
                 entryFileNames: 'js/[name].js',
             },
         }

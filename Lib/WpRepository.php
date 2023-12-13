@@ -21,6 +21,7 @@ class WpRepository
 {
     private CacheInterface $cache;
     public const PIVOT_REFRUBRIQUE = 'pivot_refrubrique';
+    public const PIVOT_REFOFFERS = 'pivot_ref_offers';
 
     public function __construct()
     {
@@ -257,6 +258,37 @@ class WpRepository
         return $allFiltres;
     }
 
+
+    /**
+     * @param int $categoryWpId
+     * @return Offre[]
+     */
+    public  function getCategoryOffers(
+        int $categoryWpId,
+    ): array {
+
+        $codesCgt = WpRepository::getMetaPivotOffres($categoryWpId);
+        $pivotRepository = PivotContainer::getPivotRepository(WP_DEBUG);
+        $offers = [];
+
+        foreach ($codesCgt as $codeCgt) {
+            if (!$codeCgt) {
+                continue;
+            }
+            try {
+                $offer = $pivotRepository->fetchOffreByCgt($codeCgt);
+            } catch (InvalidArgumentException $e) {
+                continue;
+            }
+            if (!$offer) {
+                continue;
+            }
+            $offers[] = $offer;
+        }
+
+        return $offers;
+    }
+
     /**
      * @return TypeOffre[]
      * @throws NonUniqueResultException|\Exception
@@ -490,5 +522,15 @@ class WpRepository
         }
 
         return $filtres;
+    }
+
+    public static function getMetaPivotOffres(int $wpCategoryId): array
+    {
+        $offers = get_term_meta($wpCategoryId, self::PIVOT_REFOFFERS, true);
+        if (!is_array($offers)) {
+            return [];
+        }
+
+        return $offers;
     }
 }

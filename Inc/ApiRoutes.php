@@ -19,12 +19,15 @@ class ApiRoutes
 
     public function registerPivot(): void
     {
+        /**
+         * return category's filters
+         */
         add_action(
             'rest_api_init',
             function () {
                 register_rest_route(
                     'pivot',
-                    'filtres_category/(?P<categoryId>[\w]+)/(?P<flatWithChildren>[\w]+)/(?P<filterCount>[\w]+)',
+                    'category_filters/(?P<categoryId>[\w]+)/(?P<flatWithChildren>[\w]+)/(?P<filterCount>[\w]+)',
                     [
                         'methods' => 'GET',
                         'callback' => fn($args) => ApiData::pivotFiltresByCategory($args),
@@ -62,6 +65,23 @@ class ApiRoutes
             }
         );
 
+        /**
+         * return offer's filters
+         */
+        add_action(
+            'rest_api_init',
+            function () {
+                register_rest_route(
+                    'pivot',
+                    'category_offers/(?P<categoryId>[\w]+)',
+                    [
+                        'methods' => 'GET',
+                        'callback' => fn($args) => ApiData::pivotOffersByCategory($args),
+                    ]
+                );
+            }
+        );
+
         add_action(
             'rest_api_init',
             function () {
@@ -82,7 +102,7 @@ class ApiRoutes
             function () {
                 register_rest_route(
                     'pivot',
-                    'findbyname/(?P<name>[\w]+)',
+                    'find-offers-by-name/(?P<name>[\w]+)',
                     [
                         'methods' => 'GET',
                         'callback' => fn($args) => ApiData::findShortsByNameOrCode($args),

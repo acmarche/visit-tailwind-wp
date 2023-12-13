@@ -1,7 +1,7 @@
 <script setup>
 import {ref} from 'vue'
-import {addFiltreRequest} from '@/admin/service/filtre-service'
-import Autocomplete from "@/admin/components/Autocomplete.vue";
+import {addFiltreRequest} from '@/service/filtre-service.js'
+import Autocomplete from "@/components/filters/Autocomplete.vue";
 
 let selectedTypeOffreId = 0
 let withChildren = false

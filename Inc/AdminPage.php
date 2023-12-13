@@ -162,7 +162,7 @@ class AdminPage
         );
         wp_enqueue_style(
             'vue-admin-css',
-            get_template_directory_uri().'/assets/js/dist/css/AppFilters.css',
+            get_template_directory_uri().'/assets/js/dist/css/filtre-service.css',
             [],
             wp_get_theme()->get('Version'),
         );
@@ -204,7 +204,7 @@ class AdminPage
         );
         wp_enqueue_style(
             'vue-admin-css',
-            get_template_directory_uri().'/assets/js/dist/css/AppFilters.css',
+            get_template_directory_uri().'/assets/js/dist/css/pivot.css',
             [],
             wp_get_theme()->get('Version'),
         );

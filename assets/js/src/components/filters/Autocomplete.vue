@@ -1,6 +1,6 @@
 <script setup>
 import {ref} from 'vue'
-import {fetchFiltresByName} from '@/admin/service/filtre-service'
+import {fetchFiltresByName} from '@/service/filtre-service.js'
 
 const typesOffre = ref([])
 const searchText = ref('')

@@ -140,4 +140,28 @@ class ApiData
             return rest_ensure_response(['error' => $e->getMessage()]);
         }
     }
+
+    public static function pivotOffersByCategory(WP_REST_Request $request)
+    {
+        $categoryWpId = (int)$request->get_param('categoryId');
+        $wpRepository = new WpRepository();
+        $codesCgt = WpRepository::getMetaPivotOffres($categoryWpId);
+        $offers = [];
+        try {
+            $offersShort = $wpRepository->getAllOffresShorts();
+            foreach ($codesCgt as $codeCgt) {
+                foreach ($offersShort as $offerShort) {
+                    if ($offerShort['codeCgt'] === $codeCgt) {
+                        $offers[] = $offerShort;
+                        break;
+                    }
+                }
+            }
+
+        } catch (InvalidArgumentException $e) {
+        }
+
+
+        return rest_ensure_response($offers);
+    }
 }

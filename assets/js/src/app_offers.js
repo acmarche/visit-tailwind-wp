@@ -1,6 +1,6 @@
 import './assets/style.css'
 
 import { createApp } from 'vue'
-import AppFilters from './AppFilters.vue'
+import AppFilters from './AppOffers.vue'
 
-createApp(AppFilters).mount('#app')
+createApp(AppFilters).mount('#offers-box')
