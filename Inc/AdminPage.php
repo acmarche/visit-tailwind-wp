@@ -118,15 +118,18 @@ class AdminPage
     private static function allOffersRender(): void
     {
         $wpRepository = new WpRepository();
+        $error = null;
         try {
             $offres = $wpRepository->getAllOffresShorts();
         } catch (InvalidArgumentException $e) {
             $offres = [];
+            $error = $e->getMessage();
         }
         Twig::rendPage(
             '@VisitTail/admin/offers_list.html.twig',
             [
                 'offers' => $offres,
+                'error' => $error,
             ]
         );
     }
@@ -147,19 +150,19 @@ class AdminPage
         $categoryUrl = get_category_link($category);
         wp_enqueue_script(
             'vue-admin-filters-js',
-            get_template_directory_uri().'/assets/js/dist/js/main-jf.js',
+            get_template_directory_uri().'/assets/js/dist/js/categoryFilters.js',
             [],
             wp_get_theme()->get('Version'),
         );
         wp_enqueue_style(
             'vue-admin-filters2-js',
-            get_template_directory_uri().'/assets/js/dist/assets/AppFilters-6oGhWRV8.js',
+            get_template_directory_uri().'/assets/js/dist/assets/AppFilters-_zuL1e4y.js',
             [],
             wp_get_theme()->get('Version'),
         );
         wp_enqueue_style(
             'vue-admin-css',
-            get_template_directory_uri().'/assets/js/dist/css/AppFilters-jf.css',
+            get_template_directory_uri().'/assets/js/dist/css/AppFilters.css',
             [],
             wp_get_theme()->get('Version'),
         );
@@ -194,14 +197,14 @@ class AdminPage
 
         wp_enqueue_script(
             'vue-admin-offers-js',
-            get_template_directory_uri().'/assets/js/dist/js/appOffersAdmin-jf.js',
+            get_template_directory_uri().'/assets/js/dist/js/categoryOffers.js',
             [],
             wp_get_theme()->get('Version'),
             true
         );
         wp_enqueue_style(
             'vue-admin-css',
-            get_template_directory_uri().'/assets/js/dist/css/index-jf.css',
+            get_template_directory_uri().'/assets/js/dist/css/AppFilters.css',
             [],
             wp_get_theme()->get('Version'),
         );

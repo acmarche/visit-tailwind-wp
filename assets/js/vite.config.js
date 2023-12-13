@@ -1,6 +1,6 @@
 import {fileURLToPath, URL} from 'node:url'
 import {defineConfig} from 'vite'
-import resolve from 'node:path'
+import {resolve} from 'path'
 import vue from '@vitejs/plugin-vue'
 
 // https://vitejs.dev/config/
@@ -20,11 +20,11 @@ export default defineConfig({
         },
         rollupOptions: {
             input: {
-                main: resolve(__dirname, 'index.html'),
-                nested: resolve(__dirname, 'index2.html'),
+                categoryFilters: resolve(__dirname, 'index.html'),
+                categoryOffers: resolve(__dirname, 'index2.html'),
             }, output: {
-                assetFileNames: 'css/[name]-jf.css',
-                entryFileNames: 'js/[name]-jf.js',
+                assetFileNames: 'css/[name].css',
+                entryFileNames: 'js/[name].js',
             },
         }
     }

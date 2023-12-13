@@ -154,7 +154,7 @@ class AssetsLoad
 
     function addScriptAsModule(string $tag, string $handle, string $src): string
     {
-        if (!in_array($handle, ['vue-admin-filters-js'])) {
+        if (!in_array($handle, ['vue-admin-filters-js', 'vue-admin-offers-js'])) {
             return $tag;
         }
 
