@@ -84,8 +84,7 @@ class ApiData
         $name = $request->get_param('name');
         $wpRepository = new WpRepository();
         try {
-            $offres = $wpRepository->getAllOffresShorts();
-            $offres2 = array_filter($offres, function (array $offre) use ($name) {
+            $offres = array_filter($wpRepository->getAllOffresShorts(), function (\stdClass $offre) use ($name) {
                 if (preg_match(strtoupper("#".$name."#"), strtoupper($offre->name)) ||
                     preg_match(strtoupper("#".$name."#"), $offre->codeCgt)) {
                     return true;
@@ -94,7 +93,7 @@ class ApiData
                 return false;
             });
 
-            return rest_ensure_response(array_values($offres2));
+            return rest_ensure_response(array_values($offres));
         } catch (InvalidArgumentException $e) {
             return rest_ensure_response(['error' => $e->getMessage()]);
         }
@@ -104,7 +103,7 @@ class ApiData
     {
         $categoryWpId = (int)$request->get_param('categoryId');
         $wpRepository = new WpRepository();
-        $offers = $wpRepository->pivotOffersShortsByCategory($categoryWpId);
+        $offers = $wpRepository->findOffersShortsByCategory($categoryWpId);
 
         return rest_ensure_response($offers);
     }

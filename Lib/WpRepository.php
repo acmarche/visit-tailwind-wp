@@ -292,7 +292,7 @@ class WpRepository
         }
 
         $offers = [];
-        foreach ($this->pivotOffersShortsByCategory($categoryId) as $offerShort) {
+        foreach ($this->findOffersShortsByCategory($categoryId) as $offerShort) {
             if ($offer = $pivotRepository->fetchOffreByCgtAndParse($offerShort->codeCgt)) {
                 $offers[] = $offer;
             }
@@ -490,7 +490,7 @@ class WpRepository
      * @param int $categoryId
      * @return \stdClass[]
      */
-    public function pivotOffersShortsByCategory(int $categoryId): array
+    public function findOffersShortsByCategory(int $categoryId): array
     {
         $wpRepository = new WpRepository();
         $codesCgt = WpRepository::getMetaPivotOffres($categoryId);
