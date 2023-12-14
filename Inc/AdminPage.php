@@ -3,6 +3,7 @@
 namespace VisitMarche\ThemeTail\Inc;
 
 use AcMarche\Pivot\DependencyInjection\PivotContainer;
+use AcMarche\Pivot\Utils\SortUtils;
 use Psr\Cache\InvalidArgumentException;
 use VisitMarche\ThemeTail\Lib\PivotCategoriesTable;
 use VisitMarche\ThemeTail\Lib\SyncPivot;
@@ -36,8 +37,8 @@ class AdminPage
         );
         add_submenu_page(
             'pivot_home',
-            'Toutes les offres',
-            'Toutes les offres',
+            'Le catalogue',
+            'Le catalogue',
             'edit_posts',
             'pivot_offres',
             fn() => $this::allOffersRender(),
@@ -125,6 +126,7 @@ class AdminPage
             $offres = [];
             $error = $e->getMessage();
         }
+        $offres = SortUtils::sortOffresByName($offres);
         Twig::rendPage(
             '@VisitTail/admin/offers_list.html.twig',
             [
