@@ -8,9 +8,11 @@ use AcMarche\Pivot\Entities\Offre\Offre;
 use AcMarche\Pivot\Entity\TypeOffre;
 use AcMarche\Pivot\Entity\UrnDefinitionEntity;
 use AcMarche\Pivot\Spec\UrnList;
+use AcSort;
 use Doctrine\ORM\NonUniqueResultException;
 use Psr\Cache\InvalidArgumentException;
 use Symfony\Contracts\Cache\CacheInterface;
+use VisitMarche\ThemeTail\Inc\CategoryMetaBox;
 use VisitMarche\ThemeTail\Inc\Theme;
 use VisitMarche\ThemeTail\Lib\Elasticsearch\Searcher;
 use WP_Post;
@@ -60,10 +62,7 @@ class WpRepository
         return $posts;
     }
 
-    /**
-     * @return array|WP_Term|object|\WP_Error|null
-     */
-    public function getParentCategory(int $cat_ID)
+    public function getParentCategory(int $cat_ID): array|WP_Term|\WP_Error|null
     {
         $category = get_category($cat_ID);
 
@@ -192,7 +191,7 @@ class WpRepository
      * @param bool $flatWithChildren pour admin ne pas etendre enfants
      * @param bool $removeFilterEmpty
      * @param bool $unsetParent pour ajax
-     * @return array|TypeOffre[]
+     * @return TypeOffre[]
      * @throws NonUniqueResultException
      */
     public static function getCategoryFilters(
@@ -258,35 +257,61 @@ class WpRepository
         return $allFiltres;
     }
 
-
     /**
-     * @param int $categoryWpId
-     * @return Offre[]
+     * Retourne les posts, les offres
+     * @param int $categoryId
+     * @param int $filtreSelected
+     * @return array
+     * @throws InvalidArgumentException
+     * @throws NonUniqueResultException
      */
-    public  function getCategoryOffers(
-        int $categoryWpId,
-    ): array {
-
-        $codesCgt = WpRepository::getMetaPivotOffres($categoryWpId);
+    public function findAllArticlesForCategory(int $categoryId, int $filtreSelected): array
+    {
+        $offres = $filtres = [];
+        $language = LocaleHelper::getSelectedLanguage();
+        $typeOffreRepository = PivotContainer::getTypeOffreRepository(WP_DEBUG);
         $pivotRepository = PivotContainer::getPivotRepository(WP_DEBUG);
-        $offers = [];
+        $postUtils = new PostUtils();
 
-        foreach ($codesCgt as $codeCgt) {
-            if (!$codeCgt) {
-                continue;
+        $typeOffreSelected = null;
+        if ($filtreSelected == 0) {
+            $filtres = $this->getCategoryFilters($categoryId);
+            $filtres = RouterPivot::setRoutesToFilters($filtres, $categoryId);
+        } else {
+            if ($typeOffreSelected = $typeOffreRepository->find($filtreSelected)) {
+                $filtres[] = $typeOffreSelected;
             }
-            try {
-                $offer = $pivotRepository->fetchOffreByCgt($codeCgt);
-            } catch (InvalidArgumentException $e) {
-                continue;
-            }
-            if (!$offer) {
-                continue;
-            }
-            $offers[] = $offer;
         }
 
-        return $offers;
+        if ([] !== $filtres) {
+            if (in_array($categoryId, Theme::CATEGORIES_AGENDA)) {
+                $offres = $this->getEvents($typeOffreSelected);
+            } else {
+                $offres = $this->getOffresByTypes($filtres);
+            }
+        }
+
+        $offers = [];
+        foreach ($this->pivotOffersShortsByCategory($categoryId) as $offerShort) {
+            if ($offer = $pivotRepository->fetchOffreByCgtAndParse($offerShort->codeCgt)) {
+                $offers[] = $offer;
+            }
+        }
+
+        $offres = [...$offres, ...$offers];
+        PostUtils::setLinkOnOffres($offres, $categoryId, $language);
+        $posts = $this->getPostsByCatId($categoryId);
+
+        $category_order = get_term_meta($categoryId, CategoryMetaBox::KEY_NAME_ORDER, true);
+        if ('manual' === $category_order) {
+            $posts = AcSort::getSortedItems($categoryId, $posts);
+        }
+
+        //fusion offres et articles
+        $posts = $postUtils->convertPostsToArray($posts);
+        $offres = $postUtils->convertOffresToArray($offres, $categoryId, $language);
+
+        return PostUtils::removeDoublon([...$posts, ...$offres]);
     }
 
     /**
@@ -451,11 +476,10 @@ class WpRepository
 
     /**
      * @param TypeOffre[] $typesOffre
-     * @param bool $parse
      * @return Offre[]
-     * @throws \Psr\Cache\InvalidArgumentException
+     * @throws InvalidArgumentException
      */
-    public function getOffres(array $typesOffre): array
+    public function getOffresByTypes(array $typesOffre): array
     {
         $pivotRepository = PivotContainer::getPivotRepository(WP_DEBUG);
 
@@ -463,7 +487,34 @@ class WpRepository
     }
 
     /**
-     * @return array
+     * @param int $categoryId
+     * @return \stdClass[]
+     */
+    public function pivotOffersShortsByCategory(int $categoryId): array
+    {
+        $wpRepository = new WpRepository();
+        $codesCgt = WpRepository::getMetaPivotOffres($categoryId);
+        $offers = [];
+        try {
+            $offersShort = $wpRepository->getAllOffresShorts();
+            foreach ($codesCgt as $codeCgt) {
+                foreach ($offersShort as $offerShort) {
+                    if ($offerShort->codeCgt === $codeCgt) {
+                        $offers[] = $offerShort;
+                        break;
+                    }
+                }
+            }
+
+        } catch (InvalidArgumentException $e) {
+        }
+
+        return $offers;
+    }
+
+
+    /**
+     * @return \stdClass{codeCgt: string, name: string, type: string}[]
      * @throws InvalidArgumentException
      */
     public function getAllOffresShorts(): array
@@ -475,11 +526,11 @@ class WpRepository
         $tmp = json_decode($responseJson)->offre;
 
         foreach ($tmp as $offre) {
-            $offres[] = [
-                'codeCgt' => $offre->codeCgt,
-                'name' => $offre->nom,
-                'type' => $offre->typeOffre->label[0]->value,
-            ];
+            $std = new \stdClass();
+            $std->codeCgt = $offre->codeCgt;
+            $std->name = $offre->nom;
+            $std->type = $offre->typeOffre->label[0]->value;
+            $offres[] = $std;
         }
 
         return $offres;

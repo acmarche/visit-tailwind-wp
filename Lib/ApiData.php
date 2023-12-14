@@ -4,8 +4,6 @@ namespace VisitMarche\ThemeTail\Lib;
 
 use AcMarche\Pivot\DependencyInjection\PivotContainer;
 use Psr\Cache\InvalidArgumentException;
-use VisitMarche\ThemeTail\Entity\CommonItem;
-use VisitMarche\ThemeTail\Inc\Theme;
 use VisitMarche\ThemeTail\Lib\Elasticsearch\Data\ElasticData;
 use WP_Error;
 use WP_HTTP_Response;
@@ -17,7 +15,7 @@ use WP_REST_Response;
  */
 class ApiData
 {
-    public static function pivotFiltresByName(WP_REST_Request $request)
+    public static function pivotFiltresByName(WP_REST_Request $request): WP_Error|WP_REST_Response|WP_HTTP_Response
     {
         $name = $request->get_param('name');
 
@@ -28,7 +26,7 @@ class ApiData
         return rest_ensure_response($filtres);
     }
 
-    public static function pivotFiltresByCategory(WP_REST_Request $request)
+    public static function pivotFiltresByCategory(WP_REST_Request $request): WP_Error|WP_REST_Response|WP_HTTP_Response
     {
         $categoryWpId = (int)$request->get_param('categoryId');
         $flatWithChildren = (bool)$request->get_param('flatWithChildren');
@@ -50,7 +48,7 @@ class ApiData
         return rest_ensure_response($filtres);
     }
 
-    public static function pivotOffres(WP_REST_Request $request)
+    public static function pivotOffres(WP_REST_Request $request): WP_Error|WP_REST_Response|WP_HTTP_Response
     {
         $currentCategoryId = (int)$request->get_param('category');
         $filtreSelected = (int)$request->get_param('filtre');
@@ -61,7 +59,8 @@ class ApiData
             return new WP_Error(500, 'missing param category');
         }
 
-        $offres = self::getOffres($filtreSelected, $currentCategoryId);
+        $wpRepository = new WpRepository();
+        $offres = $wpRepository->findAllArticlesForCategory($currentCategoryId, $filtreSelected);
 
         return rest_ensure_response($offres);
     }
@@ -80,46 +79,6 @@ class ApiData
         return rest_ensure_response($data);
     }
 
-    /**
-     * @param int $filtreSelected
-     * @param int $currentCategoryId
-     * @return array|CommonItem[]
-     * @throws \Doctrine\ORM\NonUniqueResultException
-     * @throws \Psr\Cache\InvalidArgumentException
-     */
-    private static function getOffres(int $filtreSelected, int $currentCategoryId): array
-    {
-        $offres = $filtres = [];
-        $language = LocaleHelper::getSelectedLanguage();
-        $typeOffreRepository = PivotContainer::getTypeOffreRepository(WP_DEBUG);
-        $wpRepository = new WpRepository();
-        $postUtils = new PostUtils();
-
-        $typeOffreSelected = null;
-        if ($filtreSelected == 0) {
-            $filtres = $wpRepository->getCategoryFilters($currentCategoryId);
-        } else {
-            if ($typeOffreSelected = $typeOffreRepository->find($filtreSelected)) {
-                $filtres[] = $typeOffreSelected;
-            }
-        }
-
-        if ([] !== $filtres) {
-            if (in_array($currentCategoryId, Theme::CATEGORIES_AGENDA)) {
-                $offres = $wpRepository->getEvents($typeOffreSelected);
-            } else {
-                $offres = $wpRepository->getOffres($filtres);
-            }
-        }
-        PostUtils::setLinkOnOffres($offres, $currentCategoryId, $language);
-        $posts = $wpRepository->getPostsByCatId($currentCategoryId);
-        //fusion offres et articles
-        $posts = $postUtils->convertPostsToArray($posts);
-        $offres = $postUtils->convertOffresToArray($offres, $currentCategoryId, $language);
-
-        return [...$posts, ...$offres];
-    }
-
     public static function findShortsByNameOrCode(WP_REST_Request $request): \WP_Error|WP_HTTP_Response|WP_REST_Response
     {
         $name = $request->get_param('name');
@@ -127,8 +86,8 @@ class ApiData
         try {
             $offres = $wpRepository->getAllOffresShorts();
             $offres2 = array_filter($offres, function (array $offre) use ($name) {
-                if (preg_match(strtoupper("#".$name."#"), strtoupper($offre['name'])) ||
-                    preg_match(strtoupper("#".$name."#"), $offre['codeCgt'])) {
+                if (preg_match(strtoupper("#".$name."#"), strtoupper($offre->name)) ||
+                    preg_match(strtoupper("#".$name."#"), $offre->codeCgt)) {
                     return true;
                 }
 
@@ -141,26 +100,11 @@ class ApiData
         }
     }
 
-    public static function pivotOffersByCategory(WP_REST_Request $request)
+    public static function pivotOffersByCategory(WP_REST_Request $request): WP_Error|WP_REST_Response|WP_HTTP_Response
     {
         $categoryWpId = (int)$request->get_param('categoryId');
         $wpRepository = new WpRepository();
-        $codesCgt = WpRepository::getMetaPivotOffres($categoryWpId);
-        $offers = [];
-        try {
-            $offersShort = $wpRepository->getAllOffresShorts();
-            foreach ($codesCgt as $codeCgt) {
-                foreach ($offersShort as $offerShort) {
-                    if ($offerShort['codeCgt'] === $codeCgt) {
-                        $offers[] = $offerShort;
-                        break;
-                    }
-                }
-            }
-
-        } catch (InvalidArgumentException $e) {
-        }
-
+        $offers = $wpRepository->pivotOffersShortsByCategory($categoryWpId);
 
         return rest_ensure_response($offers);
     }

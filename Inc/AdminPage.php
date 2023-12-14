@@ -154,15 +154,10 @@ class AdminPage
             [],
             wp_get_theme()->get('Version'),
         );
-        wp_enqueue_style(
-            'vue-admin-filters2-js',
-            get_template_directory_uri().'/assets/js/dist/assets/AppFilters-_zuL1e4y.js',
-            [],
-            wp_get_theme()->get('Version'),
-        );
+
         wp_enqueue_style(
             'vue-admin-css',
-            get_template_directory_uri().'/assets/js/dist/css/filtre-service.css',
+            get_template_directory_uri().'/assets/js/dist/css/pivot.css',
             [],
             wp_get_theme()->get('Version'),
         );

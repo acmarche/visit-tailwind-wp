@@ -180,4 +180,18 @@ class PostUtils
             $offres
         );
     }
+
+    /**
+     * @param CommonItem[] $offers
+     * @return CommonItem[]
+     */
+    public static function removeDoublon(array $offers): array
+    {
+        $tmp = [];
+        foreach ($offers as $offer) {
+            $tmp[$offer->id] = $offer;
+        }
+
+        return array_values($tmp);
+    }
 }

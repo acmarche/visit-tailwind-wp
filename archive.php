@@ -4,12 +4,10 @@ namespace VisitMarche\ThemeTail;
 
 use AcMarche\Pivot\DependencyInjection\PivotContainer;
 use AcMarche\Pivot\Entity\TypeOffre;
-use AcSort;
+use Doctrine\ORM\NonUniqueResultException;
 use Psr\Cache\InvalidArgumentException;
 use Symfony\Component\HttpFoundation\Request;
-use VisitMarche\ThemeTail\Inc\CategoryMetaBox;
 use VisitMarche\ThemeTail\Lib\LocaleHelper;
-use VisitMarche\ThemeTail\Lib\PostUtils;
 use VisitMarche\ThemeTail\Lib\RouterPivot;
 use VisitMarche\ThemeTail\Lib\Twig;
 use VisitMarche\ThemeTail\Lib\WpRepository;
@@ -34,22 +32,15 @@ if ($parent) {
     $nameBack = $parent->name;
 }
 
-$posts = $wpRepository->getPostsByCatId($cat_ID);
-
-$category_order = get_term_meta($cat_ID, CategoryMetaBox::KEY_NAME_ORDER, true);
-if ('manual' === $category_order) {
-    $posts = AcSort::getSortedItems($cat_ID, $posts);
-}
 $icone = $wpRepository->categoryIcone($category);
 $bgcat = $wpRepository->categoryBgColor($category);
 $image = $wpRepository->categoryImage($category);
 $video = $wpRepository->categoryVideo($category);
 
 $children = $wpRepository->getChildrenOfCategory($category->cat_ID);
-$offres = [];
 
 $request = Request::createFromGlobals();
-$filterSelected = $request->get(RouterPivot::PARAM_FILTRE, null);
+$filterSelected = $request->get(RouterPivot::PARAM_FILTRE, 0);
 
 if ($filterSelected) {
     $filterSelected = htmlentities($filterSelected);
@@ -59,32 +50,23 @@ if ($filterSelected) {
         $filtres = [$filtres[0]];
         $categoryName = $filtres[0]->name;
     }
+    $filterSelected = $filtres[0]->id;
 } else {
     $filtres = $wpRepository->getCategoryFilters($cat_ID);
 }
-
-if ([] !== $filtres) {
-    $filtres = RouterPivot::setRoutesToFilters($filtres, $cat_ID);
-
-    try {
-        $offres = $wpRepository->getOffres($filtres);
-    } catch (InvalidArgumentException|\Exception $e) {
-        dump($e->getMessage());
-    }
-    if (count($filtres) > 1) {
-        $labelAll = $translator->trans('filter.all');
-        $filtreTout = new TypeOffre($labelAll, 0, 0, "ALL", "", "Type", null);
-        $filtreTout->id = 0;
-        $filtres = [$filtreTout, ...$filtres];
-    }
-    PostUtils::setLinkOnOffres($offres, $cat_ID, $language);
+//add all button
+if (count($filtres) > 1) {
+    $labelAll = $translator->trans('filter.all');
+    $filtreTout = new TypeOffre($labelAll, 0, 0, "ALL", "", "Type", null);
+    $filtreTout->id = 0;
+    $filtres = [$filtreTout, ...$filtres];
 }
-//fusion offres et articles
-$postUtils = new PostUtils();
-$posts = $postUtils->convertPostsToArray($posts);
 
-$offres = $postUtils->convertOffresToArray($offres, $cat_ID, $language);
-$offres = [...$posts, ...$offres];
+try {
+    $offres = $wpRepository->findAllArticlesForCategory($category->cat_ID, $filterSelected);
+} catch (NonUniqueResultException|InvalidArgumentException $e) {
+    $offres = [];
+}
 
 Twig::rendPage(
     '@VisitTail/category.html.twig',
