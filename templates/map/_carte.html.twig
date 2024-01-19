@@ -7,74 +7,7 @@
          data-pois="{{ offre.pois|json_encode }}">
     </div>
 
-    <script type="module" src="{{ template_uri() }}/assets/js/dist/js/mapJf-jf.js">
+    <script type="module" src="{{ template_uri() }}/assets/js/dist/js/map.js">
 
     </script>
-
-   {#  <script ty22pe="text/javascript" defer type="module">
-        const latitude = '{{ latitude }}';
-        const longitude = '{{ longitude }}';
-        const center = [latitude, longitude];
-        let zoom = 15;
-        const name = "{{ name|remove_html|raw }}";
-
-        const poisString = document.getElementById('openmap_offre').dataset.pois;
-        const pois = JSON.parse(poisString);
-
-        if (typeof pois === 'object' && pois.length > 0) {
-            zoom = 13;
-        }
-
-        const map = L.map('openmap_offre')
-            .setView(center, zoom);
-        L.tileLayer('https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
-            minZoom: 1,
-            maxZoom: 20
-        })
-            .addTo(map);
-
-        const marker = L.marker(center, {
-            title: name,
-            draggable: true
-        })
-            .addTo(map);
-
-        const LeafIcon = L.Icon.extend({
-            options: {
-                shadowUrl: '{{ template_uri() }}/assets/images/leaf-shadow.png',
-                iconSize: [38, 95],
-                shadowSize: [50, 64],
-                iconAnchor: [22, 94],
-                shadowAnchor: [4, 62],
-                popupAnchor: [-3, -76]
-            }
-        });
-
-        const greenIcon = new LeafIcon({iconUrl: '{{ template_uri() }}/assets/images/leaf-green.png'});
-
-        pois.forEach(function (poi, index) {
-            L.marker([poi.adresse1.latitude, poi.adresse1.longitude], {
-                title: poi.nom,
-                icon: greenIcon,
-                draggable: true
-            })
-                .bindPopup(poi.nom).addTo(map);
-        });
-
-        let latlngs = JSON.parse('{{ locations|json_encode }}');
-        const myStyle = {
-            "color": "#487F89FF",
-            "weight": 5,
-            "opacity": 1
-        };
-        L.polyline(latlngs, myStyle).addTo(map);
-
-        document.addEventListener("DOMContentLoaded", function () {
-            //     runFunction1WhenPageLoads;
-        });
-
-
-    </script>  #}
-
 {% endif %}
