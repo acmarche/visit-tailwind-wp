@@ -159,7 +159,7 @@ class AdminPage
 
         wp_enqueue_style(
             'vue-admin-css',
-            get_template_directory_uri().'/assets/js/dist/css/pivot.css',
+            get_template_directory_uri().'/assets/js/dist/css/AxiosInstance.css',
             [],
             wp_get_theme()->get('Version'),
         );
@@ -201,7 +201,7 @@ class AdminPage
         );
         wp_enqueue_style(
             'vue-admin-css',
-            get_template_directory_uri().'/assets/js/dist/css/pivot.css',
+            get_template_directory_uri().'/assets/js/dist/css/AxiosInstance.css',
             [],
             wp_get_theme()->get('Version'),
         );

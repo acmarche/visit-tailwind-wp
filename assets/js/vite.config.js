@@ -22,8 +22,10 @@ export default defineConfig({
             input: {
                 categoryFilters: resolve(__dirname, 'index.html'),
                 categoryOffers: resolve(__dirname, 'index2.html'),
+                chart: resolve(__dirname, 'index3.html'),
+                map: resolve(__dirname, 'index4.html'),
             }, output: {
-                assetFileNames: 'css/pivot.css',
+                assetFileNames: 'css/[name].css',
                 entryFileNames: 'js/[name].js',
             },
         }
