@@ -61,7 +61,9 @@ if (count($filtres) > 1) {
     $filtreTout->id = 0;
     $filtres = [$filtreTout, ...$filtres];
 }
-
+if (!$filterSelected) {
+    $filterSelected = 0;
+}
 try {
     $offres = $wpRepository->findAllArticlesForCategory($category->cat_ID, $filterSelected);
 } catch (NonUniqueResultException|InvalidArgumentException $e) {
