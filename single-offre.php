@@ -33,7 +33,12 @@ try {
 
     return;
 }
-
+if (!$offre) {
+    get_header();
+    Twig::rend404Page();
+    get_footer();
+    return;
+}
 if (count($offre->dates) > 0) {
     if ($eventOk = EventUtils::isEventObsolete($offre)) {
         $offre = $eventOk;
