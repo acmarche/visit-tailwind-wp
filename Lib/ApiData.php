@@ -3,6 +3,7 @@
 namespace VisitMarche\ThemeTail\Lib;
 
 use AcMarche\Pivot\DependencyInjection\PivotContainer;
+use Doctrine\ORM\NonUniqueResultException;
 use Psr\Cache\InvalidArgumentException;
 use VisitMarche\ThemeTail\Lib\Elasticsearch\Data\ElasticData;
 use WP_Error;
@@ -26,7 +27,7 @@ class ApiData
         return rest_ensure_response($filtres);
     }
 
-    public static function pivotFiltresByCategory(WP_REST_Request $request): WP_Error|WP_REST_Response|WP_HTTP_Response
+    public static function getFiltersByCategory(WP_REST_Request $request): WP_Error|WP_REST_Response|WP_HTTP_Response
     {
         $categoryWpId = (int)$request->get_param('categoryId');
         $flatWithChildren = (bool)$request->get_param('flatWithChildren');
@@ -38,11 +39,13 @@ class ApiData
             return new WP_Error(500, 'missing param categoryId');
         }
 
-        $filtres = WpRepository::getCategoryFilters(
+        $wpFilterRepository = new WpFilterRepository();
+        $filtres = $wpFilterRepository->getCategoryFilters(
             $categoryWpId,
             $flatWithChildren,
             $removeFilterEmpty,
-            unsetParent: true
+            unsetParent: true,
+            onlyPivot: true
         );
 
         return rest_ensure_response($filtres);
@@ -52,6 +55,7 @@ class ApiData
     {
         $currentCategoryId = (int)$request->get_param('category');
         $filtreSelected = (int)$request->get_param('filtre');
+        $filtreType = (string)$request->get_param('filtreType');
 
         if (0 === $currentCategoryId) {
             Mailer::sendError('error hades offre', 'missing param keyword');
@@ -60,7 +64,7 @@ class ApiData
         }
 
         $wpRepository = new WpRepository();
-        $offres = $wpRepository->findAllArticlesForCategory($currentCategoryId, $filtreSelected);
+        $offres = $wpRepository->findAllArticlesForCategory($currentCategoryId, $filtreSelected, $filtreType);
 
         return rest_ensure_response($offres);
     }
@@ -103,7 +107,11 @@ class ApiData
     {
         $categoryWpId = (int)$request->get_param('categoryId');
         $wpRepository = new WpRepository();
-        $offers = $wpRepository->findOffersShortsByCategory($categoryWpId);
+        try {
+            $offers = $wpRepository->findAllArticlesForCategory($categoryWpId, 0, null);
+        } catch (NonUniqueResultException|InvalidArgumentException $e) {
+            $offers = [];
+        }
 
         return rest_ensure_response($offers);
     }

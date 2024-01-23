@@ -3,13 +3,14 @@
 namespace VisitMarche\ThemeTail;
 
 use AcMarche\Pivot\DependencyInjection\PivotContainer;
-use AcMarche\Pivot\Entity\TypeOffre;
 use Doctrine\ORM\NonUniqueResultException;
 use Psr\Cache\InvalidArgumentException;
 use Symfony\Component\HttpFoundation\Request;
+use VisitMarche\ThemeTail\Lib\FilterStd;
 use VisitMarche\ThemeTail\Lib\LocaleHelper;
 use VisitMarche\ThemeTail\Lib\RouterPivot;
 use VisitMarche\ThemeTail\Lib\Twig;
+use VisitMarche\ThemeTail\Lib\WpFilterRepository;
 use VisitMarche\ThemeTail\Lib\WpRepository;
 
 get_header();
@@ -19,6 +20,7 @@ $category = get_category($cat_ID);
 $categoryName = single_cat_title('', false);
 
 $wpRepository = new WpRepository();
+$wpFilterRepository = new WpFilterRepository();
 $translator = LocaleHelper::iniTranslator();
 $language = LocaleHelper::getSelectedLanguage();
 
@@ -41,6 +43,7 @@ $children = $wpRepository->getChildrenOfCategory($category->cat_ID);
 
 $request = Request::createFromGlobals();
 $filterSelected = $request->get(RouterPivot::PARAM_FILTRE, 0);
+$filterType = $request->get(RouterPivot::PARAM_FILTRE, 0);
 
 if ($filterSelected) {
     $filterSelected = htmlentities($filterSelected);
@@ -52,20 +55,20 @@ if ($filterSelected) {
     }
     $filterSelected = $filtres[0]->id;
 } else {
-    $filtres = $wpRepository->getCategoryFilters($cat_ID);
+    $filtres = $wpFilterRepository->getCategoryFilters($cat_ID);
 }
 //add all button
 if (count($filtres) > 1) {
     $labelAll = $translator->trans('filter.all');
-    $filtreTout = new TypeOffre($labelAll, 0, 0, "ALL", "", "Type", null);
-    $filtreTout->id = 0;
+    $filtreTout = new FilterStd(0, $labelAll, FilterStd::TYPE_PIVOT);
     $filtres = [$filtreTout, ...$filtres];
 }
 if (!$filterSelected) {
     $filterSelected = 0;
 }
+
 try {
-    $offres = $wpRepository->findAllArticlesForCategory($category->cat_ID, $filterSelected);
+    $offres = $wpRepository->findAllArticlesForCategory($category->cat_ID, $filterSelected, $filterType);
 } catch (NonUniqueResultException|InvalidArgumentException $e) {
     $offres = [];
 }
@@ -82,8 +85,9 @@ Twig::rendPage(
         'category' => $category,
         'urlBack' => $urlBack,
         'children' => $children,
-        'filtres' => $filtres,
+        'filters' => $filtres,
         'filterSelected' => $filterSelected,
+        'filterType' => $filterType,
         'nameBack' => $nameBack,
         'categoryName' => $categoryName,
         'offres' => $offres,

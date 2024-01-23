@@ -6,6 +6,7 @@ use AcMarche\Pivot\Entities\Label;
 use AcMarche\Pivot\Entities\Offre\Offre;
 use AcMarche\Pivot\Entities\Specification\SpecData;
 use AcMarche\Pivot\Entities\Tag;
+use AcMarche\Pivot\Entity\TypeOffre;
 use AcMarche\Pivot\Spec\UrnTypeList;
 use VisitMarche\ThemeTail\Entity\CommonItem;
 use WP_Post;
@@ -14,7 +15,7 @@ class PostUtils
 {
     /**
      * @param WP_Post[] $posts
-     * @return array|CommonItem[]
+     * @return CommonItem[]
      */
     public function convertPostsToArray(array $posts): array
     {
@@ -39,7 +40,7 @@ class PostUtils
      * @param Offre[] $offres
      * @param int $categoryId
      * @param string $language
-     * @return array|CommonItem[]
+     * @return CommonItem[]
      */
     public function convertOffresToArray(array $offres, int $categoryId, string $language): array
     {
@@ -133,7 +134,7 @@ class PostUtils
     /**
      * @param array $offres
      * @param string $language
-     * @return array|CommonItem[]
+     * @return CommonItem[]
      */
     public static function convertRecommandationsToArray(array $offres, string $language): array
     {
@@ -166,22 +167,6 @@ class PostUtils
     }
 
     /**
-     * @param array|Offre[] $offres
-     * @param int $categoryId
-     * @param string $language
-     * @return void
-     */
-    public static function setLinkOnOffres(array $offres, int $categoryId, string $language)
-    {
-        array_map(
-            function ($offre) use ($categoryId, $language) {
-                $offre->url = RouterPivot::getUrlOffre($offre, $categoryId);
-            },
-            $offres
-        );
-    }
-
-    /**
      * @param CommonItem[] $offers
      * @return CommonItem[]
      */
@@ -193,5 +178,20 @@ class PostUtils
         }
 
         return array_values($tmp);
+    }
+
+    /**
+     * @param TypeOffre[] $typesOffre
+     * @return FilterStd[]
+     */
+    public static function convertTypeOffreToFilterStd(array $typesOffre): array
+    {
+        $filters = [];
+        foreach ($typesOffre as $typeOffre) {
+            $filters[] = FilterStd::createFromTypeOffre($typeOffre);
+        }
+
+        return $filters;
+
     }
 }

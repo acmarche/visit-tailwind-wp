@@ -13,7 +13,7 @@ class SyncPivot
         $categories = [];
         $wpRepository = new WpRepository();
         foreach ($wpRepository->getCategoriesFromWp() as $category) {
-            $filtres = WpRepository::getMetaPivotTypesOffre($category->term_id);
+            $filtres = WpFilterRepository::getMetaPivotTypesOffre($category->term_id);
             if (count($filtres) > 0) {
                 $categories[] = $category;
             }
@@ -26,12 +26,12 @@ class SyncPivot
     {
         $languages = ['en','nl'];
         foreach ($this->categoriesWithFiltre() as $category) {
-            $filtresFr = WpRepository::getMetaPivotTypesOffre($category->term_id);
+            $filtresFr = WpFilterRepository::getMetaPivotTypesOffre($category->term_id);
             foreach ($languages as $language) {
                 $categoryId = apply_filters('wpml_object_id', $category->term_id, 'category', true, $language);
                 if ($categoryId) {
                     $categoryLng = get_category($categoryId);
-                    $filtresEn = WpRepository::getMetaPivotTypesOffre($categoryLng->term_id);
+                    $filtresEn = WpFilterRepository::getMetaPivotTypesOffre($categoryLng->term_id);
                     $diff = array_diff(array_column($filtresFr, 'urn'), (array_column($filtresEn, 'urn')));
                     if (count($diff) > 0) {
                         update_term_meta($categoryLng->term_id, WpRepository::PIVOT_REFRUBRIQUE, $filtresFr);
@@ -46,7 +46,7 @@ class SyncPivot
         $wpRepository = new WpRepository();
         foreach ($wpRepository->getCategoriesFromWp() as $category) {
             $update = false;
-            $filtres = WpRepository::getMetaPivotTypesOffre($category->term_id);
+            $filtres = WpFilterRepository::getMetaPivotTypesOffre($category->term_id);
             foreach ($filtres as $key => $filtre) {
                 if (!isset($filtre['urn'])) {
                     $update = true;

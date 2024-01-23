@@ -3,6 +3,7 @@
 namespace VisitMarche\ThemeTail\Inc;
 
 use AcMarche\Pivot\DependencyInjection\PivotContainer;
+use VisitMarche\ThemeTail\Lib\WpFilterRepository;
 use VisitMarche\ThemeTail\Lib\WpRepository;
 
 class Ajax
@@ -24,7 +25,7 @@ class Ajax
             $filtreRepository = PivotContainer::getTypeOffreRepository(WP_DEBUG);
             if ($filtre = $filtreRepository->find($id)) {
                 $urn = $filtre->urn;
-                $categoryFiltres = WpRepository::getMetaPivotTypesOffre($categoryWpId);
+                $categoryFiltres = WpFilterRepository::getMetaPivotTypesOffre($categoryWpId);
                 foreach ($categoryFiltres as $key => $data) {
                     if ($urn == $data['urn']) {
                         unset($categoryFiltres[$key]);
@@ -46,7 +47,7 @@ class Ajax
         $filtreRepository = PivotContainer::getTypeOffreRepository(WP_DEBUG);
 
         if ($categoryId > 0 && $typeOffreId > 0) {
-            $categoryFiltres = WpRepository::getMetaPivotTypesOffre($categoryId);
+            $categoryFiltres = WpFilterRepository::getMetaPivotTypesOffre($categoryId);
             $filtre = $filtreRepository->find($typeOffreId);
             if ($filtre) {
                 $meta = ['urn' => $filtre->urn, 'withChildren' => $withChildren];
@@ -64,7 +65,7 @@ class Ajax
         $codeCgt = (string)$_POST['codeCgt'];
         $codesCgt = [];
         if ($categoryId > 0 && $codeCgt) {
-            $codesCgt = WpRepository::getMetaPivotOffres($categoryId);
+            $codesCgt = WpFilterRepository::getMetaPivotOffres($categoryId);
             if (!in_array($codeCgt, $codesCgt)) {
                 $codesCgt[] = $codeCgt;
                 update_term_meta($categoryId, WpRepository::PIVOT_REFOFFERS, $codesCgt);
@@ -82,7 +83,7 @@ class Ajax
         $codesCgt = [];
 
         if ($categoryId > 0 && $codeCgt) {
-            $codesCgt = WpRepository::getMetaPivotOffres($categoryId);
+            $codesCgt = WpFilterRepository::getMetaPivotOffres($categoryId);
             $key = array_search($codeCgt, $codesCgt);
             if ($key !== false) {
                 unset($codesCgt[$key]);

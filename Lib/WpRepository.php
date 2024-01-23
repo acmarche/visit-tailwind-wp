@@ -6,12 +6,10 @@ use AcMarche\Pivot\Api\QueryDetailEnum;
 use AcMarche\Pivot\DependencyInjection\PivotContainer;
 use AcMarche\Pivot\Entities\Offre\Offre;
 use AcMarche\Pivot\Entity\TypeOffre;
-use AcMarche\Pivot\Entity\UrnDefinitionEntity;
-use AcMarche\Pivot\Spec\UrnList;
 use AcSort;
 use Doctrine\ORM\NonUniqueResultException;
 use Psr\Cache\InvalidArgumentException;
-use Symfony\Contracts\Cache\CacheInterface;
+use VisitMarche\ThemeTail\Entity\CommonItem;
 use VisitMarche\ThemeTail\Inc\CategoryMetaBox;
 use VisitMarche\ThemeTail\Inc\Theme;
 use VisitMarche\ThemeTail\Lib\Elasticsearch\Searcher;
@@ -21,19 +19,8 @@ use WP_Term;
 
 class WpRepository
 {
-    private CacheInterface $cache;
     public const PIVOT_REFRUBRIQUE = 'pivot_refrubrique';
     public const PIVOT_REFOFFERS = 'pivot_ref_offers';
-
-    public function __construct()
-    {
-        $this->cache = Cache::instance('wprepo');
-    }
-
-    public function getCategoryBySlug(string $slug)
-    {
-        return get_category_by_slug($slug);
-    }
 
     /**
      * @param int $catId
@@ -187,167 +174,81 @@ class WpRepository
     }
 
     /**
-     * @param int $categoryWpId
-     * @param bool $flatWithChildren pour admin ne pas etendre enfants
-     * @param bool $removeFilterEmpty
-     * @param bool $unsetParent pour ajax
-     * @return TypeOffre[]
-     * @throws NonUniqueResultException
-     */
-    public static function getCategoryFilters(
-        int $categoryWpId,
-        bool $flatWithChildren = false,
-        bool $removeFilterEmpty = true,
-        bool $unsetParent = false
-    ): array {
-        if (in_array($categoryWpId, Theme::CATEGORIES_HEBERGEMENT)) {
-            return WpRepository::getChildrenHebergements($removeFilterEmpty);
-        }
-        if (in_array($categoryWpId, Theme::CATEGORIES_AGENDA)) {
-            return WpRepository::getAllFiltersEvent($removeFilterEmpty);
-        }
-        if (in_array($categoryWpId, Theme::CATEGORIES_RESTAURATION)) {
-            return WpRepository::getChildrenRestauration($removeFilterEmpty);
-        }
-
-        $categoryUrns = WpRepository::getMetaPivotTypesOffre($categoryWpId);
-        $typeOffreRepository = PivotContainer::getTypeOffreRepository(WP_DEBUG);
-        $allFiltres = [];
-
-        foreach ($categoryUrns as $categoryUrn) {
-
-            if (!isset($categoryUrn['urn'])) {
-                continue;
-            }
-
-            $typeOffre = $typeOffreRepository->findOneByUrn($categoryUrn['urn']);
-            if (!$typeOffre) {
-                continue;
-            }
-
-            //bug parent is a proxy
-            if ($unsetParent) {
-                if ($typeOffre->parent) {
-                    $typeOffre->parent = $typeOffreRepository->find($typeOffre->parent->id);
-                }
-            }
-
-            $typeOffre->withChildren = $categoryUrn['withChildren'];
-            $allFiltres[] = $typeOffre;
-
-            /**
-             * Force a pas prendre enfant
-             */
-            if ($flatWithChildren) {
-                continue;
-            }
-
-            if ($categoryUrn['withChildren']) {
-                $children = $typeOffreRepository->findByParent($typeOffre->id, $removeFilterEmpty);
-                foreach ($children as $typeOffreChild) {
-                    //bug parent is a proxy
-                    if ($typeOffreChild->parent) {
-                        $typeOffreChild->parent = $typeOffreRepository->find($typeOffreChild->parent->id);
-                    }
-                    $allFiltres[] = $typeOffreChild;
-                }
-            }
-        }
-
-        return $allFiltres;
-    }
-
-    /**
      * Retourne les posts, les offres
-     * @param int $categoryId
+     * @param int $currentCategoryId
      * @param int $filtreSelected
-     * @return array
+     * @param ?string $filtreType
+     * @return CommonItem[]
      * @throws InvalidArgumentException
      * @throws NonUniqueResultException
      */
-    public function findAllArticlesForCategory(int $categoryId, int $filtreSelected): array
+    public function findAllArticlesForCategory(int $currentCategoryId, int $filtreSelected, ?string $filtreType): array
     {
-        $offres = $filtres = [];
-        $language = LocaleHelper::getSelectedLanguage();
-        $typeOffreRepository = PivotContainer::getTypeOffreRepository(WP_DEBUG);
         $pivotRepository = PivotContainer::getPivotRepository(WP_DEBUG);
-        $postUtils = new PostUtils();
+        if (in_array($currentCategoryId, Theme::CATEGORIES_AGENDA)) {
+            $offers = $this->getEvents();
 
-        $typeOffreSelected = null;
-        if ($filtreSelected == 0) {
-            $filtres = $this->getCategoryFilters($categoryId);
-            $filtres = RouterPivot::setRoutesToFilters($filtres, $categoryId);
-        } else {
-            if ($typeOffreSelected = $typeOffreRepository->find($filtreSelected)) {
-                $filtres[] = $typeOffreSelected;
-            }
+            return $this->treatment($currentCategoryId, $offers);
         }
 
-        if ([] !== $filtres) {
-            if (in_array($categoryId, Theme::CATEGORIES_AGENDA)) {
-                $offres = $this->getEvents($typeOffreSelected);
+        if ($filtreSelected) {
+            if ($filtreType == FilterStd::TYPE_WP) {
+                if ($category = get_category($filtreSelected)) {
+                    $offers = $this->findOffersShortsByCategories([$category->term_id]);
+
+                    return $this->treatment($currentCategoryId, $offers);
+                }
             } else {
-                $offres = $this->getOffresByTypes($filtres);
+                $typeOffreRepository = PivotContainer::getTypeOffreRepository(WP_DEBUG);
+                if ($typeOffre = $typeOffreRepository->find($filtreSelected)) {
+                    $offers = $this->findOffresByTypesOffre([$typeOffre]);
+
+                    return $this->treatment($currentCategoryId, $offers);
+                }
             }
         }
+
+        $wpFilterRepository = new WpFilterRepository();
+        $typesOffre = $wpFilterRepository->getTypesOffreByCategoryId($currentCategoryId);
+        $codesCgt = $wpFilterRepository->getCodesCgtByCategoryId($currentCategoryId);
+
+        $offres = $this->findOffresByTypesOffre($typesOffre);
+        $offersShort = $this->getOffersShortByCodesCgt($codesCgt);
 
         $offers = [];
-        foreach ($this->findOffersShortsByCategory($categoryId) as $offerShort) {
+        foreach ($offersShort as $offerShort) {
             if ($offer = $pivotRepository->fetchOffreByCgtAndParse($offerShort->codeCgt)) {
                 $offers[] = $offer;
             }
         }
 
         $offres = [...$offres, ...$offers];
-        PostUtils::setLinkOnOffres($offres, $categoryId, $language);
-        $posts = $this->getPostsByCatId($categoryId);
 
-        $category_order = get_term_meta($categoryId, CategoryMetaBox::KEY_NAME_ORDER, true);
+        return $this->treatment($currentCategoryId, $offres);
+    }
+
+    /**
+     * @param int $currentCategoryId
+     * @param array $offers
+     * @return  CommonItem[]
+     */
+    private function treatment(int $currentCategoryId, array $offers): array
+    {
+        $language = LocaleHelper::getSelectedLanguage();
+        RouterPivot::setLinkOnOffres($offers, $currentCategoryId, $language);
+
+        $posts = $this->getPostsByCatId($currentCategoryId);
+        $category_order = get_term_meta($currentCategoryId, CategoryMetaBox::KEY_NAME_ORDER, true);
         if ('manual' === $category_order) {
-            $posts = AcSort::getSortedItems($categoryId, $posts);
+            $posts = AcSort::getSortedItems($currentCategoryId, $posts);
         }
 
         //fusion offres et articles
+        $postUtils = new PostUtils();
         $posts = $postUtils->convertPostsToArray($posts);
-        $offres = $postUtils->convertOffresToArray($offres, $categoryId, $language);
+        $offres = $postUtils->convertOffresToArray($offers, $currentCategoryId, $language);
 
         return PostUtils::removeDoublon([...$posts, ...$offres]);
-    }
-
-    /**
-     * @return TypeOffre[]
-     * @throws NonUniqueResultException|\Exception
-     */
-    public static function getAllFiltersEvent(bool $removeFilterEmpty): array
-    {
-        $filtreRepository = PivotContainer::getTypeOffreRepository(WP_DEBUG);
-        $parents = $filtreRepository->findByUrn(UrnList::EVENTS->value);
-
-        return $filtreRepository->findByParent($parents[0]->parent->id, $removeFilterEmpty);
-    }
-
-    /**
-     * @return TypeOffre[]
-     * @throws NonUniqueResultException|\Exception
-     */
-    public static function getChildrenRestauration(bool $removeFilterEmpty): array
-    {
-        $filtreRepository = PivotContainer::getTypeOffreRepository(WP_DEBUG);
-        $barVin = $filtreRepository->findOneByUrn(UrnList::BAR_VIN->value);
-
-        return $filtreRepository->findByParent($barVin->parent->id, $removeFilterEmpty);
-    }
-
-    /**
-     * @return TypeOffre[]
-     * @throws NonUniqueResultException
-     */
-    public static function getChildrenHebergements(bool $removeFilterEmpty): array
-    {
-        $filtreRepository = PivotContainer::getTypeOffreRepository(WP_DEBUG);
-        $filtre = $filtreRepository->findOneByUrn(UrnList::HERGEMENT->value);
-
-        return $filtreRepository->findByParent($filtre->id, $removeFilterEmpty);
     }
 
     public function categoryImage(WP_Term $category): string
@@ -409,37 +310,43 @@ class WpRepository
     {
         $key = Cache::SEE_ALSO_OFFRES.'-'.$offerRefer->codeCgt.'-'.$category->term_id;
         $cacheKey = Cache::generateKey($key);
+        $cache = Cache::instance('wprepo');
 
-        return $this->cache->get($cacheKey, function () use ($offerRefer, $category, $language) {
-            if (count($offerRefer->see_also)) {
-                $offres = $offerRefer->see_also;
-            } else {
-                $pivotRepository = PivotContainer::getPivotRepository();
-                $offres = $pivotRepository->fetchSameOffres($offerRefer, 10);
-            }
-            PostUtils::setLinkOnOffres($offres, $category->term_id, $language);
-            $recommandations = PostUtils::convertRecommandationsToArray($offres, $language);
-            $count = count($recommandations);
-            $data = [];
-
-            if ($count === 0) {
-                return $data;
-            }
-
-            if ($count > 3) {
-                $count = 3;
-            }
-
-            $keys = array_rand($recommandations, $count);
-
-            if (is_array($keys)) {
-                foreach ($keys as $key) {
-                    $data[] = $recommandations[$key];
+        try {
+            return $cache->get($cacheKey, function () use ($offerRefer, $category, $language) {
+                if (count($offerRefer->see_also)) {
+                    $offres = $offerRefer->see_also;
+                } else {
+                    $pivotRepository = PivotContainer::getPivotRepository();
+                    $offres = $pivotRepository->fetchSameOffres($offerRefer, 10);
                 }
-            }
 
-            return $data;
-        });
+                $recommandations = PostUtils::convertRecommandationsToArray($offres, $language);
+                $count = count($recommandations);
+                if ($count === 0) {
+                    return [];
+                }
+
+                RouterPivot::setLinkOnOffres($recommandations, $category->term_id, $language);
+                $data = [];
+
+                if ($count > 3) {
+                    $count = 3;
+                }
+
+                $keys = array_rand($recommandations, $count);
+
+                if (is_array($keys)) {
+                    foreach ($keys as $key) {
+                        $data[] = $recommandations[$key];
+                    }
+                }
+
+                return $data;
+            });
+        } catch (InvalidArgumentException $e) {
+            return [];
+        }
     }
 
     /**
@@ -450,13 +357,7 @@ class WpRepository
     public function getEvents(TypeOffre $typeOffre = null): array
     {
         $pivotRepository = PivotContainer::getPivotRepository(WP_DEBUG);
-        if ($typeOffre) {
-            $filtres = [$typeOffre];
-        } else {
-            $filtres = $this->getAllFiltersEvent(true);
-        }
-
-        $events = $pivotRepository->fetchEvents($filtres);
+        $events = $pivotRepository->fetchEvents();
         $data = [];
         foreach ($events as $event) {
             $event->locality = $event->getAdresse()->localite[0]->get('fr');
@@ -475,28 +376,52 @@ class WpRepository
     }
 
     /**
-     * @param TypeOffre[] $typesOffre
+     * @param TypeOffre[] $filters
      * @return Offre[]
      * @throws InvalidArgumentException
      */
-    public function getOffresByTypes(array $typesOffre): array
+    public function findOffresByTypesOffre(array $filters): array
     {
         $pivotRepository = PivotContainer::getPivotRepository(WP_DEBUG);
 
-        return $pivotRepository->fetchOffres($typesOffre);
+        return $pivotRepository->fetchOffres($filters);
     }
 
     /**
-     * @param int $categoryId
+     * @param array $categoryIds
      * @return \stdClass[]
      */
-    public function findOffersShortsByCategory(int $categoryId): array
+    public function findOffersShortsByCategories(array $categoryIds): array
     {
-        $wpRepository = new WpRepository();
-        $codesCgt = WpRepository::getMetaPivotOffres($categoryId);
+        $offers = [[]];
+        foreach ($categoryIds as $categoryId) {
+            $data = $this->findOffersShortsByCategory($categoryId);
+            if (count($data) > 0) {
+                $offers[] = $data;
+            }
+        }
+        $data = [];
+
+        foreach ($offers as $offer) {
+            if (count($offer) > 0) {
+                foreach ($offer as $item) {
+                    $data[$item->codeCgt] = $item;
+                }
+            }
+        }
+
+        return array_values($data);
+    }
+
+    /**
+     * @param string[] $codesCgt
+     * @return \stdClass[]
+     */
+    public function getOffersShortByCodesCgt(array $codesCgt): array
+    {
         $offers = [];
         try {
-            $offersShort = $wpRepository->getAllOffresShorts();
+            $offersShort = $this->getAllOffresShorts();
             foreach ($codesCgt as $codeCgt) {
                 foreach ($offersShort as $offerShort) {
                     if ($offerShort->codeCgt === $codeCgt) {
@@ -511,7 +436,6 @@ class WpRepository
 
         return $offers;
     }
-
 
     /**
      * @return \stdClass{codeCgt: string, name: string, type: string}[]
@@ -546,13 +470,6 @@ class WpRepository
         return $pivotRepository->fetchOffreByCgtAndParse($codeCgt);
     }
 
-    public function getUrnDefinition(string $urnName): ?UrnDefinitionEntity
-    {
-        $pivotRepository = PivotContainer::getUrnDefinitionRepository(WP_DEBUG);
-
-        return $pivotRepository->findByUrn($urnName);
-    }
-
     public function groupSpecifications(Offre $offre): array
     {
         $categories = [];
@@ -565,23 +482,4 @@ class WpRepository
         return $categories;
     }
 
-    public static function getMetaPivotTypesOffre(int $wpCategoryId): array
-    {
-        $filtres = get_term_meta($wpCategoryId, self::PIVOT_REFRUBRIQUE, true);
-        if (!is_array($filtres)) {
-            return [];
-        }
-
-        return $filtres;
-    }
-
-    public static function getMetaPivotOffres(int $wpCategoryId): array
-    {
-        $offers = get_term_meta($wpCategoryId, self::PIVOT_REFOFFERS, true);
-        if (!is_array($offers)) {
-            return [];
-        }
-
-        return $offers;
-    }
 }

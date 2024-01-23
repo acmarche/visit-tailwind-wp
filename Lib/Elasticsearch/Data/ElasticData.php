@@ -5,11 +5,14 @@ namespace VisitMarche\ThemeTail\Lib\Elasticsearch\Data;
 use AcMarche\Pivot\DependencyInjection\PivotContainer;
 use AcMarche\Pivot\Entities\Offre\Offre;
 use DateTime;
+use Doctrine\ORM\NonUniqueResultException;
 use Exception;
+use InvalidArgumentException;
 use stdClass;
 use VisitMarche\ThemeTail\Lib\Mailer;
 use VisitMarche\ThemeTail\Lib\PostUtils;
 use VisitMarche\ThemeTail\Lib\RouterPivot;
+use VisitMarche\ThemeTail\Lib\WpFilterRepository;
 use VisitMarche\ThemeTail\Lib\WpRepository;
 use WP_Post;
 use WP_Term;
@@ -18,11 +21,13 @@ class ElasticData
 {
     private WpRepository $wpRepository;
     private string $url;
+    private WpFilterRepository $wpFilterRepository;
 
     public function __construct()
     {
         $this->wpRepository = new WpRepository();
-        $this->url = 'https://www.visitmarche.be/wp-json/visit/all';
+        $this->wpFilterRepository = new WpFilterRepository();
+        $this->url = 'https://www.visit.marche.be/wp-json/visit/all';
     }
 
     public function getAllData(): stdClass
@@ -58,8 +63,6 @@ class ElasticData
                 $content .= $documentElastic->excerpt;
                 $content .= $documentElastic->content;
             }
-
-            $content .= $this->getContentHades($category, $language);
 
             $children = $this->wpRepository->getChildrenOfCategory($category->cat_ID);
             $tags = [];
@@ -129,21 +132,16 @@ class ElasticData
         $datas = [];
 
         foreach ($this->wpRepository->getCategoriesFromWp() as $category) {
-            $filtres = $this->wpRepository->getCategoryFilters($category->cat_ID);
 
-            if ([] !== $filtres) {
-                $pivotRepository = PivotContainer::getPivotRepository(WP_DEBUG);
-                $offres = $pivotRepository->fetchOffres($filtres);
-                array_map(
-                    function ($offre) use ($category, $language) {
-                        $offre->url = RouterPivot::getUrlOffre($offre, $category->cat_ID);
-                    },
-                    $offres
-                );
-                foreach ($offres as $offre) {
-                    $datas[] = $this->createDocumentElasticFromOffre($offre, $language);
-                }
+            try {
+                $offres = $this->wpRepository->findAllArticlesForCategory($category->cat_ID, 0, null);
+            } catch (NonUniqueResultException|InvalidArgumentException|\Psr\Cache\InvalidArgumentException $e) {
+                continue;
             }
+        }
+
+        foreach ($offres as $offre) {
+            $datas[$offre->id] = $this->createDocumentElasticFromOffre($offre, $language);
         }
 
         return $datas;

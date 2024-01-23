@@ -2,8 +2,8 @@
 
 namespace VisitMarche\ThemeTail\Lib;
 
-use AcMarche\Pivot\Entities\Offre\Offre;
 use AcMarche\Pivot\Entity\TypeOffre;
+use VisitMarche\ThemeTail\Entity\CommonItem;
 
 /**
  * Ajouts des routes pour les offres
@@ -16,6 +16,7 @@ class RouterPivot
     public const PARAM_OFFRE = 'codeoffre';
     public const OFFRE_URL = 'offre';
     public const PARAM_FILTRE = 'filtre';
+    public const PARAM_FILTRE_TYPE = 'filtretype';
 
     public function __construct()
     {
@@ -36,26 +37,40 @@ class RouterPivot
         return home_url($wp->request);
     }
 
-    public static function getUrlOffre(Offre $offre, int $categoryId): string
+    /**
+     * @param CommonItem[] $offres
+     * @param int $categoryId
+     * @param string $language
+     * @return void
+     */
+    public static function setLinkOnOffres(array $offres, int $categoryId, string $language): void
     {
-        return get_category_link($categoryId).self::OFFRE_URL.'/'.$offre->codeCgt;
+        array_map(
+            function ($offre) use ($categoryId, $language) {
+                $offre->url = RouterPivot::getUrlOffre($offre, $categoryId);
+            },
+            $offres
+        );
     }
 
-    public static function getUrlFiltre(int $categoryId): string
+    public static function getUrlOffre(CommonItem $offre, int $categoryId): string
     {
-        return get_category_link(get_category($categoryId)).'?filtre=';
+        return get_category_link($categoryId).self::OFFRE_URL.'/'.$offre->id;
     }
 
     /**
-     * @param TypeOffre[] $filtres
+     * @param FilterStd[] $filtres
      * @return TypeOffre[]
      */
     public static function setRoutesToFilters(array $filtres, int $categoryId): array
     {
-        $urlfiltre = self::getUrlFiltre($categoryId);
+        $urlBase = get_category_link(get_category($categoryId)).'?filtre=';
         foreach ($filtres as $filtre) {
-            $key = $filtre->urn;
-            $filtre->url = $urlfiltre.$key;
+            if ($filtre->type == FilterStd::TYPE_PIVOT) {
+                $filtre->url = $urlBase.$filtre->urn;
+            } else {
+                $filtre->url = $urlBase.$filtre->id;
+            }
         }
 
         return $filtres;

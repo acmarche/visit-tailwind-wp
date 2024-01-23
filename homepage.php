@@ -16,7 +16,7 @@ get_header();
 $wpRepository = new WpRepository();
 
 $intro = $wpRepository->getIntro();
-$inspirationCat = $wpRepository->getCategoryBySlug('inspirations');
+$inspirationCat = get_category_by_slug('inspirations');
 $inspirations = $wpRepository->getPostsByCatId($inspirationCat->cat_ID);
 $category_order = get_term_meta($inspirationCat->cat_ID, CategoryMetaBox::KEY_NAME_ORDER, true);
 if ('manual' === $category_order) {
