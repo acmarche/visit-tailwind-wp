@@ -211,6 +211,21 @@ class WpRepository
         $typesOffre = $wpFilterRepository->getTypesOffreByCategoryId($currentCategoryId);
         $codesCgt = $wpFilterRepository->getCodesCgtByCategoryId($currentCategoryId);
 
+        foreach ($this->getChildrenOfCategory($currentCategoryId) as $child) {
+            $tmp = $wpFilterRepository->getTypesOffreByCategoryId($child->term_id);
+            foreach ($tmp as $t) {
+                if ($t) {
+                    $typesOffre[$t->id] = $t;
+                }
+            }
+            $tmp = $wpFilterRepository->getCodesCgtByCategoryId($child->term_id);
+            foreach ($tmp as $t) {
+                if ($t) {
+                    $codesCgt[$t] = $t;
+                }
+            }
+        }
+
         $offres = $this->findOffresByTypesOffre($typesOffre);
         $offersShort = $this->findOffersShortByCodesCgt($codesCgt);
 
