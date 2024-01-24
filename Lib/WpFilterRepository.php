@@ -28,7 +28,8 @@ class WpFilterRepository
         bool $unsetParent = false,
         bool $onlyPivot = false
     ): array {
-        $typesOffre = array_map(fn(TypeOffre $typeOffe) => FilterStd::createFromTypeOffre($typeOffe),
+
+        $typesOffre = array_map(fn(TypeOffre $typeOffre) => FilterStd::createFromTypeOffre($typeOffre),
             $this->getTypesOffreByCategoryId(
                 $categoryId,
                 $flatWithChildren,
@@ -57,6 +58,7 @@ class WpFilterRepository
      * @param bool $removeFilterEmpty
      * @param bool $unsetParent
      * @return TypeOffre[]
+     * @throws NonUniqueResultException
      */
     public function getTypesOffreByCategoryId(
         int $categoryWpId,
@@ -65,13 +67,13 @@ class WpFilterRepository
         bool $unsetParent = false
     ): array {
         if (in_array($categoryWpId, Theme::CATEGORIES_HEBERGEMENT)) {
-            return PostUtils::convertTypeOffreToFilterStd(self::getChildrenHebergements($removeFilterEmpty));
+            return self::getChildrenHebergements($removeFilterEmpty);
         }
         if (in_array($categoryWpId, Theme::CATEGORIES_AGENDA)) {
-            return PostUtils::convertTypeOffreToFilterStd(self::getChildrenEvents($removeFilterEmpty));
+            return self::getChildrenEvents($removeFilterEmpty);
         }
         if (in_array($categoryWpId, Theme::CATEGORIES_RESTAURATION)) {
-            return PostUtils::convertTypeOffreToFilterStd(self::getChildrenRestauration($removeFilterEmpty));
+            return self::getChildrenRestauration($removeFilterEmpty);
         }
 
         $categoryUrns = self::getMetaPivotTypesOffre($categoryWpId);
@@ -116,7 +118,7 @@ class WpFilterRepository
                     if ($typeOffreChild->parent) {
                         $typeOffreChild->parent = $typeOffreRepository->find($typeOffreChild->parent->id);
                     }
-                    $allFiltres[] = FilterStd::createFromTypeOffre($typeOffreChild);
+                    $allFiltres[] = $typeOffreChild;
                 }
             }
         }
@@ -140,9 +142,8 @@ class WpFilterRepository
     public static function getChildrenEvents(bool $removeFilterEmpty): array
     {
         $filtreRepository = PivotContainer::getTypeOffreRepository(WP_DEBUG);
-        $parents = $filtreRepository->findByUrn(UrnList::EVENTS->value);
 
-        return $filtreRepository->findByParent($parents[0]->parent->id, $removeFilterEmpty);
+        return $filtreRepository->findByUrnLike(UrnList::CATEGORIE_EVENT->value.':');
     }
 
     /**

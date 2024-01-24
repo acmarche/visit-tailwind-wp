@@ -4,6 +4,7 @@ namespace VisitMarche\ThemeTail;
 
 use AcMarche\Pivot\DependencyInjection\PivotContainer;
 use AcMarche\Pivot\Entity\TypeOffre;
+use Doctrine\ORM\NonUniqueResultException;
 use Psr\Cache\InvalidArgumentException;
 use VisitMarche\ThemeTail\Lib\LocaleHelper;
 use VisitMarche\ThemeTail\Lib\RouterPivot;
@@ -31,10 +32,14 @@ $categorName = $category->name;
 $filtre = null;
 if ($filterSelected) {
     $typeOffreRepository = PivotContainer::getTypeOffreRepository(WP_DEBUG);
-    $filtre = $typeOffreRepository->findOneByUrn($filterSelected);
-    if ($filtre instanceof TypeOffre) {
-        $nameBack = $translator->trans('agenda.title');
-        $categorName = $category->name.' - '.$filtre->labelByLanguage($language);
+    try {
+        $filtre = $typeOffreRepository->findOneByUrn($filterSelected);
+        if ($filtre instanceof TypeOffre) {
+            $nameBack = $translator->trans('agenda.title');
+            $categorName = $category->name.' - '.$filtre->labelByLanguage($language);
+        }
+    } catch (NonUniqueResultException $e) {
+
     }
 }
 try {
@@ -53,12 +58,14 @@ try {
     return;
 }
 $wpFilterRepository = new WpFilterRepository();
-$filtres = $wpFilterRepository->getChildrenEvents(true);
-if (count($filtres) > 1) {
+$filters = $wpFilterRepository->getCategoryFilters($cat_ID, true, true);
+RouterPivot::setRoutesToFilters($filters, $cat_ID);
+
+if (count($filters) > 1) {
     $labelAll = $translator->trans('filter.all');
     $filtreTout = new TypeOffre($labelAll, 0, 0, "ALL", "", "Type", null);
     $filtreTout->id = 0;
-    $filtres = [$filtreTout, ...$filtres];
+    $filtres = [$filtreTout, ...$filters];
 }
 Twig::rendPage(
     '@VisitTail/agenda.html.twig',
