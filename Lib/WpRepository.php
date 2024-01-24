@@ -186,6 +186,12 @@ class WpRepository
     {
         $pivotRepository = PivotContainer::getPivotRepository(WP_DEBUG);
 
+        if (in_array($currentCategoryId, Theme::CATEGORIES_AGENDA)) {
+            $offers = $this->getEvents();
+
+            return $this->treatment($currentCategoryId, $offers);
+        }
+
         if ($filtreSelected) {
             if ($filtreType == FilterStd::TYPE_WP) {
                 if ($category = get_category($filtreSelected)) {
