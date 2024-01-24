@@ -96,7 +96,7 @@ class ApiData
     }
 
     /**
-     * Pour alimenter le moteur de recherche depuis l'exterieur.
+     * Pour alimenter le moteur de recherche depuis l'extérieur.
      */
     public static function getAll(): \WP_Error|WP_HTTP_Response|WP_REST_Response
     {

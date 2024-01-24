@@ -9,6 +9,7 @@ use Doctrine\ORM\NonUniqueResultException;
 use Exception;
 use InvalidArgumentException;
 use stdClass;
+use VisitMarche\ThemeTail\Entity\CommonItem;
 use VisitMarche\ThemeTail\Lib\Mailer;
 use VisitMarche\ThemeTail\Lib\PostUtils;
 use VisitMarche\ThemeTail\Lib\RouterPivot;
@@ -134,14 +135,14 @@ class ElasticData
         foreach ($this->wpRepository->getCategoriesFromWp() as $category) {
 
             try {
-                $offres = $this->wpRepository->findAllArticlesForCategory($category->cat_ID, 0, null);
+                $offres = $this->wpRepository->findOffersByCategory($category->cat_ID, 0, null);
             } catch (NonUniqueResultException|InvalidArgumentException|\Psr\Cache\InvalidArgumentException $e) {
                 continue;
             }
         }
 
         foreach ($offres as $offre) {
-            $datas[$offre->id] = $this->createDocumentElasticFromOffre($offre, $language);
+            $datas[$offre->codeCgt] = $this->createDocumentElasticFromOffre($offre, $language);
         }
 
         return $datas;

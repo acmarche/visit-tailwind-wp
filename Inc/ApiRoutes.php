@@ -86,6 +86,7 @@ class ApiRoutes
             }
         );
 
+        //https://www.visitmarche.be/wp-json/visit/all
         add_action(
             'rest_api_init',
             function () {
