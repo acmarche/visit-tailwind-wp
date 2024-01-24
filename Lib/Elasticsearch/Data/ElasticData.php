@@ -27,7 +27,7 @@ class ElasticData
     {
         $this->wpRepository = new WpRepository();
         $this->wpFilterRepository = new WpFilterRepository();
-        $this->url = 'https://www.visit.marche.be/wp-json/visit/all';
+        $this->url = 'https://www.visitmarche.be/wp-json/visit/all';
     }
 
     public function getAllData(): stdClass

@@ -11,7 +11,7 @@ document.addEventListener('alpine:init', () => {
                 this.noResults = false
                 this.isLoading = true
                 console.log(`search for ${this.query}`)
-                let response = await fetch("https://visit.marche.be/api/search.php?s=" + this.query)
+                let response = await fetch("https://visitmarche.be/api/search.php?s=" + this.query)
                     .then(function (response) {
                         // The API call was successful!
                         return response.json()

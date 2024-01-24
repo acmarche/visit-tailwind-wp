@@ -28,7 +28,7 @@ document.addEventListener('alpine:init', () => {
                     this.filtreSelected = e.target.dataset.filtre
                     this.filtreType = e.target.dataset.filtretype
                 }
-                const url = `https://visit.marche.be/wp-json/pivot/offres/${this.currentCategory}/${this.filtreSelected}/${this.filtreType}`;
+                const url = `https://visitmarche.be/wp-json/pivot/offres/${this.currentCategory}/${this.filtreSelected}/${this.filtreType}`;
                 console.log(url)
                 this.offres = await fetch(url)
                     .then(function (response) {
