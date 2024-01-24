@@ -5,6 +5,7 @@ namespace VisitMarche\ThemeTail\Lib;
 use AcMarche\Pivot\DependencyInjection\PivotContainer;
 use Doctrine\ORM\NonUniqueResultException;
 use Psr\Cache\InvalidArgumentException;
+use VisitMarche\ThemeTail\Inc\Theme;
 use VisitMarche\ThemeTail\Lib\Elasticsearch\Data\ElasticData;
 use WP_Error;
 use WP_HTTP_Response;
@@ -64,6 +65,23 @@ class ApiData
         }
 
         $wpRepository = new WpRepository();
+        if (in_array($currentCategoryId, Theme::CATEGORIES_AGENDA)) {
+            try {
+                $events = $wpRepository->getEvents($filtreSelected);
+                array_map(
+                    function ($event) use ($currentCategoryId) {
+                        $event->url = RouterPivot::getUrlOffre($currentCategoryId, $event->codeCgt);
+                    },
+                    $events
+                );
+
+                return rest_ensure_response($events);
+            } catch (NonUniqueResultException|InvalidArgumentException $e) {
+                return rest_ensure_response([]);
+            }
+
+        }
+
         try {
             $offres = $wpRepository->findAllArticlesForCategory($currentCategoryId, $filtreSelected, $filtreType);
         } catch (NonUniqueResultException|InvalidArgumentException $e) {

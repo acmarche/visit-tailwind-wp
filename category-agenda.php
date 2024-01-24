@@ -43,7 +43,7 @@ if ($filterSelected) {
     }
 }
 try {
-    $events = $wpRepository->getEvents($filtre);
+    $events = $wpRepository->getEvents($filtre?->id);
 
     array_map(
         function ($event) use ($cat_ID, $language) {

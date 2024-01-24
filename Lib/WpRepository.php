@@ -186,12 +186,6 @@ class WpRepository
     {
         $pivotRepository = PivotContainer::getPivotRepository(WP_DEBUG);
 
-        if (in_array($currentCategoryId, Theme::CATEGORIES_AGENDA)) {
-            $offers = $this->getEvents();
-
-            return $this->treatment($currentCategoryId, $offers);
-        }
-
         if ($filtreSelected) {
             if ($filtreType == FilterStd::TYPE_WP) {
                 if ($category = get_category($filtreSelected)) {
@@ -361,10 +355,22 @@ class WpRepository
      * @throws InvalidArgumentException
      * @throws NonUniqueResultException
      */
-    public function getEvents(TypeOffre $typeOffre = null): array
+    public function getEvents(?int $filterSelected = null): array
     {
         $pivotRepository = PivotContainer::getPivotRepository(WP_DEBUG);
-        $events = $pivotRepository->fetchEvents();
+        $args = [];
+        if ($filterSelected) {
+            $typeOffreRepository = PivotContainer::getTypeOffreRepository(WP_DEBUG);
+            try {
+                $filtre = $typeOffreRepository->findOneByUrn($filterSelected);
+                if ($filtre instanceof TypeOffre) {
+                    $args = [$filtre];
+                }
+            } catch (NonUniqueResultException $e) {
+
+            }
+        }
+        $events = $pivotRepository->fetchEvents($args);
         $data = [];
         foreach ($events as $event) {
             $event->locality = $event->getAdresse()->localite[0]->get('fr');
@@ -378,6 +384,7 @@ class WpRepository
             }
             $data[] = $event;
         }
+
 
         return $data;
     }
