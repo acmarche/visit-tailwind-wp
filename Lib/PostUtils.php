@@ -6,7 +6,6 @@ use AcMarche\Pivot\Entities\Label;
 use AcMarche\Pivot\Entities\Offre\Offre;
 use AcMarche\Pivot\Entities\Specification\SpecData;
 use AcMarche\Pivot\Entities\Tag;
-use AcMarche\Pivot\Entity\TypeOffre;
 use AcMarche\Pivot\Spec\UrnTypeList;
 use VisitMarche\ThemeTail\Entity\CommonItem;
 use WP_Post;
@@ -183,17 +182,24 @@ class PostUtils
     }
 
     /**
-     * @param TypeOffre[] $typesOffre
-     * @return FilterStd[]
+     * @param \stdClass[]|CommonItem[] $offres
+     *
+     * @return \stdClass[]
      */
-    public static function convertTypeOffreToFilterStd(array $typesOffre): array
+    public static function sortOffresByName(array $offres, string $order = 'ASC'): array
     {
-        $filters = [];
-        foreach ($typesOffre as $typeOffre) {
-            $filters[] = FilterStd::createFromTypeOffre($typeOffre);
-        }
+        usort(
+            $offres,
+            function ($offreA, $offreB) use ($order) {
+                if ($order == 'ASC') {
+                    return $offreA->name <=> $offreB->name;
+                } else {
+                    return $offreB->name <=> $offreA->name;
+                }
+            }
+        );
 
-        return $filters;
-
+        return $offres;
     }
+
 }

@@ -3,9 +3,9 @@
 namespace VisitMarche\ThemeTail\Inc;
 
 use AcMarche\Pivot\DependencyInjection\PivotContainer;
-use AcMarche\Pivot\Utils\SortUtils;
 use Psr\Cache\InvalidArgumentException;
 use VisitMarche\ThemeTail\Lib\PivotCategoriesTable;
+use VisitMarche\ThemeTail\Lib\PostUtils;
 use VisitMarche\ThemeTail\Lib\RouterPivot;
 use VisitMarche\ThemeTail\Lib\SyncPivot;
 use VisitMarche\ThemeTail\Lib\Twig;
@@ -127,7 +127,7 @@ class AdminPage
             $offres = [];
             $error = $e->getMessage();
         }
-        $offres = SortUtils::sortOffresByName($offres);
+        $offres = PostUtils::sortOffresByName($offres);
         array_map(fn($offer) => $offer->urlPivot = RouterPivot::getRouteOfferToPivotSite($offer->codeCgt), $offres);
         Twig::rendPage(
             '@VisitTail/admin/offers_list.html.twig',

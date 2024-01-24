@@ -184,15 +184,11 @@ class WpRepository
      */
     public function findAllArticlesForCategory(int $currentCategoryId, int $filtreSelected, ?string $filtreType): array
     {
-        $pivotRepository = PivotContainer::getPivotRepository(WP_DEBUG);
-
         if ($filtreSelected) {
             if ($filtreType == FilterStd::TYPE_WP) {
                 if ($category = get_category($filtreSelected)) {
-                    $offers = $this->findAllArticlesForCategory(
-                        $currentCategoryId,
+                    $offers = $this->findOffersByCategory(
                         $category->term_id,
-                        FilterStd::TYPE_WP
                     );
 
                     return $this->treatment($currentCategoryId, $offers);
@@ -207,36 +203,7 @@ class WpRepository
             }
         }
 
-        $wpFilterRepository = new WpFilterRepository();
-        $typesOffre = $wpFilterRepository->getTypesOffreByCategoryId($currentCategoryId);
-        $codesCgt = $wpFilterRepository->getCodesCgtByCategoryId($currentCategoryId);
-
-        foreach ($this->getChildrenOfCategory($currentCategoryId) as $child) {
-            $tmp = $wpFilterRepository->getTypesOffreByCategoryId($child->term_id);
-            foreach ($tmp as $t) {
-                if ($t) {
-                    $typesOffre[$t->id] = $t;
-                }
-            }
-            $tmp = $wpFilterRepository->getCodesCgtByCategoryId($child->term_id);
-            foreach ($tmp as $t) {
-                if ($t) {
-                    $codesCgt[$t] = $t;
-                }
-            }
-        }
-
-        $offres = $this->findOffresByTypesOffre($typesOffre);
-        $offersShort = $this->findOffersShortByCodesCgt($codesCgt);
-
-        $offers = [];
-        foreach ($offersShort as $offerShort) {
-            if ($offer = $pivotRepository->fetchOffreByCgtAndParse($offerShort->codeCgt)) {
-                $offers[] = $offer;
-            }
-        }
-
-        $offres = [...$offres, ...$offers];
+        $offres = $this->findOffersByCategory($currentCategoryId);
 
         return $this->treatment($currentCategoryId, $offres);
     }
@@ -264,7 +231,48 @@ class WpRepository
         $data = PostUtils::removeDoublon([...$posts, ...$offres]);
         RouterPivot::setLinkOnCommonItems($data, $currentCategoryId, $language);
 
-        return $data;
+        return PostUtils::sortOffresByName($data);
+    }
+
+    /**
+     * @param int $categoryIdSelected
+     * @return Offre[]
+     * @throws InvalidArgumentException
+     * @throws NonUniqueResultException
+     */
+    public function findOffersByCategory(int $categoryIdSelected): array
+    {
+        $wpFilterRepository = new WpFilterRepository();
+        $typesOffre = $wpFilterRepository->getTypesOffreByCategoryId($categoryIdSelected);
+        $codesCgt = $wpFilterRepository->getCodesCgtByCategoryId($categoryIdSelected);
+
+        foreach ($this->getChildrenOfCategory($categoryIdSelected) as $child) {
+            $tmp = $wpFilterRepository->getTypesOffreByCategoryId($child->term_id);
+            foreach ($tmp as $t) {
+                if ($t) {
+                    $typesOffre[$t->id] = $t;
+                }
+            }
+            $tmp = $wpFilterRepository->getCodesCgtByCategoryId($child->term_id);
+            foreach ($tmp as $t) {
+                if ($t) {
+                    $codesCgt[$t] = $t;
+                }
+            }
+        }
+
+        $offres = $this->findOffresByTypesOffre($typesOffre);
+        $offersShort = $this->findOffersShortByCodesCgt($codesCgt);
+
+        $pivotRepository = PivotContainer::getPivotRepository(WP_DEBUG);
+        $offers = [];
+        foreach ($offersShort as $offerShort) {
+            if ($offer = $pivotRepository->fetchOffreByCgtAndParse($offerShort->codeCgt)) {
+                $offers[] = $offer;
+            }
+        }
+
+        return [...$offres, ...$offers];
     }
 
     public function categoryImage(WP_Term $category): string
