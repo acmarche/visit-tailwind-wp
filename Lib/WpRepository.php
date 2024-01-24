@@ -191,33 +191,37 @@ class WpRepository
                         $category->term_id,
                     );
 
-                    return $this->treatment($currentCategoryId, $offers);
+                    $posts = $this->getPostsByCatId($filtreSelected);
+
+                    return $this->treatment($currentCategoryId, $offers, $posts);
                 }
             } else {
                 $typeOffreRepository = PivotContainer::getTypeOffreRepository(WP_DEBUG);
                 if ($typeOffre = $typeOffreRepository->find($filtreSelected)) {
                     $offers = $this->findOffresByTypesOffre([$typeOffre]);
+                    $posts = [];
 
-                    return $this->treatment($currentCategoryId, $offers);
+                    return $this->treatment($currentCategoryId, $offers, $posts);
                 }
             }
         }
 
         $offres = $this->findOffersByCategory($currentCategoryId);
+        $posts = $this->getPostsByCatId($currentCategoryId);
 
-        return $this->treatment($currentCategoryId, $offres);
+        return $this->treatment($currentCategoryId, $offres, $posts);
     }
 
     /**
      * @param int $currentCategoryId
      * @param Offre[] $offers
+     * @param WP_Post[] $posts
      * @return  CommonItem[]
      */
-    private function treatment(int $currentCategoryId, array $offers): array
+    private function treatment(int $currentCategoryId, array $offers, array $posts): array
     {
         $language = LocaleHelper::getSelectedLanguage();
 
-        $posts = $this->getPostsByCatId($currentCategoryId);
         $category_order = get_term_meta($currentCategoryId, CategoryMetaBox::KEY_NAME_ORDER, true);
         if ('manual' === $category_order) {
             $posts = AcSort::getSortedItems($currentCategoryId, $posts);
