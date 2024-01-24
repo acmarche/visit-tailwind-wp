@@ -74,8 +74,12 @@ class ApiData
                     },
                     $events
                 );
+                $language = LocaleHelper::getSelectedLanguage();
+                $postUtils = new PostUtils();
+                $offres = $postUtils->convertOffresToArray($events, $currentCategoryId, $language);
+                RouterPivot::setLinkOnCommonItems($offres, $currentCategoryId, $language);
 
-                return rest_ensure_response($events);
+                return rest_ensure_response($offres);
             } catch (NonUniqueResultException|InvalidArgumentException $e) {
                 return rest_ensure_response([]);
             }

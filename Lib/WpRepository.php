@@ -362,14 +362,15 @@ class WpRepository
         if ($filterSelected) {
             $typeOffreRepository = PivotContainer::getTypeOffreRepository(WP_DEBUG);
             try {
-                $filtre = $typeOffreRepository->findOneByUrn($filterSelected);
+                $filtre = $typeOffreRepository->find($filterSelected);
                 if ($filtre instanceof TypeOffre) {
                     $args = [$filtre];
                 }
             } catch (NonUniqueResultException $e) {
-
+                return [];
             }
         }
+
         $events = $pivotRepository->fetchEvents($args);
         $data = [];
         foreach ($events as $event) {
