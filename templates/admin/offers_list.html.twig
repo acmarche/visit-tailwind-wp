@@ -24,7 +24,7 @@
         {% for offer in offers %}
             <tr>
                 <td>
-                    <a href="https://pivotgest.tourismewallonie.be/PivotGest-4.0.0/detail.xhtml?codeCgt={{ offer.codeCgt }}"
+                    <a href="{{ offer.urlPivot }}"
                        target="_blank">
                         {{ offer.name }}
                     </a>

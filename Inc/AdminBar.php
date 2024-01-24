@@ -22,7 +22,7 @@ class AdminBar
                 [
                     'id' => 'edit',
                     'title' => 'Modifier l\'offre',
-                    'href' => 'https://pivotgest.tourismewallonie.be/PivotGest-4.0.0/detail.xhtml?codeCgt='.$codeCgt,
+                    'href' => RouterPivot::getRouteOfferToPivotSite($codeCgt),
                 ]
             );
         }

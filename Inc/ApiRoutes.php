@@ -6,7 +6,11 @@ use VisitMarche\ThemeTail\Lib\ApiData;
 use WP_Error;
 
 /**
- * Enregistrement des routes pour les api pour les composants react
+ * Enregistrement des routes pour les api pour les composants vuejs
+ * https://visit.marche.be/wp-json/pivot/category_offers/120
+ * https://visit.marche.be/wp-json/pivot/offres/120/0/wp
+ * https://visit.marche.be/wp-json/pivot/offres/8/10/pivot
+ * https://visit.marche.be/wp-json/pivot/category_filters/120/0/1
  */
 class ApiRoutes
 {
