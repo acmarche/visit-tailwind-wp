@@ -107,8 +107,8 @@ class ApiData
         }
     }
 
-    public static function getOffersShortByCodesCgt(WP_REST_Request $request): WP_Error|WP_REST_Response|WP_HTTP_Response
-    {
+    public static function getOffersShortByCodesCgt(WP_REST_Request $request
+    ): WP_Error|WP_REST_Response|WP_HTTP_Response {
         $categoryWpId = (int)$request->get_param('categoryId');
         $wpRepository = new WpRepository();
         $wpFilterRepository = new WpFilterRepository();
@@ -122,7 +122,7 @@ class ApiData
 
         foreach ($offers as $offer) {
             $offer->urlPivot = RouterPivot::getRouteOfferToPivotSite($offer->codeCgt);
-            $offer->urlSite = RouterPivot::getUrlOffre($offer->codeCgt,$categoryWpId);
+            $offer->urlSite = RouterPivot::getUrlOffre($categoryWpId, $offer->codeCgt);
         }
 
         return rest_ensure_response($offers);

@@ -8,6 +8,7 @@ use Psr\Cache\InvalidArgumentException;
 use VisitMarche\ThemeTail\Lib\LocaleHelper;
 use VisitMarche\ThemeTail\Lib\RouterPivot;
 use VisitMarche\ThemeTail\Lib\Twig;
+use VisitMarche\ThemeTail\Lib\WpFilterRepository;
 use VisitMarche\ThemeTail\Lib\WpRepository;
 use WP_Term;
 
@@ -51,8 +52,8 @@ try {
 
     return;
 }
-
-$filtres = $wpRepository->getAllFiltersEvent(true);
+$wpFilterRepository = new WpFilterRepository();
+$filtres = $wpFilterRepository->getChildrenEvents(true);
 if (count($filtres) > 1) {
     $labelAll = $translator->trans('filter.all');
     $filtreTout = new TypeOffre($labelAll, 0, 0, "ALL", "", "Type", null);
@@ -68,7 +69,7 @@ Twig::rendPage(
         'nameBack' => $nameBack,
         'categoryName' => $categorName,
         'image' => $image,
-        'filtres' => $filtres,
+        'filters' => $filtres,
         'icone' => null,
     ]
 );

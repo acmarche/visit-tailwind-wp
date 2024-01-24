@@ -23,8 +23,6 @@ $wpRepository = new WpRepository();
 $translator = LocaleHelper::iniTranslator();
 $language = LocaleHelper::getSelectedLanguage();
 
-$parent = $wpRepository->getParentCategory($cat_ID);
-
 $urlBack = '/'.$language;
 $nameBack = $translator->trans('menu.home');
 
