@@ -20,8 +20,8 @@ async function removeOffer(codeCgt) {
       <th scope="col" class="manage-column column-booktitle column-primary">Nom</th>
       <th scope="col" class="manage-column column-booktitle column-primary">CodeCgt</th>
       <th scope="col" class="manage-column column-booktitle column-primary">Type</th>
-      <th scope="col" class="manage-column column-booktitle column-primary">Supprimer
-      </th>
+      <th scope="col" class="manage-column column-booktitle column-primary">Voir</th>
+      <th scope="col" class="manage-column column-booktitle column-primary">Supprimer</th>
     </tr>
     </thead>
     <tbody>
@@ -30,14 +30,17 @@ async function removeOffer(codeCgt) {
         {{ offer.name }}
       </td>
       <td class="ooktitle column-booktitle has-row-actions column-primary">
-        {{ offer.codeCgt }}
+        <a :href="offer.urlPivot" target="_blank" title="Lien vers Pivot">{{ offer.codeCgt }}</a>
       </td>
       <td class="ooktitle column-booktitle has-row-actions column-primary">
         {{ offer.type }}
       </td>
+      <td class="ooktitle column-booktitle has-row-actions column-primary">
+        <a :href="offer.urlSite" target="_blank">Voir sur le site</a>
+      </td>
       <td>
         <button class="button button-danger" type="button" @click="removeOffer(offer.codeCgt)">
-          <span class="dashicons dashicons-trash"></span> SUPPRIMER
+          <span class="dashicons dashicons-trash" style="color: red;"></span> SUPPRIMER
         </button>
       </td>
     </tr>

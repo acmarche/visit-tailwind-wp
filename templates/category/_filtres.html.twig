@@ -1,10 +1,10 @@
-{% if filtres|length > 1 %}
+{% if filters|length > 1 %}
     <label>
         <select name="category"
                 @change="changeOffres($event.target.options[$event.target.selectedIndex].value)"
                 class="xl:hidden flex border border-cta-primary p-2 mt-3 font-montserrat-semi-bold bg-white mx-auto">
-            {% for item in filtres %}
-                <option value="{{ item.id }}" data-filtre="{{ item.id }}">
+            {% for item in filters %}
+                <option value="{{ item.id }}" data-filtre="{{ item.id }}" data-filtretype="{{ item.type }}">
                     {{ item.name }}
                 </option>
             {% endfor %}
@@ -12,9 +12,10 @@
     </label>
 
     <ul class="hidden xl:flex pt-6 flex-1 flex-wrap gap-2 w-3/5 my-2 mx-auto">
-        {% for item in filtres %}
+        {% for item in filters %}
             <li class="rounded-md shadow-lg border border-cta-dark p-3 font-montserrat-light  hover:bg-cta-dark hover:text-white">
-                <a href="{{ item.url }}" @click.prevent="launchRefresh" data-filtre="{{ item.id }}" class="p-3">
+                <a href="{{ item.url }}" @click.prevent="launchRefresh" data-filtre="{{ item.id }}"
+                   data-filtretype="{{ item.type }}" class="p-3">
                     {{ item.name }}
                 </a>
             </li>

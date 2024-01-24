@@ -38,24 +38,31 @@ class RouterPivot
     }
 
     /**
-     * @param CommonItem[] $offres
+     * @param CommonItem[] $items
      * @param int $categoryId
      * @param string $language
-     * @return void
+     * @return CommonItem[]
      */
-    public static function setLinkOnOffres(array $offres, int $categoryId, string $language): void
+    public static function setLinkOnCommonItems(array $items, int $categoryId, string $language): void
     {
+        $urlBase = get_category_link(get_category($categoryId)).self::OFFRE_URL.'/';
+
         array_map(
-            function ($offre) use ($categoryId, $language) {
-                $offre->url = RouterPivot::getUrlOffre($offre, $categoryId);
+            function ($item) use ($categoryId, $language, $urlBase) {
+                if ($item->type == 'post') {
+                    $item->url = get_permalink($item->id);
+                } else {
+                    $item->url = $urlBase.$item->id;
+                }
             },
-            $offres
+            $items
         );
+
     }
 
-    public static function getUrlOffre(CommonItem $offre, int $categoryId): string
+    public static function getUrlOffre(string $codeCgt, int $categoryId): string
     {
-        return get_category_link($categoryId).self::OFFRE_URL.'/'.$offre->id;
+        return get_category_link($categoryId).self::OFFRE_URL.'/'.$codeCgt;
     }
 
     /**
@@ -74,6 +81,11 @@ class RouterPivot
         }
 
         return $filtres;
+    }
+
+    public static function getRouteOfferToPivotSite(string $codeCgt): string
+    {
+        return 'https://pivotgest.tourismewallonie.be/PivotGest-4.0.0/detail.xhtml?codeCgt='.$codeCgt;
     }
 
     public function addRouteOffre(): void

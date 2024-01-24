@@ -64,7 +64,11 @@ class ApiData
         }
 
         $wpRepository = new WpRepository();
-        $offres = $wpRepository->findAllArticlesForCategory($currentCategoryId, $filtreSelected, $filtreType);
+        try {
+            $offres = $wpRepository->findAllArticlesForCategory($currentCategoryId, $filtreSelected, $filtreType);
+        } catch (NonUniqueResultException|InvalidArgumentException $e) {
+            return rest_ensure_response([$e->getMessage()]);
+        }
 
         return rest_ensure_response($offres);
     }
@@ -103,14 +107,22 @@ class ApiData
         }
     }
 
-    public static function pivotOffersByCategory(WP_REST_Request $request): WP_Error|WP_REST_Response|WP_HTTP_Response
+    public static function getOffersShortByCodesCgt(WP_REST_Request $request): WP_Error|WP_REST_Response|WP_HTTP_Response
     {
         $categoryWpId = (int)$request->get_param('categoryId');
         $wpRepository = new WpRepository();
+        $wpFilterRepository = new WpFilterRepository();
+        $codesCgt = $wpFilterRepository->getCodesCgtByCategoryId($categoryWpId);
+
         try {
-            $offers = $wpRepository->findAllArticlesForCategory($categoryWpId, 0, null);
-        } catch (NonUniqueResultException|InvalidArgumentException $e) {
+            $offers = $wpRepository->findOffersShortByCodesCgt($codesCgt);
+        } catch (\Exception $e) {
             $offers = [];
+        }
+
+        foreach ($offers as $offer) {
+            $offer->urlPivot = RouterPivot::getRouteOfferToPivotSite($offer->codeCgt);
+            $offer->urlSite = RouterPivot::getUrlOffre($offer->codeCgt,$categoryWpId);
         }
 
         return rest_ensure_response($offers);

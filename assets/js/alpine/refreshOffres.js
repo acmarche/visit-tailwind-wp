@@ -2,6 +2,7 @@ document.addEventListener('alpine:init', () => {
     Alpine.data('refreshOffres', () => ({
             currentCategory: 0,
             filtreSelected: 0,
+            filtreType: 'wp',
             language: '',
             isLoading: false,
             offres: [],
@@ -15,8 +16,9 @@ document.addEventListener('alpine:init', () => {
                 console.log(this.language)
                 this.launchRefresh(null)
             },
-            async changeOffres(f) {
+            async changeOffres(f, type) {
                 this.filtreSelected = f
+                this.filtreType = type
                 this.launchRefresh(null)
             },
             async launchRefresh(e) {
@@ -24,8 +26,9 @@ document.addEventListener('alpine:init', () => {
                 console.log(this.currentCategory)
                 if (e !== null) {
                     this.filtreSelected = e.target.dataset.filtre
+                    this.filtreType = e.target.dataset.filtretype
                 }
-                const url = `https://visitmarche.be/wp-json/pivot/offres/${this.currentCategory}/${this.filtreSelected}`;
+                const url = `https://visit.marche.be/wp-json/pivot/offres/${this.currentCategory}/${this.filtreSelected}/${this.filtreType}`;
                 console.log(url)
                 this.offres = await fetch(url)
                     .then(function (response) {

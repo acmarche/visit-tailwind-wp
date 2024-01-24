@@ -7,6 +7,7 @@ use AcMarche\Pivot\Entities\Tag;
 class CommonItem
 {
     public ?string $id = null;
+    public ?string $type = null;
     public ?string $url = null;
     public ?string $name = null;
     public ?string $description = null;
@@ -22,6 +23,7 @@ class CommonItem
     public bool $isPeriod = false;
 
     public function __construct(
+        string $type,
         string $id,
         string $name,
         ?string $description,
@@ -35,5 +37,6 @@ class CommonItem
         $this->image = $image;
         $this->url = $url;
         $this->tags = $tags;
+        $this->type = $type;
     }
 }

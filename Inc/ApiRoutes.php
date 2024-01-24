@@ -66,7 +66,7 @@ class ApiRoutes
         );
 
         /**
-         * return offer's filters
+         * return offer's by codesCgt
          */
         add_action(
             'rest_api_init',
@@ -76,7 +76,7 @@ class ApiRoutes
                     'category_offers/(?P<categoryId>[\w]+)',
                     [
                         'methods' => 'GET',
-                        'callback' => fn($args) => ApiData::pivotOffersByCategory($args),
+                        'callback' => fn($args) => ApiData::getOffersShortByCodesCgt($args),
                     ]
                 );
             }

@@ -223,7 +223,7 @@ class ElasticData
             $offres = $pivotRepository->fetchOffres($filtres);
             array_map(
                 function ($offre) use ($category, $language) {
-                    $offre->url = RouterPivot::getUrlOffre($offre, $category->cat_ID);
+                    $offre->url = RouterPivot::getUrlOffre($category->cat_ID, $offre->codeCgt);
                     $offre->titre = $offre->nameByLanguage($language);
                 },
                 $offres

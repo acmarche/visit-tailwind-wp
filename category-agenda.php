@@ -41,7 +41,7 @@ try {
 
     array_map(
         function ($event) use ($cat_ID, $language) {
-            $event->url = RouterPivot::getUrlOffre($event, $cat_ID);
+            $event->url = RouterPivot::getUrlOffre($cat_ID, $event->codeCgt);
         },
         $events
     );

@@ -120,7 +120,8 @@ class Twig
             '@VisitTail/errors/500.html.twig',
             [
                 'excerpt' => null,
-                'image' => get_template_directory_uri().'/assets/images/error500.jpg',
+                // 'image' => get_template_directory_uri().'/assets/images/error500.jpg',
+                'image' => null,
                 'urlBack' => '/',
                 'imagePosition' => 'bottom center',
                 'categoryName' => 'Accueil',

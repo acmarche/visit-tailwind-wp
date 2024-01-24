@@ -43,7 +43,7 @@ $children = $wpRepository->getChildrenOfCategory($category->cat_ID);
 
 $request = Request::createFromGlobals();
 $filterSelected = $request->get(RouterPivot::PARAM_FILTRE, 0);
-$filterType = $request->get(RouterPivot::PARAM_FILTRE, 0);
+$filterSelectedType = $request->get(RouterPivot::PARAM_FILTRE, 0);
 
 if ($filterSelected) {
     $filterSelected = htmlentities($filterSelected);
@@ -57,6 +57,7 @@ if ($filterSelected) {
 } else {
     $filtres = $wpFilterRepository->getCategoryFilters($cat_ID);
 }
+
 //add all button
 if (count($filtres) > 1) {
     $labelAll = $translator->trans('filter.all');
@@ -68,11 +69,10 @@ if (!$filterSelected) {
 }
 
 try {
-    $offres = $wpRepository->findAllArticlesForCategory($category->cat_ID, $filterSelected, $filterType);
+    $offres = $wpRepository->findAllArticlesForCategory($category->cat_ID, $filterSelected, $filterSelectedType);
 } catch (NonUniqueResultException|InvalidArgumentException $e) {
     $offres = [];
 }
-
 Twig::rendPage(
     '@VisitTail/category.html.twig',
     [
@@ -87,7 +87,7 @@ Twig::rendPage(
         'children' => $children,
         'filters' => $filtres,
         'filterSelected' => $filterSelected,
-        'filterType' => $filterType,
+        'filterType' => $filterSelectedType,
         'nameBack' => $nameBack,
         'categoryName' => $categoryName,
         'offres' => $offres,

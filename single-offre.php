@@ -37,6 +37,7 @@ if (!$offre) {
     get_header();
     Twig::rend404Page();
     get_footer();
+
     return;
 }
 if (count($offre->dates) > 0) {
@@ -66,7 +67,7 @@ $postUtils->tagsOffre($offre, $language, $urlcurrentCategory);
 $recommandations = $wpRepository->recommandationsByOffre($offre, $currentCategory, $language);
 
 foreach ($offre->pois as $poi) {
-    $poi->url = RouterPivot::getUrlOffre($poi, $currentCategory->cat_ID);
+    $poi->url = RouterPivot::getUrlOffre($currentCategory->cat_ID, $poi->codeCgt);
     $poi->image = $poi->firstImage();
     $postUtils->tagsOffre($poi, $language, $urlcurrentCategory);
 }

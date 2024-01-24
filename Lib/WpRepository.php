@@ -194,7 +194,11 @@ class WpRepository
         if ($filtreSelected) {
             if ($filtreType == FilterStd::TYPE_WP) {
                 if ($category = get_category($filtreSelected)) {
-                    $offers = $this->findOffersShortsByCategories([$category->term_id]);
+                    $offers = $this->findAllArticlesForCategory(
+                        $currentCategoryId,
+                        $category->term_id,
+                        FilterStd::TYPE_WP
+                    );
 
                     return $this->treatment($currentCategoryId, $offers);
                 }
@@ -213,7 +217,7 @@ class WpRepository
         $codesCgt = $wpFilterRepository->getCodesCgtByCategoryId($currentCategoryId);
 
         $offres = $this->findOffresByTypesOffre($typesOffre);
-        $offersShort = $this->getOffersShortByCodesCgt($codesCgt);
+        $offersShort = $this->findOffersShortByCodesCgt($codesCgt);
 
         $offers = [];
         foreach ($offersShort as $offerShort) {
@@ -229,13 +233,12 @@ class WpRepository
 
     /**
      * @param int $currentCategoryId
-     * @param array $offers
+     * @param Offre[] $offers
      * @return  CommonItem[]
      */
     private function treatment(int $currentCategoryId, array $offers): array
     {
         $language = LocaleHelper::getSelectedLanguage();
-        RouterPivot::setLinkOnOffres($offers, $currentCategoryId, $language);
 
         $posts = $this->getPostsByCatId($currentCategoryId);
         $category_order = get_term_meta($currentCategoryId, CategoryMetaBox::KEY_NAME_ORDER, true);
@@ -248,7 +251,10 @@ class WpRepository
         $posts = $postUtils->convertPostsToArray($posts);
         $offres = $postUtils->convertOffresToArray($offers, $currentCategoryId, $language);
 
-        return PostUtils::removeDoublon([...$posts, ...$offres]);
+        $data = PostUtils::removeDoublon([...$posts, ...$offres]);
+        RouterPivot::setLinkOnCommonItems($data, $currentCategoryId, $language);
+
+        return $data;
     }
 
     public function categoryImage(WP_Term $category): string
@@ -327,7 +333,7 @@ class WpRepository
                     return [];
                 }
 
-                RouterPivot::setLinkOnOffres($recommandations, $category->term_id, $language);
+                RouterPivot::setLinkOnCommonItems($recommandations, $category->term_id, $language);
                 $data = [];
 
                 if ($count > 3) {
@@ -388,36 +394,10 @@ class WpRepository
     }
 
     /**
-     * @param array $categoryIds
-     * @return \stdClass[]
-     */
-    public function findOffersShortsByCategories(array $categoryIds): array
-    {
-        $offers = [[]];
-        foreach ($categoryIds as $categoryId) {
-            $data = $this->findOffersShortsByCategory($categoryId);
-            if (count($data) > 0) {
-                $offers[] = $data;
-            }
-        }
-        $data = [];
-
-        foreach ($offers as $offer) {
-            if (count($offer) > 0) {
-                foreach ($offer as $item) {
-                    $data[$item->codeCgt] = $item;
-                }
-            }
-        }
-
-        return array_values($data);
-    }
-
-    /**
      * @param string[] $codesCgt
      * @return \stdClass[]
      */
-    public function getOffersShortByCodesCgt(array $codesCgt): array
+    public function findOffersShortByCodesCgt(array $codesCgt): array
     {
         $offers = [];
         try {

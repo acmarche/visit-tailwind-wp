@@ -24,6 +24,7 @@ class PostUtils
                 $this->tagsPost($post);
 
                 return new CommonItem(
+                    'post',
                     $post->ID,
                     $post->post_title,
                     $post->post_excerpt,
@@ -64,7 +65,7 @@ class PostUtils
                 }
 
                 $item = new CommonItem(
-                    $offre->codeCgt, $name, $description, $image, $offre->url, $offre->tagsFormatted
+                    'pivot', $offre->codeCgt, $name, $description, $image, $offre->url, $offre->tagsFormatted
                 );
 
                 $item->locality = $offre->adresse1->localiteByLanguage('fr');//ajax
@@ -146,6 +147,7 @@ class PostUtils
                 $image = get_template_directory_uri().'/assets/tartine/bg_home.jpg';
             }
             $item = new CommonItem(
+                'pivot',
                 $offre->codeCgt, $offre->name(), '', $image, $offre->url, $offre->tags
             );
             $recommandations[] = $item;

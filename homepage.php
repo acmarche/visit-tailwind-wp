@@ -31,7 +31,7 @@ try {
         $urlAgenda = get_category_link($categoryAgenda);
         array_map(
             function ($event) use ($categoryAgenda) {
-                $event->url = RouterPivot::getUrlOffre($event, $categoryAgenda->cat_ID);
+                $event->url = RouterPivot::getUrlOffre($categoryAgenda->cat_ID, $event->codeCgt);
             },
             $events
         );
@@ -40,7 +40,7 @@ try {
     $events = [];
 }
 $sortLink = false;
-if (current_user_can( 'edit_post', 2 )) {
+if (current_user_can('edit_post', 2)) {
     $sortLink = SortLink::linkSortArticles(2);
 }
 $inspirations = array_slice($inspirations, 0, 4);
