@@ -75,6 +75,20 @@ class Twig
         return self::$instanceObject;
     }
 
+    public static function rendContent(string $templatePath, array $variables = []): string
+    {
+        $twig = self::LoadTwig();
+        $variables['language'] = LocaleHelper::getSelectedLanguage();
+        try {
+            return $twig->render(
+                $templatePath,
+                $variables,
+            );
+        } catch (LoaderError|RuntimeError|SyntaxError $e) {
+            return '';
+        }
+    }
+
     public static function rendPage(string $templatePath, array $variables = []): void
     {
         $twig = self::LoadTwig();

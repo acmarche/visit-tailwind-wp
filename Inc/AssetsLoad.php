@@ -48,6 +48,11 @@ class AssetsLoad
             get_template_directory_uri().'/assets/css/perso.css',
         );
 
+        wp_enqueue_style(
+            'tabler-icons-css',
+            'https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css',
+        );
+
         wp_enqueue_script(
             'menuMobile-js',
             get_template_directory_uri().'/assets/js/alpine/menuMobile.js',

@@ -57,6 +57,9 @@ class PostUtils
                         $description = $tmp[0]->value;
                     }
                 }
+                if ($offre->gpx_distance) {
+                    $description = Twig::rendContent('@VisitTail/category/_description.html.twig', ['offer' => $offre]);
+                }
                 $this->tagsOffre($offre, $language);
                 $image = $offre->firstImage();
                 if (!$image) {
