@@ -71,12 +71,12 @@ class RouterPivot
      */
     public static function setRoutesToFilters(array $filtres, int $categoryId): array
     {
-        $urlBase = get_category_link(get_category($categoryId)).'?filtre=';
+        $urlBase = get_category_link(get_category($categoryId));
         foreach ($filtres as $filtre) {
             if ($filtre->type == FilterStd::TYPE_PIVOT) {
-                $filtre->url = $urlBase.$filtre->urn;
+                $filtre->url = $urlBase.'?filtre='.$filtre->urn;
             } else {
-                $filtre->url = $urlBase.$filtre->id;
+                $filtre->url = get_category_link(get_category($filtre->id));
             }
         }
 
