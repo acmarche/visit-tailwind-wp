@@ -43,6 +43,7 @@ class WpFilterRepository
             $wpRepository = new WpRepository();
             $children = array_map(fn(\WP_Term $category) => FilterStd::createFromCategory($category),
                 $wpRepository->getChildrenOfCategory($categoryId));
+            $children = RouterPivot::setRoutesToFilters($children, $categoryId);
         }
 
         $filters = [...$typesOffre, ...$children];
@@ -132,7 +133,7 @@ class WpFilterRepository
      */
     public function getCodesCgtByCategoryId(int $categoryId): array
     {
-        return self::getMetaPivotOffres($categoryId);
+        return self::getMetaPivotCodesCgtOffres($categoryId);
     }
 
     /**
@@ -180,7 +181,7 @@ class WpFilterRepository
         return $filtres;
     }
 
-    public static function getMetaPivotOffres(int $wpCategoryId): array
+    public static function getMetaPivotCodesCgtOffres(int $wpCategoryId): array
     {
         $offers = get_term_meta($wpCategoryId, self::PIVOT_REFOFFERS, true);
         if (!is_array($offers)) {
