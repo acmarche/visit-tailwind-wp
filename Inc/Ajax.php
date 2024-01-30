@@ -65,7 +65,7 @@ class Ajax
         $codeCgt = (string)$_POST['codeCgt'];
         $codesCgt = [];
         if ($categoryId > 0 && $codeCgt) {
-            $codesCgt = WpFilterRepository::getMetaPivotOffres($categoryId);
+            $codesCgt = WpFilterRepository::getMetaPivotCodesCgtOffres($categoryId);
             if (!in_array($codeCgt, $codesCgt)) {
                 $codesCgt[] = $codeCgt;
                 update_term_meta($categoryId, WpRepository::PIVOT_REFOFFERS, $codesCgt);
@@ -83,7 +83,7 @@ class Ajax
         $codesCgt = [];
 
         if ($categoryId > 0 && $codeCgt) {
-            $codesCgt = WpFilterRepository::getMetaPivotOffres($categoryId);
+            $codesCgt = WpFilterRepository::getMetaPivotCodesCgtOffres($categoryId);
             $key = array_search($codeCgt, $codesCgt);
             if ($key !== false) {
                 unset($codesCgt[$key]);

@@ -46,14 +46,6 @@ class AdminPage
         );
         add_submenu_page(
             'pivot_home',
-            'Catégories avec filtres',
-            'Catégories avec filtres',
-            'edit_posts',
-            'pivot_categories_filtre',
-            fn() => $this::categoriesFiltresRender(),
-        );
-        add_submenu_page(
-            'pivot_home',
             'Filtres sur une catégorie',
             'Filtres sur une catégorie',
             'edit_posts',
@@ -82,6 +74,10 @@ class AdminPage
 
     private static function filtresRender(): void
     {
+        $syncPivot = new SyncPivot();
+        $syncPivot->cleanFiltres();
+        $syncPivot->syncUrns();
+
         $pivotRepository = PivotContainer::getTypeOffreRepository(WP_DEBUG);
         $filters = $pivotRepository->findWithChildren(true);
 
@@ -97,24 +93,6 @@ class AdminPage
                 'categoryUrl' => $categoryUrl,
             ]
         );
-    }
-
-    private static function categoriesFiltresRender(): void
-    {
-        $syncPivot = new SyncPivot();
-        $syncPivot->cleanFiltres();
-        $syncPivot->syncUrns();
-        $categories = $syncPivot->categoriesWithFiltre();
-        $pivotOffresTable = new PivotCategoriesTable();
-        $pivotOffresTable->data = $categories;
-        ?>
-        <div class="wrap">
-            <h2>Les catégories wordpress avec des références Pivot</h2>
-            <?php $pivotOffresTable->prepare_items();
-            $pivotOffresTable->display();
-            ?>
-        </div>
-        <?php
     }
 
     private static function allOffersRender(): void
