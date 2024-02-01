@@ -402,7 +402,7 @@ class WpRepository
         $events = $pivotRepository->fetchEvents($args);
         $data = [];
         foreach ($events as $event) {
-            if ($event->visibiliteUrn->urn !== EventEnum::LOCAL->value) {
+           // if ($event->visibiliteUrn->urn !== EventEnum::LOCAL->value) {
                 $event->locality = $event->getAdresse()->localite[0]->get('fr');
                 $event->dateEvent = [
                     'year' => $event->dateEnd->format('Y'),
@@ -413,7 +413,7 @@ class WpRepository
                     $event->images = [get_template_directory_uri().'/assets/tartine/bg_events.png'];
                 }
                 $data[] = $event;
-            }
+           // }
         }
 
         return $data;
