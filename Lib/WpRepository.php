@@ -6,6 +6,7 @@ use AcMarche\Pivot\Api\QueryDetailEnum;
 use AcMarche\Pivot\DependencyInjection\PivotContainer;
 use AcMarche\Pivot\Entities\Offre\Offre;
 use AcMarche\Pivot\Entity\TypeOffre;
+use AcMarche\Pivot\Event\EventEnum;
 use AcSort;
 use Doctrine\ORM\NonUniqueResultException;
 use Psr\Cache\InvalidArgumentException;
@@ -401,18 +402,19 @@ class WpRepository
         $events = $pivotRepository->fetchEvents($args);
         $data = [];
         foreach ($events as $event) {
-            $event->locality = $event->getAdresse()->localite[0]->get('fr');
-            $event->dateEvent = [
-                'year' => $event->dateEnd->format('Y'),
-                'month' => $event->dateEnd->format('m'),
-                'day' => $event->dateEnd->format('d'),
-            ];
-            if (count($event->images) == 0) {
-                $event->images = [get_template_directory_uri().'/assets/tartine/bg_events.png'];
+            if ($event->visibiliteUrn->urn !== EventEnum::LOCAL->value) {
+                $event->locality = $event->getAdresse()->localite[0]->get('fr');
+                $event->dateEvent = [
+                    'year' => $event->dateEnd->format('Y'),
+                    'month' => $event->dateEnd->format('m'),
+                    'day' => $event->dateEnd->format('d'),
+                ];
+                if (count($event->images) == 0) {
+                    $event->images = [get_template_directory_uri().'/assets/tartine/bg_events.png'];
+                }
+                $data[] = $event;
             }
-            $data[] = $event;
         }
-
 
         return $data;
     }
