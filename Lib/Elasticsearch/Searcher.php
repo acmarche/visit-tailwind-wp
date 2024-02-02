@@ -33,7 +33,7 @@ class Searcher
      */
     public function searchFromWww(string $keyword): bool|string
     {
-        $url = 'https://www.marche.be/visit-elasticsearch/search.php?keyword='.urlencode($keyword);
+        $url = 'https://www.marche.be/api/visit-search.php?keyword='.urlencode($keyword);
         try {
             $response = $this->httpClient->request(
                 'GET',
