@@ -8,11 +8,9 @@ use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Exception;
 use InvalidArgumentException;
-use stdClass;
 use VisitMarche\ThemeTail\Lib\Mailer;
 use VisitMarche\ThemeTail\Lib\PostUtils;
 use VisitMarche\ThemeTail\Lib\RouterPivot;
-use VisitMarche\ThemeTail\Lib\WpFilterRepository;
 use VisitMarche\ThemeTail\Lib\WpRepository;
 use WP_Post;
 use WP_Term;
@@ -20,23 +18,10 @@ use WP_Term;
 class ElasticData
 {
     private WpRepository $wpRepository;
-    private string $url;
-    private WpFilterRepository $wpFilterRepository;
 
     public function __construct()
     {
         $this->wpRepository = new WpRepository();
-        $this->wpFilterRepository = new WpFilterRepository();
-        $this->url = 'https://www.visitmarche.be/wp-json/visit/all';
-    }
-
-    public function getAllData(): stdClass
-    {
-        $t = json_decode(file_get_contents($this->url), null, 512, JSON_THROW_ON_ERROR); //2 times error ssl
-        $t = json_decode(file_get_contents($this->url), null, 512, JSON_THROW_ON_ERROR); //2 times error ssl
-        $t = json_decode(file_get_contents($this->url), null, 512, JSON_THROW_ON_ERROR);
-
-        return $t;
     }
 
     /**
