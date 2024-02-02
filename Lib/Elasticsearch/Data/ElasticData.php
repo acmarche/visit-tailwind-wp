@@ -138,8 +138,8 @@ class ElasticData
             } catch (NonUniqueResultException|InvalidArgumentException|\Psr\Cache\InvalidArgumentException $e) {
                 continue;
             }
-
             foreach ($offres as $offre) {
+                $offre->url = RouterPivot::getUrlOffre($category->term_id, $offre->codeCgt);
                 $datas[$offre->codeCgt] = $this->createDocumentElasticFromOffre($offre, $language);
             }
         }

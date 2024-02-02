@@ -62,7 +62,7 @@ class RouterPivot
 
     public static function getUrlOffre(int $categoryId, string $codeCgt): string
     {
-        return get_category_link($categoryId).self::OFFRE_URL.'/'.$codeCgt;
+        return get_category_link(get_category($categoryId)).self::OFFRE_URL.'/'.$codeCgt;
     }
 
     /**
