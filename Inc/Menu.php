@@ -76,6 +76,7 @@ class Menu
                 'gourmandises' => get_category_by_slug('gourmandises'),
                 'patrimoine' => get_category_by_slug('patrimoine'),
                 'agenda' => get_category_by_slug('agenda'),
+                'idees' => get_category_by_slug('idees-sejours'),
             ];
             $menu = array_map(
                 function ($item) {
