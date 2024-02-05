@@ -1,5 +1,16 @@
-<i class="ti ti-walk"></i> <strong>Distance :</strong> {{ offer.gpx_distance }} km -
-<i class="ti ti-trekking"></i> <strong>Difficulté :</strong> {{ offer.gpx_difficulte }} -
-{% if offer.gpx_duree %}
-    <i class="ti ti-clock"></i> <strong>Durée :</strong> {{ offer.gpx_duree }}
-{% endif %}
+<div class="flex flex-row gap-2">
+    {% if image %}
+        <img alt="logo" src="{{ image|raw }}" style="width: 50px;">
+    {% endif %}
+    <span><i class="ti ti-walk"></i> <strong>Distance :</strong> {{ offer.gpx_distance }} km -</span>
+    <span><i class="ti ti-trekking"></i> <strong>Difficulté :</strong> {{ offer.gpx_difficulte }} -</span>
+    {% if offer.gpx_duree != '' %}
+        <span>    <i class="ti ti-clock"></i> <strong>Durée :</strong> {{ offer.gpx_duree }}</span>
+    {% endif %}
+    {% if offre.adresse %}
+        <span>
+            <i class="ti ti-clock"></i> <strong>
+                Départ:</strong> {{ offre.adresse.rue }} {{ offre.adresse.localite.get('fr') }}
+        </span>
+    {% endif %}
+</div>

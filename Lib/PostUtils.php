@@ -6,12 +6,17 @@ use AcMarche\Pivot\Entities\Label;
 use AcMarche\Pivot\Entities\Offre\Offre;
 use AcMarche\Pivot\Entities\Specification\SpecData;
 use AcMarche\Pivot\Entities\Tag;
+use AcMarche\Pivot\Spec\SpecSearchTrait;
+use AcMarche\Pivot\Spec\UrnCatList;
 use AcMarche\Pivot\Spec\UrnTypeList;
+use Symfony\Component\String\UnicodeString;
 use VisitMarche\ThemeTail\Entity\CommonItem;
 use WP_Post;
 
 class PostUtils
 {
+    use SpecSearchTrait;
+
     /**
      * @param WP_Post[] $posts
      * @return CommonItem[]
@@ -57,8 +62,16 @@ class PostUtils
                         $description = $tmp[0]->value;
                     }
                 }
+                if ($description) {
+                    $string = new UnicodeString($description);
+                    $description = $string->truncate(180, '...');
+                }
                 if ($offre->gpx_distance) {
-                    $description = Twig::rendContent('@VisitTail/category/_description.html.twig', ['offer' => $offre]);
+                    $image = $this->imageWalk($offre);
+                    $description = Twig::rendContent(
+                        '@VisitTail/category/_description.html.twig',
+                        ['offer' => $offre, 'image' => $image]
+                    );
                 }
                 $this->tagsOffre($offre, $language);
                 $image = $offre->firstImage();
@@ -86,6 +99,33 @@ class PostUtils
             },
             $offres
         );
+    }
+
+    public function imageWalk(Offre $offre): ?string
+    {
+        if (\str_contains($offre->name(), "Trail")) {
+            if (\str_contains($offre->name(), "noir")) {
+                return get_template_directory_uri().'/assets/images/trail-black.png';
+            }
+            if (\str_contains($offre->name(), "bleu")) {
+                return get_template_directory_uri().'/assets/images/trail-blue.png';
+            }
+            if (\str_contains($offre->name(), "vert")) {
+                return get_template_directory_uri().'/assets/images/trail-green.png';
+            }
+            if (\str_contains($offre->name(), "rouge")) {
+                return get_template_directory_uri().'/assets/images/trail-red.png';
+            }
+        }
+
+        if (\str_contains($offre->name(), "rectangle")) {
+            $datas = $this->findByUrn($offre, UrnCatList::SIGNAL->value, returnData: true);
+            if (count($datas) > 0) {
+                return 'https://pivotweb.tourismewallonie.be/PivotWeb-3.1/img/'.$datas[0]->value.';w=50';
+            }
+        }
+
+        return null;
     }
 
     /**

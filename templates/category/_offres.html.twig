@@ -11,7 +11,7 @@
                         {{ item.name }}
                     </h3>
                     <span class="text-caractere text-sm font-montserrat-light">
-                        {{ item.description|remove_html|u.truncate(170, '...') }}
+                        {{ item.description|remove_html }}
                     </span>
                     <div class="text-cta-light my-1 flex gap-1 font-montserrat-light text-xs">
                         {% for tag in item.tags|slice(0, 2) %}
