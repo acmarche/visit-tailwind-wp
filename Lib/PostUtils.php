@@ -118,7 +118,17 @@ class PostUtils
             }
         }
 
-        if (\str_contains($offre->name(), "rectangle")) {
+        $colors = ['bleu', 'vert', 'rouge', 'noir', 'jaune'];
+        $color = false;
+        $words = explode(" ", $offre->name());
+        foreach ($words as $word) {
+            if (in_array($word, $colors)) {
+                $color = true;
+                break;
+            }
+        }
+
+        if ($color) {
             $datas = $this->findByUrn($offre, UrnCatList::SIGNAL->value, returnData: true);
             if (count($datas) > 0) {
                 return 'https://pivotweb.tourismewallonie.be/PivotWeb-3.1/img/'.$datas[0]->value.';w=50';
