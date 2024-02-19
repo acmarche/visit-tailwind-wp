@@ -173,6 +173,9 @@ class WpFilterRepository
             if ($filter->urn == 'urn:val:typeheb:chbhot') {
                 unset($filters[$key]);
             }
+           if ($filter->urn == 'urn:typ:270') {
+                unset($filters[$key]);
+            }
             if ($filter->id == 188) {
                 unset($filters[$key]);
             }
