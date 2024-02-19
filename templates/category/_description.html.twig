@@ -4,9 +4,6 @@
     {% endif %}
     <div class="flex flex-row gap-2 items-center justify-center">
         <span><i class="ti ti-walk"></i> <strong>Distance :</strong> {{ offer.gpx_distance }} km</span>
-        {% if offer.gpx_duree != '' %}
-            <span><i class="ti ti-clock"></i> <strong>Durée :</strong> {{ offer.gpx_duree }}</span>
-        {% endif %}
         {% if offer.gpx_difficulte != '' %}
             <span><i class="ti ti-trekking"></i> <strong>Difficulté :</strong> {{ offer.gpx_difficulte }}</span>
         {% endif %}
