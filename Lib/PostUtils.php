@@ -127,6 +127,10 @@ class PostUtils
                 break;
             }
         }
+        //GRP 577
+        if ($offre->codeCgt == 'LOD-A0-006J-79U8') {
+            $color = true;
+        }
 
         if ($color) {
             $datas = $this->findByUrn($offre, UrnCatList::SIGNAL->value, returnData: true);
