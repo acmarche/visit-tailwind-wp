@@ -168,7 +168,17 @@ class WpFilterRepository
         $filtreRepository = PivotContainer::getTypeOffreRepository(WP_DEBUG);
         $filtre = $filtreRepository->findOneByUrn(UrnList::HERGEMENT->value);
 
-        return $filtreRepository->findByParent($filtre->id, $removeFilterEmpty);
+        $filters = $filtreRepository->findByParent($filtre->id, $removeFilterEmpty);
+        foreach ($filters as $key => $filter) {
+            if ($filter->urn == 'urn:val:typeheb:chbhot') {
+                unset($filters[$key]);
+            }
+            if ($filter->id == 188) {
+                unset($filters[$key]);
+            }
+        }
+
+        return array_values($filters);
     }
 
     public static function getMetaPivotTypesOffre(int $wpCategoryId): array
