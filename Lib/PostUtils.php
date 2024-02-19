@@ -120,7 +120,7 @@ class PostUtils
 
         $colors = ['bleu', 'vert', 'rouge', 'noir', 'jaune'];
         $color = false;
-        $words = explode(" ", $offre->name());
+        $words = explode(" ", strtolower($offre->name()));
         foreach ($words as $word) {
             if (in_array($word, $colors)) {
                 $color = true;
