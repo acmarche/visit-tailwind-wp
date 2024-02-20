@@ -33,3 +33,5 @@
     height: 100%;
     object-fit: cover;
 }
+
+[x-cloak] { display: none !important; }
