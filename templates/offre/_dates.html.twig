@@ -5,10 +5,12 @@
     <div class="flex flex-col gap-2 mb-6">
         {% for date in offre.dates %}
             <span class="font-montserrat-semi-bold text-cta-dark">
-                {% if date.isPeriod %}
-                    {{ 'from'|trans }} {{ date.date_begin|format_date('full') }} {{ 'until'|trans }} {{ date.date_end|format_date('full') }}
-                {% else %}
-                    {{ date.date_begin|format_date('full') }}
+                {% if dates %}
+                    {% if date.isPeriod %}
+                        {{ 'from'|trans }} {{ date.date_begin|format_date('full') }} {{ 'until'|trans }} {{ date.date_end|format_date('full') }}
+                    {% else %}
+                        {{ date.date_begin|format_date('full') }}
+                    {% endif %}
                 {% endif %}
             </span>
         {% endfor %}
