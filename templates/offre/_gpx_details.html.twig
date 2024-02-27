@@ -4,7 +4,7 @@
     </h3>
     <div class="flex flex-col gap-2">
         <div class="grid grid-cols-1 xl:grid-cols-[20rem,1fr] gap-2">
-            <span class="font-montserrat-semi-bold text-cta-dark">Distance</span>
+           {# <span class="font-montserrat-semi-bold text-cta-dark">Distance</span>
             <span class="text-caractere">{{ offre.gpx_distance }} km</span>
 
             <span class="font-montserrat-semi-bold text-cta-dark">Durée du parcours</span>
@@ -25,7 +25,7 @@
                 {{ offre.gpx_cat_circuit.urnDefinition.labelByLanguage(locale) }}
             </span>
                 <span class="text-caractere">{{ offre.gpx_cat_circuit.data|format_pivot_value }}</span>
-            {% endif %}
+            {% endif %}#}
 
             <span class="font-montserrat-semi-bold text-cta-dark">Télécharger le gpx</span>
             <span class="text-caractere">
