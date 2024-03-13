@@ -4,6 +4,7 @@ namespace VisitMarche\ThemeTail;
 
 use AcSort;
 use Exception;
+use Psr\Cache\InvalidArgumentException;
 use SortLink;
 use VisitMarche\ThemeTail\Inc\CategoryMetaBox;
 use VisitMarche\ThemeTail\Inc\Menu;
@@ -36,7 +37,7 @@ try {
             $events
         );
     }
-} catch (Exception $exception) {
+} catch (Exception|InvalidArgumentException $exception) {
     $events = [];
 }
 $sortLink = false;
