@@ -14,7 +14,7 @@ ajour aussi dans le head prefetch de l'url d'img de fond
     </div>
     <div class="flex flex-col justify-center items-center w-full">
         {% include '@VisitTail/homepage/_home_caractere.html.twig' %}
-        <section class="bg-white w-full mx-2 mx-auto grid grid-cols-1 xl:px-40 xl:grid-cols-[60%,40%] xl:gap-4">
+        <section class="bg-white w-full auto grid grid-cols-1 xl:px-40 xl:grid-cols-[60%,40%] xl:gap-4">
             <div>
                 {% include '@VisitTail/homepage/_inspiration.html.twig' %}
             </div>
@@ -23,6 +23,7 @@ ajour aussi dans le head prefetch de l'url d'img de fond
             </div>
         </section>
     </div>
+    {% include '@VisitTail/homepage/_ideas.html.twig' %}
     {% include '@VisitTail/homepage/_banner_party.html.twig' %}
 </main>
 {% include '@VisitTail/homepage/_partenaires.html.twig' %}
