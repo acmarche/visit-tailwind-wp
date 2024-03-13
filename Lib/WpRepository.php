@@ -151,6 +151,47 @@ class WpRepository
         return $intro;
     }
 
+    public function getIdeas(): array
+    {
+        return [
+            [
+                'img' => 'Ado.jpg',
+                'description' => 'Avec ado',
+                'url' => get_category_link(get_category_by_slug('avec-ado')),
+            ],
+            [
+                'img' => 'Duo-WBT.jpg',
+                'description' => 'En solo ou en duo',
+                'url' => get_category_link(get_category_by_slug('en-solo-ou-duo')),
+            ],
+            [
+                'img' => 'Enfants-WBT.jpg',
+                'description' => 'Avec enfants',
+                'url' => get_category_link(get_category_by_slug('avec-enfants')),
+            ],
+            [
+                'img' => 'EVC.png',
+                'description' => 'Enterrement de vie de célibataire',
+                'url' => get_category_link(get_category_by_slug('evc-enterrement-de-vie-de-celibataire')),
+            ],
+            [
+                'img' => 'Groupe.jpg',
+                'description' => 'En groupe',
+                'url' => get_category_link(get_category_by_slug('en-groupe')),
+            ],
+            [
+                'img' => 'PMR.jpg',
+                'description' => 'Personnes porteuses d\'un handicap',
+                'url' => get_category_link(get_category_by_slug('personnes-porteuses-dun-handicap')),
+            ],
+            [
+                'img' => 'Tourismeparticipatif.jpg',
+                'description' => 'Tourisme participatif',
+                'url' => get_category_link(get_category_by_slug('tourisme-participatif-2')),
+            ],
+        ];
+    }
+
     /**
      * @return array|\WP_Term[]
      */

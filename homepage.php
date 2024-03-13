@@ -17,6 +17,11 @@ get_header();
 $wpRepository = new WpRepository();
 
 $intro = $wpRepository->getIntro();
+try {
+    $ideas = $wpRepository->getIdeas();
+} catch (Exception $exception) {
+    $ideas = [];
+}
 $inspirationCat = get_category_by_slug('inspirations');
 $inspirations = $wpRepository->getPostsByCatId($inspirationCat->cat_ID);
 $category_order = get_term_meta($inspirationCat->cat_ID, CategoryMetaBox::KEY_NAME_ORDER, true);
@@ -72,6 +77,7 @@ Twig::rendPage(
         'urlInspiration' => $urlInspiration,
         'intro' => $intro,
         'icones' => $icones,
+        'ideas' => $ideas,
         'bgimg' => $bgImg,
         'sortLink' => $sortLink,
     ]
