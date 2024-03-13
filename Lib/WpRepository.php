@@ -153,42 +153,38 @@ class WpRepository
 
     public function getIdeas(): array
     {
+        $ideas = [];
+        if ($term = get_category_by_slug('avec-ado')) {
+            $ideas[] = $this->addIdea($term, 'Ado.jpg');
+        }
+        if ($term = get_category_by_slug('en-solo-ou-duo')) {
+            $ideas[] = $this->addIdea($term, 'Duo-WBT.jpg');
+        }
+        if ($term = get_category_by_slug('avec-enfants')) {
+            $ideas[] = $this->addIdea($term, 'Enfants-WBT.jpg');
+        }
+        if ($term = get_category_by_slug('evc-enterrement-de-vie-de-celibataire')) {
+            $ideas[] = $this->addIdea($term, 'EVC.png');
+        }
+        if ($term = get_category_by_slug('en-groupe')) {
+            $ideas[] = $this->addIdea($term, 'Groupe.jpg');
+        }
+        if ($term = get_category_by_slug('personnes-porteuses-dun-handicap')) {
+            $ideas[] = $this->addIdea($term, 'PMR.jpg');
+        }
+        if ($term = get_category_by_slug('tourisme-participatif-2')) {
+            $ideas[] = $this->addIdea($term, 'Tourismeparticipatif.jpg');
+        }
+
+        return $ideas;
+    }
+
+    private function addIdea(WP_Term $term, string $imageName): array
+    {
         return [
-            [
-                'img' => 'Ado.jpg',
-                'description' => 'Avec ado',
-                'url' => get_category_link(get_category_by_slug('avec-ado')),
-            ],
-            [
-                'img' => 'Duo-WBT.jpg',
-                'description' => 'En solo ou en duo',
-                'url' => get_category_link(get_category_by_slug('en-solo-ou-duo')),
-            ],
-            [
-                'img' => 'Enfants-WBT.jpg',
-                'description' => 'Avec enfants',
-                'url' => get_category_link(get_category_by_slug('avec-enfants')),
-            ],
-            [
-                'img' => 'EVC.png',
-                'description' => 'Enterrement de vie de célibataire',
-                'url' => get_category_link(get_category_by_slug('evc-enterrement-de-vie-de-celibataire')),
-            ],
-            [
-                'img' => 'Groupe.jpg',
-                'description' => 'En groupe',
-                'url' => get_category_link(get_category_by_slug('en-groupe')),
-            ],
-            [
-                'img' => 'PMR.jpg',
-                'description' => 'Personnes porteuses d\'un handicap',
-                'url' => get_category_link(get_category_by_slug('personnes-porteuses-dun-handicap')),
-            ],
-            [
-                'img' => 'Tourismeparticipatif.jpg',
-                'description' => 'Tourisme participatif',
-                'url' => get_category_link(get_category_by_slug('tourisme-participatif-2')),
-            ],
+            'img' => $imageName,
+            'description' => $term->name,
+            'url' => get_category_link($term),
         ];
     }
 
