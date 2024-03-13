@@ -237,11 +237,25 @@ class GpxViewer
         if (is_readable($filePath)) {
             return false;
         }
+        $httpClient = HttpClient::create();
+        try {
+            $response = $httpClient->request(
+                'GET',
+                $url,
+            );
+            $data_raw = $response->getContent();
+        } catch (ClientExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface|TransportExceptionInterface $e) {
+            Mailer::sendError("Visit error get gpx", $e->getMessage());
+
+            return false;
+        }
+
         try {
             $filesystem = new Filesystem();
-            $filesystem->dumpFile($filePath, file_get_contents($url));
+            $filesystem->dumpFile($filePath, $data_raw);
         } catch (IOExceptionInterface $exception) {
-            echo "An error occurred while creating your directory at ".$exception->getPath();
+            $error = "An error occurred while creating your directory at ".$exception->getPath();
+            Mailer::sendError("Visit error write gpx", $error);
         }
 
         return false;
@@ -305,118 +319,6 @@ class GpxViewer
         }
 
         return $attachments[0];
-    }
-
-    private function gpxView(string $fileName)
-    {
-        $urlLocal = '/'.$this->folder_gpx.$fileName;
-        $options = [
-            'src' => $urlLocal,
-            'name' => 'Gpx',
-            'color' => '#fd8383',
-            'width' => '3',
-            'distance_unit' => 'km',
-            "height_unit" => "m",
-            "step_min" => "300",
-            "icon_url" => RouterPivot::getUrlSite()."/wp-content/plugins/gpx-viewer/images/",
-            'download_button' => true,
-        ];
-
-        $gpx = gpx_view($options);
-    }
-
-    private function requestElevationsGet(array $locations): array
-    {
-        $urlBase = 'https://api.opentopodata.org/v1/eudem25m';
-        $headers = [
-            'headers' => ['Accept' => 'application/json', 'Content-Type' => 'application/json'],
-        ];
-        $httpClient = HttpClient::createForBaseUri($urlBase, $headers);
-
-        foreach ($locations as $key => $location) {
-            try {
-                $elevationsString = $this->requestElevation($httpClient, $urlBase, $location);
-                if ($result = json_decode($elevationsString)) {
-                    if ($result->status == 'OK') {
-                        $location['elevation'] = $result->results[0]->elevation;
-                    }
-                } else {
-                    $location['elevation'] = 0;
-                }
-            } catch (Exception $e) {
-                dump($e);
-                $location['elevation'] = 0;
-            }
-            $locations[$key] = $location;
-        }
-
-        return $locations;
-    }
-
-    /**
-     * @throws Exception
-     */
-    private function requestElevation(
-        $httpClient,
-        $urlBase,
-        array $location
-    ): string {
-        try {
-            $response = $httpClient->request(
-                'GET',
-                $urlBase, [
-                    'query' => [
-                        'locations' => $location['latitude'].','.$location['longitude'],
-                    ],
-                    'timeout' => 2.5,
-                ]
-            );
-
-            return $response->getContent();
-        } catch (ClientException|ClientExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface|TransportExceptionInterface $exception) {
-            Mailer::sendError('elevation', 'el '.$exception->getMessage());
-            throw  new Exception($exception->getMessage(), $exception->getCode(), $exception);
-        }
-    }
-
-    private function requestElevationBroken(array $locations): string
-    {
-        $url = 'https://api.open-elevation.com/api/v1/lookup';
-        $headers = [
-            'headers' => ['Accept' => 'application/json', 'Content-Type' => 'application/json'],
-        ];
-
-        $httpClient = HttpClient::create($headers);
-        $data = json_encode(['locations' => $locations]);
-
-        try {
-            $response = $httpClient->request(
-                'POST',
-                $url, [
-                    'body' => $data,
-                    'timeout' => 2.5,
-                ]
-            );
-
-            return $response->getContent();
-        } catch (ClientException|ClientExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface|TransportExceptionInterface $exception) {
-            Mailer::sendError('elevation', 'el '.$exception->getMessage());
-            throw  new Exception($exception->getMessage(), $exception->getCode(), $exception);
-        }
-    }
-
-    private function isXmlValid(string $value): bool
-    {
-        $prev = libxml_use_internal_errors(true);
-        $doc = simplexml_load_string($value);
-        $errors = libxml_get_errors();
-        foreach ($errors as $error) {
-            dump($error);
-        }
-        libxml_clear_errors();
-        libxml_use_internal_errors($prev);
-
-        return false !== $doc && empty($errors);
     }
 
     /**
