@@ -163,34 +163,42 @@ class ApiData
 
     public static function getAllWalks(WP_REST_Request $request
     ): WP_Error|WP_REST_Response|WP_HTTP_Response {
-
-        $wpRepository = new WpRepository();
         $categoryWpId = (int)$request->get_param('categoryId');
+        $cache = Cache::instance('walks');
 
-        try {
-            $offres = $wpRepository->findOffersByCategory($categoryWpId);
-        } catch (NonUniqueResultException|InvalidArgumentException $e) {
-            $offres = [];
-        }
+        $offers = $cache->get('walks-'.$categoryWpId, function () use ($categoryWpId) {
 
-        $gpxViewer = new GpxViewer();
-        foreach ($offres as $offre) {
+            $wpRepository = new WpRepository();
+
             try {
-                if (count($offre->gpxs) > 0) {
-                    $gpx = $offre->gpxs[0];
-                    $gpxViewer->renderWithPlugin($gpx);
-                    if ($gpx && isset($gpx->data['locations'])) {
-                        foreach ($gpx->data['locations'] as $location) {
-                            $locations[] = [$location['latitude'], $location['longitude']];
+                $offres = $wpRepository->findOffersByCategory($categoryWpId);
+            } catch (NonUniqueResultException|InvalidArgumentException $e) {
+                $offres = [];
+            }
+
+            $gpxViewer = new GpxViewer();
+            foreach ($offres as $offre) {
+                try {
+                    if (count($offre->gpxs) > 0) {
+                        $gpx = $offre->gpxs[0];
+                        $gpxViewer->renderWithPlugin($gpx);
+                        if ($gpx && isset($gpx->data['locations'])) {
+                            foreach ($gpx->data['locations'] as $location) {
+                                $locations[] = [$location['latitude'], $location['longitude']];
+                            }
                         }
                     }
-                }
-                $offre->locations = $locations;
-                $offers[] = $offre;
-            } catch (\Exception|InvalidArgumentException $e) {
+                    $offre->locations = $locations;
+                } catch (\Exception|InvalidArgumentException $e) {
 
+                }
             }
-        }
+            if (count($offres) > 0) {
+                return $offres;
+            }
+
+            return null;
+        });
 
         return rest_ensure_response($offers);
     }
