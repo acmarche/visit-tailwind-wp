@@ -178,10 +178,21 @@ class ApiData
         }
 
         $offers = [];
+        $gpxViewer = new GpxViewer();
         foreach ($items as $item) {
             try {
                 $offre = $wpRepository->getOffreByCgtAndParse($item->id);
                 if ($offre) {
+                    if (count($offre->gpxs) > 0) {
+                        $gpx = $offre->gpxs[0];
+                        $gpxViewer->renderWithPlugin($gpx);
+                        if ($gpx && isset($gpx->data['locations'])) {
+                            foreach ($gpx->data['locations'] as $location) {
+                                $locations[] = [$location['latitude'], $location['longitude']];
+                            }
+                        }
+                    }
+                    $offre->locations = $locations;
                     $offers[] = $offre;
                 }
             } catch (\Exception|InvalidArgumentException $e) {
