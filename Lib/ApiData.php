@@ -149,4 +149,34 @@ class ApiData
 
         return rest_ensure_response($offers);
     }
+
+    public static function getAllWalkFilters(WP_REST_Request $request
+    ): WP_Error|WP_REST_Response|WP_HTTP_Response {
+
+        $categoryWpId = (int)$request->get_param('categoryId');
+
+        $wpFilterRepository = new WpFilterRepository();
+        $filtres = $wpFilterRepository->getCategoryFilters($categoryWpId);
+
+        return rest_ensure_response($filtres);
+    }
+
+    public static function getAllWalks(WP_REST_Request $request
+    ): WP_Error|WP_REST_Response|WP_HTTP_Response {
+
+        $wpRepository = new WpRepository();
+        $categoryWpId = (int)$request->get_param('categoryId');
+
+        try {
+            $offers = $wpRepository->findAllArticlesForCategory(
+                $categoryWpId,
+                0,
+                null
+            );
+        } catch (NonUniqueResultException|InvalidArgumentException $e) {
+            $offers = [];
+        }
+
+        return rest_ensure_response($offers);
+    }
 }

@@ -116,6 +116,40 @@ class ApiRoutes
                 );
             }
         );
+
+        /**
+         * filter walks
+         */
+        add_action(
+            'rest_api_init',
+            function () {
+                register_rest_route(
+                    'pivot',
+                    'walk_filters/(?P<categoryId>[\w]+)',
+                    [
+                        'methods' => 'GET',
+                        'callback' => fn($args) => ApiData::getAllWalkFilters($args),
+                    ]
+                );
+            }
+        );
+
+        /**
+         * all walks
+         */
+        add_action(
+            'rest_api_init',
+            function () {
+                register_rest_route(
+                    'pivot',
+                    'walks_list/(?P<categoryId>[\w]+)',
+                    [
+                        'methods' => 'GET',
+                        'callback' => fn($args) => ApiData::getAllWalks($args),
+                    ]
+                );
+            }
+        );
     }
 
     /**
