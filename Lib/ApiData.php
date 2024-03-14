@@ -168,13 +168,25 @@ class ApiData
         $categoryWpId = (int)$request->get_param('categoryId');
 
         try {
-            $offers = $wpRepository->findAllArticlesForCategory(
+            $items = $wpRepository->findAllArticlesForCategory(
                 $categoryWpId,
                 0,
                 null
             );
         } catch (NonUniqueResultException|InvalidArgumentException $e) {
-            $offers = [];
+            $items = [];
+        }
+
+        $offers = [];
+        foreach ($items as $item) {
+            try {
+                $offre = $wpRepository->getOffreByCgtAndParse($item->id);
+                if ($offre) {
+                    $offers[] = $offre;
+                }
+            } catch (\Exception|InvalidArgumentException $e) {
+
+            }
         }
 
         return rest_ensure_response($offers);
