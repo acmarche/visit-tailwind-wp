@@ -166,7 +166,7 @@ class ApiData
         $categoryWpId = (int)$request->get_param('categoryId');
         $cache = Cache::instance('walks');
 
-        $offers = $cache->get('walks-'.$categoryWpId, function () use ($categoryWpId) {
+        $data = $cache->get('walks2-'.$categoryWpId, function () use ($categoryWpId) {
 
             $wpRepository = new WpRepository();
 
@@ -177,6 +177,7 @@ class ApiData
             }
 
             $gpxViewer = new GpxViewer();
+            $offers = [];
             foreach ($offres as $offre) {
                 try {
                     if (count($offre->gpxs) > 0) {
@@ -188,18 +189,24 @@ class ApiData
                             }
                         }
                     }
-                    $offre->locations = $locations;
+
+                    $offers[] = [
+                        'codeCgt' => $offre->codeCgt,
+                        'images' => $offre->images,
+                        'address' => $offre->adresse1,
+                        'locations' => $locations,
+                    ];
                 } catch (\Exception|InvalidArgumentException $e) {
 
                 }
             }
-            if (count($offres) > 0) {
-                return $offres;
+            if (count($offers) > 0) {
+                return $offers;
             }
 
             return null;
         });
 
-        return rest_ensure_response([$offers[2]]);
+        return rest_ensure_response([$data[2]]);
     }
 }
