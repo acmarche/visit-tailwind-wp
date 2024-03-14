@@ -168,33 +168,25 @@ class ApiData
         $categoryWpId = (int)$request->get_param('categoryId');
 
         try {
-            $items = $wpRepository->findAllArticlesForCategory(
-                $categoryWpId,
-                0,
-                null
-            );
+            $offres = $wpRepository->findOffersByCategory($categoryWpId);
         } catch (NonUniqueResultException|InvalidArgumentException $e) {
-            $items = [];
+            $offres = [];
         }
 
-        $offers = [];
         $gpxViewer = new GpxViewer();
-        foreach ($items as $item) {
+        foreach ($offres as $offre) {
             try {
-                $offre = $wpRepository->getOffreByCgtAndParse($item->id);
-                if ($offre) {
-                    if (count($offre->gpxs) > 0) {
-                        $gpx = $offre->gpxs[0];
-                        $gpxViewer->renderWithPlugin($gpx);
-                        if ($gpx && isset($gpx->data['locations'])) {
-                            foreach ($gpx->data['locations'] as $location) {
-                                $locations[] = [$location['latitude'], $location['longitude']];
-                            }
+                if (count($offre->gpxs) > 0) {
+                    $gpx = $offre->gpxs[0];
+                    $gpxViewer->renderWithPlugin($gpx);
+                    if ($gpx && isset($gpx->data['locations'])) {
+                        foreach ($gpx->data['locations'] as $location) {
+                            $locations[] = [$location['latitude'], $location['longitude']];
                         }
                     }
-                    $offre->locations = $locations;
-                    $offers[] = $offre;
                 }
+                $offre->locations = $locations;
+                $offers[] = $offre;
             } catch (\Exception|InvalidArgumentException $e) {
 
             }
