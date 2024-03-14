@@ -200,6 +200,6 @@ class ApiData
             return null;
         });
 
-        return rest_ensure_response($offers);
+        return rest_ensure_response([$offers[2]]);
     }
 }
