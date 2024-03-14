@@ -192,6 +192,8 @@ class ApiData
 
                     $offers[] = [
                         'codeCgt' => $offre->codeCgt,
+                        'nom' => $offre->nom,
+                        'url' => $offre->url,
                         'images' => $offre->images,
                         'address' => $offre->adresse1,
                         'locations' => $locations,
