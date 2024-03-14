@@ -166,7 +166,7 @@ class ApiData
         $categoryWpId = (int)$request->get_param('categoryId');
         $cache = Cache::instance('walks');
 
-        $data = $cache->get('walks3-'.$categoryWpId, function () use ($categoryWpId) {
+        $data = $cache->get('walks5-'.$categoryWpId, function () use ($categoryWpId) {
 
             $wpRepository = new WpRepository();
 
@@ -209,6 +209,6 @@ class ApiData
             return null;
         });
 
-        return rest_ensure_response([$data[2]]);
+        return rest_ensure_response($data);
     }
 }
