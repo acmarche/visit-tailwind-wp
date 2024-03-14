@@ -166,7 +166,7 @@ class ApiData
         $categoryWpId = (int)$request->get_param('categoryId');
         $cache = Cache::instance('walks');
 
-        $data = $cache->get('walks2-'.$categoryWpId, function () use ($categoryWpId) {
+        $data = $cache->get('walks3-'.$categoryWpId, function () use ($categoryWpId) {
 
             $wpRepository = new WpRepository();
 
