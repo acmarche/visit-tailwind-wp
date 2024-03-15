@@ -2,7 +2,7 @@
         class="py-2 px-4 text-center font-montserrat-bold text-2xl text-grey-dark lg:text-left xl:p-4">
     {{ 'ideas.home'|trans }}
 </h2>
-<section class="grid grid-cols-1 md:grid-cols-4 gap-2 items-center justify-center content-center">
+<section class="grid grid-cols-1 md:grid-cols-3 gap-2 items-center justify-center content-center">
     {% for idea in ideas %}
         <a class="relative max-w-xl overflow-hidden bg-cover bg-no-repeat group" href="{{ idea.url }}">
             <img
