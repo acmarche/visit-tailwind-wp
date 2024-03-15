@@ -155,13 +155,10 @@ class WpRepository
     {
         $ideas = [];
         if ($term = get_category_by_slug('avec-ado')) {
-            $ideas[] = $this->addIdea($term, 'Ado.jpg');
+            $ideas[] = $this->addIdea($term, 'famille.jpg');
         }
         if ($term = get_category_by_slug('en-solo-ou-duo')) {
             $ideas[] = $this->addIdea($term, 'Duo-WBT.jpg');
-        }
-        if ($term = get_category_by_slug('avec-enfants')) {
-            $ideas[] = $this->addIdea($term, 'Enfants-WBT.jpg');
         }
         if ($term = get_category_by_slug('evc-enterrement-de-vie-de-celibataire')) {
             $ideas[] = $this->addIdea($term, 'EVC.png');
