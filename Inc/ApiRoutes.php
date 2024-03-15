@@ -159,7 +159,7 @@ class ApiRoutes
             function () {
                 register_rest_route(
                     'pivot',
-                    'offer/(?P<codeCgt>[\w]+)',
+                    'offer/(?P<codeCgt>[\w-]+)',
                     [
                         'methods' => 'GET',
                         'callback' => fn($args) => ApiData::offerByCodeCgt($args),

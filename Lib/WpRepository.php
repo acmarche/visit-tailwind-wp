@@ -155,7 +155,7 @@ class WpRepository
     {
         $ideas = [];
         if ($term = get_category_by_slug('avec-ado')) {
-            $ideas[] = $this->addIdea($term, 'famille.jpg');
+            $ideas[] = $this->addIdea($term, 'Famille.jpg');
         }
         if ($term = get_category_by_slug('en-solo-ou-duo')) {
             $ideas[] = $this->addIdea($term, 'Duo-WBT.jpg');
