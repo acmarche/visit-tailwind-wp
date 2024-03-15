@@ -150,6 +150,24 @@ class ApiRoutes
                 );
             }
         );
+
+        /**
+         * One offer by cgt
+         */
+        add_action(
+            'rest_api_init',
+            function () {
+                register_rest_route(
+                    'pivot',
+                    'offer/(?P<codeCgt>[\w]+)',
+                    [
+                        'methods' => 'GET',
+                        'callback' => fn($args) => ApiData::offerByCodeCgt($args),
+                    ],
+                    true
+                );
+            }
+        );
     }
 
     /**

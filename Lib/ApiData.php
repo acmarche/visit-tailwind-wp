@@ -193,7 +193,7 @@ class ApiData
                     $offers[] = [
                         'codeCgt' => $offre->codeCgt,
                         'nom' => $offre->nom,
-                        'url' => $offre->url,
+                        'url' => RouterPivot::getUrlOffre($categoryWpId, $offre->codeCgt),
                         'images' => $offre->images,
                         'address' => $offre->adresse1,
                         'locations' => $locations,
@@ -210,5 +210,21 @@ class ApiData
         });
 
         return rest_ensure_response($data);
+    }
+
+    public static function offerByCodeCgt(WP_REST_Request $request
+    ): WP_Error|WP_REST_Response|WP_HTTP_Response {
+        $codeCgt = (string)$request->get_param('codeCgt');
+        $wpRepository = new WpRepository();
+
+        try {
+            $offre = $wpRepository->getOffreByCgtAndParse($codeCgt);
+        } catch (\Exception|InvalidArgumentException $e) {
+
+        }
+
+        $offre->url = RouterPivot::getUrlOffre(11, $offre->codeCgt);
+
+        return rest_ensure_response($offre);
     }
 }
