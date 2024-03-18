@@ -154,7 +154,7 @@ class WpRepository
     public function getIdeas(): array
     {
         $ideas = [];
-        if ($term = get_category_by_slug('avec-ado')) {
+        if ($term = get_category_by_slug('en-famille')) {
             $ideas[] = $this->addIdea($term, 'Famille.jpg');
         }
         if ($term = get_category_by_slug('en-solo-ou-duo')) {
