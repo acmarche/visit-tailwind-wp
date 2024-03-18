@@ -8,7 +8,9 @@ use VisitMarche\ThemeTail\Lib\Twig;
 get_header();
 
 global $post;
-
+if(!$post){
+    return '';
+}
 $image = PostUtils::getImage($post);
 $tags = PostUtils::tagsPost($post);
 
