@@ -181,6 +181,7 @@ class ApiData
             $gpxViewer = new GpxViewer();
             $offers = [];
             foreach ($offres as $offre) {
+                $locations = [];
                 try {
                     if (count($offre->gpxs) > 0) {
                         $gpx = $offre->gpxs[0];
@@ -223,6 +224,7 @@ class ApiData
             $offre = $wpRepository->getOffreByCgtAndParse($codeCgt);
         } catch (\Exception|InvalidArgumentException $e) {
 
+            return rest_ensure_response(['error' => $e->getMessage()]);
         }
 
         $offre->url = RouterPivot::getUrlOffre(11, $offre->codeCgt);
