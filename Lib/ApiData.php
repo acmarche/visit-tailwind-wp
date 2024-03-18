@@ -147,6 +147,8 @@ class ApiData
             $offer->urlSite = RouterPivot::getUrlOffre($categoryWpId, $offer->codeCgt);
         }
 
+        $offers = PostUtils::sortOffresByName($offers);
+
         return rest_ensure_response($offers);
     }
 

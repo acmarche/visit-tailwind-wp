@@ -508,9 +508,8 @@ class WpRepository
             $std->type = $offre->typeOffre->label[0]->value;
             $offres[] = $std;
         }
-        $offres = PostUtils::sortOffresByName($offres);
 
-        return $offres;
+        return PostUtils::sortOffresByName($offres);
     }
 
     /**
