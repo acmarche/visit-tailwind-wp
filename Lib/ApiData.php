@@ -166,6 +166,10 @@ class ApiData
     public static function getAllWalks(WP_REST_Request $request
     ): WP_Error|WP_REST_Response|WP_HTTP_Response {
         $categoryWpId = (int)$request->get_param('categoryId');
+        $args = $request->get_param('args');
+        $localite = $args['localite'];
+        $type = $args['type'];
+        $coordinates = $args['coordinates'];
         $cache = Cache::instance('walks');
 
         $data = $cache->get('walks5-'.$categoryWpId, function () use ($categoryWpId) {
