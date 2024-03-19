@@ -262,4 +262,25 @@ class PostUtils
         return $offres;
     }
 
+    /**
+     * @param \stdClass[]|CommonItem[] $offres
+     *
+     * @return \stdClass[]
+     */
+    public static function sortArrayByName(array $offres, string $order = 'ASC'): array
+    {
+        usort(
+            $offres,
+            function ($offreA, $offreB) use ($order) {
+                if ($order == 'ASC') {
+                    return $offreA['name'] <=> $offreB['name'];
+                } else {
+                    return $offreB['name'] <=> $offreA['name'];
+                }
+            }
+        );
+
+        return $offres;
+    }
+
 }

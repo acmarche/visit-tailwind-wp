@@ -158,9 +158,38 @@ class ApiData
         $categoryWpId = (int)$request->get_param('categoryId');
 
         $wpFilterRepository = new WpFilterRepository();
-        $filtres = $wpFilterRepository->getCategoryFilters($categoryWpId);
+        $types = $wpFilterRepository->getCategoryFilters($categoryWpId);
 
-        return rest_ensure_response($filtres);
+        return rest_ensure_response([
+            'type' => $types,
+            'localite' => self::localites(),
+        ]);
+    }
+
+    private static function localites(): array
+    {
+        $categoryWpId = 11;
+        $cache = Cache::instance('walks');
+        $localites = $cache->get('filtersWalkhg22-'.$categoryWpId, function () use ($categoryWpId) {
+            $localites = [];
+            $wpRepository = new WpRepository();
+            try {
+                $offres = $wpRepository->findOffersByCategory($categoryWpId);
+                foreach ($offres as $offre) {
+                    if ($offre->adresse1) {
+                        if ($localite = $offre->adresse1->localite) {
+                            $localites[$localite[0]->value] = ['id' => $localite[0]->value, 'name' => $localite[0]->value];
+                        }
+                    }
+                }
+
+                return PostUtils::sortArrayByName(array_values($localites));
+            } catch (NonUniqueResultException|InvalidArgumentException $e) {
+                return [];
+            }
+        });
+
+        return $localites;
     }
 
     public static function getAllWalks(WP_REST_Request $request
@@ -215,8 +244,26 @@ class ApiData
 
             return null;
         });
+        $offers = [];
+        foreach ($data as $offre) {
+            if ($localite) {
+                if ($offre->adresse1) {
+                    if ($offre->adresse1->localite['value'] !== $localite) {
+                        continue;
+                    }
+                }
+            }
+            if ($type) {
+                if ($offre->adresse1) {
+                    if ($offre->adresse1->localite['value'] !== $localite) {
+                        continue;
+                    }
+                }
+            }
+            $offers[] = $offre;
+        }
 
-        return rest_ensure_response($data);
+        return rest_ensure_response($offers);
     }
 
     public static function offerByCodeCgt(WP_REST_Request $request
