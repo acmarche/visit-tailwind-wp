@@ -245,6 +245,8 @@ class ApiData
             return null;
         });
         $offers = [];
+
+        return rest_ensure_response($data);
         foreach ($data as $offre) {
             if ($localite) {
                 if ($offre->adresse1) {
@@ -254,11 +256,7 @@ class ApiData
                 }
             }
             if ($type) {
-                if ($offre->adresse1) {
-                    if ($offre->adresse1->localite['value'] !== $localite) {
-                        continue;
-                    }
-                }
+
             }
             $offers[] = $offre;
         }
