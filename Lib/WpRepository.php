@@ -161,7 +161,7 @@ class WpRepository
             $ideas[] = $this->addIdea($term, 'Duo-WBT.jpg');
         }
         if ($term = get_category_by_slug('avec-des-amis')) {
-            $ideas[] = $this->addIdea($term, 'Friends.png');
+            $ideas[] = $this->addIdea($term, 'Friends.jpg');
         }
         if ($term = get_category_by_slug('en-groupe')) {
             $ideas[] = $this->addIdea($term, 'Groupe.jpg');

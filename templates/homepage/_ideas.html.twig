@@ -2,12 +2,12 @@
         class="py-2 px-4 text-center font-montserrat-bold text-2xl text-grey-dark lg:text-left xl:p-4">
     {{ 'ideas.home'|trans }}
 </h2>
-<section class="grid grid-cols-1 md:grid-cols-3 gap-2 items-center justify-center co12ntent-center">
+<section class="grid grid-cols-1 md:grid-cols-3 gap-2 items-center justify-center">
     {% for idea in ideas %}
-        <a class="relative  overflow-hidden bg-cover bg-no-repeat group" href="{{ idea.url }}">
+        <a class="relative md:max-h-80 overflow-hidden bg-cover bg-no-repeat group" href="{{ idea.url }}">
             <img
                     src="{{ template_uri() }}/assets/images/ideas/{{ idea.img }}"
-                    class="w-full md:max-w-xl transition duration-300 ease-in-out group-hover:scale-110 rounded-lg"
+                    class="w-full md:max-h-80 transition duration-300 ease-in-out group-hover:scale-110 rounded-lg"
                     alt="idea.img"/>
             <div
                     class="absolute bottom-0 left-0 right-0 top-0 h-full w-full overflow-hidden bg-cta-light bg-fixed opacity-0 transition duration-300 ease-in-out group-hover:opacity-50"></div>
