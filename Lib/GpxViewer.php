@@ -24,8 +24,10 @@ class GpxViewer
     {
         $fileName = $gpx->codeCgt.'.'.phpGPX::XML_FORMAT;
         $filePath = ABSPATH.$this->folder_gpx.$fileName;
-        if (!$this->writeTmpFile($filePath, $gpx->url)) {
-            $this->elevation($filePath, $gpx);
+        if ($gpx->url) {
+            if (!$this->writeTmpFile($filePath, $gpx->url)) {
+                $this->elevation($filePath, $gpx);
+            }
         }
     }
 
