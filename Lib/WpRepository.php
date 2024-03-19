@@ -160,7 +160,7 @@ class WpRepository
         if ($term = get_category_by_slug('en-solo-ou-duo')) {
             $ideas[] = $this->addIdea($term, 'Duo-WBT.jpg');
         }
-        if ($term = get_category_by_slug('avec-des-amis')) {
+        if ($term = get_category_by_slug('entre-amis')) {
             $ideas[] = $this->addIdea($term, 'Friends.jpg');
         }
         if ($term = get_category_by_slug('en-groupe')) {
