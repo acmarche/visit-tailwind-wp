@@ -178,7 +178,10 @@ class ApiData
                 foreach ($offres as $offre) {
                     if ($offre->adresse1) {
                         if ($localite = $offre->adresse1->localite) {
-                            $localites[$localite[0]->value] = ['id' => $localite[0]->value, 'name' => $localite[0]->value];
+                            $localites[$localite[0]->value] = [
+                                'id' => $localite[0]->value,
+                                'name' => $localite[0]->value,
+                            ];
                         }
                     }
                 }
@@ -195,12 +198,13 @@ class ApiData
     public static function getAllWalks(WP_REST_Request $request
     ): WP_Error|WP_REST_Response|WP_HTTP_Response {
         $categoryWpId = (int)$request->get_param('categoryId');
+        //  $response = new WP_REST_Response(['error' => 'no args'.json_encode($request->get_params())], 200);
+        //  $response = new WP_REST_Response(['error' => 'no args'], 200);
         $args = $request->get_param('args');
         $localite = $args['localite'];
         $type = $args['type'];
-        $coordinates = $args['coordinates'];
         $cache = Cache::instance('walks');
-
+        $categoryWpId = 11;
         $data = $cache->get('walks5-'.$categoryWpId, function () use ($categoryWpId) {
 
             $wpRepository = new WpRepository();
@@ -245,12 +249,10 @@ class ApiData
             return null;
         });
         $offers = [];
-
-        return rest_ensure_response($data);
         foreach ($data as $offre) {
             if ($localite) {
-                if ($offre->adresse1) {
-                    if ($offre->adresse1->localite['value'] !== $localite) {
+                if ($offre['address']) {
+                    if ($offre['address']->localite[0]->value !== $localite) {
                         continue;
                     }
                 }

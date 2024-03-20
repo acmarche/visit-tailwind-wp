@@ -35,6 +35,7 @@ class ApiRoutes
                     [
                         'methods' => 'GET',
                         'callback' => fn($args) => ApiData::getFiltersByCategory($args),
+                        'permission_callback' => fn() => true,
                     ]
                 );
             }
@@ -49,6 +50,7 @@ class ApiRoutes
                     [
                         'methods' => 'GET',
                         'callback' => fn($args) => ApiData::pivotFiltresByName($args),
+                        'permission_callback' => fn() => true,
                     ]
                 );
             }
@@ -63,8 +65,8 @@ class ApiRoutes
                     [
                         'methods' => 'GET',
                         'callback' => fn($args) => ApiData::pivotOffres($args),
+                        'permission_callback' => fn() => true,
                     ],
-                    true
                 );
             }
         );
@@ -81,6 +83,7 @@ class ApiRoutes
                     [
                         'methods' => 'GET',
                         'callback' => fn($args) => ApiData::getOffersShortByCodesCgt($args),
+                        'permission_callback' => fn() => true,
                     ]
                 );
             }
@@ -96,8 +99,8 @@ class ApiRoutes
                     [
                         'methods' => 'GET',
                         'callback' => fn() => ApiData::getAll(),
+                        'permission_callback' => fn() => true,
                     ],
-                    true
                 );
             }
         );
@@ -111,8 +114,8 @@ class ApiRoutes
                     [
                         'methods' => 'GET',
                         'callback' => fn($args) => ApiData::findShortsByNameOrCode($args),
+                        'permission_callback' => fn() => true,
                     ],
-                    true
                 );
             }
         );
@@ -129,6 +132,7 @@ class ApiRoutes
                     [
                         'methods' => 'GET',
                         'callback' => fn($args) => ApiData::getAllWalkFilters($args),
+                        'permission_callback' => fn() => true,
                     ]
                 );
             }
@@ -146,6 +150,7 @@ class ApiRoutes
                     [
                         'methods' => 'POST',
                         'callback' => fn($args) => ApiData::getAllWalks($args),
+                        'permission_callback' => fn() => true,
                     ]
                 );
             }
@@ -163,8 +168,8 @@ class ApiRoutes
                     [
                         'methods' => 'GET',
                         'callback' => fn($args) => ApiData::offerByCodeCgt($args),
+                        'permission_callback' => fn() => true,
                     ],
-                    true
                 );
             }
         );
