@@ -198,14 +198,10 @@ class ApiData
     public static function getAllWalks(WP_REST_Request $request
     ): WP_Error|WP_REST_Response|WP_HTTP_Response {
         $categoryWpId = (int)$request->get_param('categoryId');
-        //  $response = new WP_REST_Response(['error' => 'no args'.json_encode($request->get_params())], 200);
-        //  $response = new WP_REST_Response(['error' => 'no args'], 200);
         $args = $request->get_param('args');
         $localite = $args['localite'];
-        $type = $args['type'];
         $cache = Cache::instance('walks');
-        $categoryWpId = 11;
-        $data = $cache->get('walks5-'.$categoryWpId, function () use ($categoryWpId) {
+        $data = $cache->get('walks-'.$categoryWpId, function () use ($categoryWpId) {
 
             $wpRepository = new WpRepository();
 
@@ -248,19 +244,16 @@ class ApiData
 
             return null;
         });
+        if (!$localite) {
+            return rest_ensure_response($data);
+        }
         $offers = [];
         foreach ($data as $offre) {
-            if ($localite) {
-                if ($offre['address']) {
-                    if ($offre['address']->localite[0]->value !== $localite) {
-                        continue;
-                    }
+            if ($offre['address']) {
+                if ($offre['address']->localite[0]->value === $localite) {
+                    $offers[] = $offre;
                 }
             }
-            if ($type) {
-
-            }
-            $offers[] = $offre;
         }
 
         return rest_ensure_response($offers);
