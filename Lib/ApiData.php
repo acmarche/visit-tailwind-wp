@@ -170,7 +170,7 @@ class ApiData
     {
         $categoryWpId = 11;
         $cache = Cache::instance('walks');
-        $localites = $cache->get('filtersWalkhg22-'.$categoryWpId, function () use ($categoryWpId) {
+        $localites = $cache->get('localitesWalks-'.$categoryWpId, function () use ($categoryWpId) {
             $localites = [];
             $wpRepository = new WpRepository();
             try {
