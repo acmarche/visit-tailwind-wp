@@ -89,36 +89,42 @@ class WpRepository
 
     public function getSamePosts(int $postId): array
     {
-        $categories = get_the_category($postId);
-        $args = [
-            'category__in' => array_map(
-                fn($category) => $category->cat_ID,
-                $categories
-            ),
-            'post__not_in' => [$postId],
-            'orderby' => 'title',
-            'order' => 'ASC',
-        ];
-        $query = new \WP_Query($args);
-        $recommandations = [];
-        foreach ($query->posts as $post) {
-            $image = null;
-            if (has_post_thumbnail($post)) {
-                $images = wp_get_attachment_image_src(get_post_thumbnail_id($post), 'original');
-                if ($images) {
-                    $image = $images[0];
-                }
-            }
-            $recommandations[] = [
-                'name' => $post->post_title,
-                'excerpt' => $post->post_excerpt,
-                'url' => get_permalink($post->ID),
-                'image' => $image,
-                'tags' => PostUtils::tagsPost($post),
-            ];
-        }
+        $cacheKey = Cache::generateKey('sampepost'.$postId);
+        $cache = Cache::instance('visit-wp');
 
-        return $recommandations;
+        return $cache->get($cacheKey, function () use ($postId) {
+            $categories = get_the_category($postId);
+            $args = [
+                'category__in' => array_map(
+                    fn($category) => $category->cat_ID,
+                    $categories
+                ),
+                'post__not_in' => [$postId],
+                'orderby' => 'title',
+                'order' => 'ASC',
+            ];
+            $query = new \WP_Query($args);
+            $recommandations = [];
+            foreach ($query->posts as $post) {
+                $image = null;
+                if (has_post_thumbnail($post)) {
+                    $images = wp_get_attachment_image_src(get_post_thumbnail_id($post), 'original');
+                    if ($images) {
+                        $image = $images[0];
+                    }
+                }
+                $recommandations[] = [
+                    'name' => $post->post_title,
+                    'excerpt' => $post->post_excerpt,
+                    'url' => get_permalink($post->ID),
+                    'image' => $image,
+                    'tags' => PostUtils::tagsPost($post),
+                ];
+            }
+
+            return $recommandations;
+        });
+
     }
 
     public function getPostThumbnail(int $id): string
@@ -219,32 +225,41 @@ class WpRepository
      */
     public function findAllArticlesForCategory(int $currentCategoryId, int $filtreSelected, ?string $filtreType): array
     {
-        if ($filtreSelected) {
-            if ($filtreType == FilterStd::TYPE_WP) {
-                if ($category = get_category($filtreSelected)) {
-                    $offers = $this->findOffersByCategory(
-                        $category->term_id,
-                    );
+        $cache = Cache::instance('visit-wp');
+        $key = 'allArticle-'.$currentCategoryId.'-'.$filtreSelected;
+        if ($filtreType) {
+            $key .= $filtreType;
+        }
+        $cacheKey = Cache::generateKey($key);
 
-                    $posts = $this->getPostsByCatId($filtreSelected);
+        return $cache->get($cacheKey, function () use ($currentCategoryId, $filtreSelected, $filtreType) {
+            if ($filtreSelected) {
+                if ($filtreType == FilterStd::TYPE_WP) {
+                    if ($category = get_category($filtreSelected)) {
+                        $offers = $this->findOffersByCategory(
+                            $category->term_id,
+                        );
 
-                    return $this->treatment($currentCategoryId, $offers, $posts);
-                }
-            } else {
-                $typeOffreRepository = PivotContainer::getTypeOffreRepository(WP_DEBUG);
-                if ($typeOffre = $typeOffreRepository->find($filtreSelected)) {
-                    $offers = $this->findOffresByTypesOffre([$typeOffre]);
-                    $posts = [];
+                        $posts = $this->getPostsByCatId($filtreSelected);
 
-                    return $this->treatment($currentCategoryId, $offers, $posts);
+                        return $this->treatment($currentCategoryId, $offers, $posts);
+                    }
+                } else {
+                    $typeOffreRepository = PivotContainer::getTypeOffreRepository(WP_DEBUG);
+                    if ($typeOffre = $typeOffreRepository->find($filtreSelected)) {
+                        $offers = $this->findOffresByTypesOffre([$typeOffre]);
+                        $posts = [];
+
+                        return $this->treatment($currentCategoryId, $offers, $posts);
+                    }
                 }
             }
-        }
 
-        $offres = $this->findOffersByCategory($currentCategoryId);
-        $posts = $this->getPostsByCatId($currentCategoryId);
+            $offres = $this->findOffersByCategory($currentCategoryId);
+            $posts = $this->getPostsByCatId($currentCategoryId);
 
-        return $this->treatment($currentCategoryId, $offres, $posts);
+            return $this->treatment($currentCategoryId, $offres, $posts);
+        });
     }
 
     /**
@@ -359,14 +374,20 @@ class WpRepository
      */
     public function recommandationsByPost(WP_Post $post): array
     {
-        $recommandations = $this->getSamePosts($post->ID);
-        if (0 === \count($recommandations)) {
-            $searcher = new Searcher();
-            global $wp_query;
-            $recommandations = $searcher->searchRecommandations($wp_query);
-        }
+        $key = 'recompost-'.$post->ID;
+        $cacheKey = Cache::generateKey($key);
+        $cache = Cache::instance('wprepo');
 
-        return $recommandations;
+        return $cache->get($cacheKey, function () use ($post) {
+            $recommandations = $this->getSamePosts($post->ID);
+            if (0 === \count($recommandations)) {
+                $searcher = new Searcher();
+                global $wp_query;
+                $recommandations = $searcher->searchRecommandations($wp_query);
+            }
+
+            return $recommandations;
+        });
     }
 
     public function recommandationsByOffre(Offre $offerRefer, WP_Term $category, string $language): array
@@ -419,38 +440,47 @@ class WpRepository
      */
     public function getEvents(?int $filterSelected = null): array
     {
-        $pivotRepository = PivotContainer::getPivotRepository(WP_DEBUG);
-        $args = [];
+        $cacheKey = Cache::generateKey('events-');
         if ($filterSelected) {
-            $typeOffreRepository = PivotContainer::getTypeOffreRepository(WP_DEBUG);
-            try {
-                $filtre = $typeOffreRepository->find($filterSelected);
-                if ($filtre instanceof TypeOffre) {
-                    $args = [$filtre];
-                }
-            } catch (NonUniqueResultException $e) {
-                return [];
-            }
+            $cacheKey .= $filterSelected;
         }
+        $cache = Cache::instance('visit-wp');
 
-        $events = $pivotRepository->fetchEvents($args);
-        $data = [];
-        foreach ($events as $event) {
-            if ($event->visibiliteUrn->urn !== EventEnum::CONVENTION->value) {
-                $event->locality = $event->getAdresse()->localite[0]->get('fr');
-                $event->dateEvent = [
-                    'year' => $event->dateEnd->format('Y'),
-                    'month' => $event->dateEnd->format('m'),
-                    'day' => $event->dateEnd->format('d'),
-                ];
-                if (count($event->images) == 0) {
-                    $event->images = [get_template_directory_uri().'/assets/tartine/bg_events.png'];
+        return $cache->get($cacheKey, function () use ($filterSelected) {
+            $pivotRepository = PivotContainer::getPivotRepository(WP_DEBUG);
+            $args = [];
+            if ($filterSelected) {
+                $typeOffreRepository = PivotContainer::getTypeOffreRepository(WP_DEBUG);
+                try {
+                    $filtre = $typeOffreRepository->find($filterSelected);
+                    if ($filtre instanceof TypeOffre) {
+                        $args = [$filtre];
+                    }
+                } catch (NonUniqueResultException $e) {
+                    return [];
                 }
-                $data[] = $event;
             }
-        }
 
-        return $data;
+            $events = $pivotRepository->fetchEvents($args);
+            $data = [];
+            foreach ($events as $event) {
+                if ($event->visibiliteUrn->urn !== EventEnum::CONVENTION->value) {
+                    $event->locality = $event->getAdresse()->localite[0]->get('fr');
+                    $event->dateEvent = [
+                        'year' => $event->dateEnd->format('Y'),
+                        'month' => $event->dateEnd->format('m'),
+                        'day' => $event->dateEnd->format('d'),
+                    ];
+                    if (count($event->images) == 0) {
+                        $event->images = [get_template_directory_uri().'/assets/tartine/bg_events.png'];
+                    }
+                    $data[] = $event;
+                }
+            }
+
+            return $data;
+        });
+
     }
 
     /**
@@ -471,22 +501,29 @@ class WpRepository
      */
     public function findOffersShortByCodesCgt(array $codesCgt): array
     {
-        $offers = [];
-        try {
-            $offersShort = $this->getAllOffresShorts();
-            foreach ($codesCgt as $codeCgt) {
-                foreach ($offersShort as $offerShort) {
-                    if ($offerShort->codeCgt === $codeCgt) {
-                        $offers[] = $offerShort;
-                        break;
+        $cacheKey = Cache::generateKey('OffersShortByCodesCgt-'.json_encode($codesCgt));
+        $cache = Cache::instance('visit-wp');
+
+        return $cache->get($cacheKey, function () use ($codesCgt) {
+
+            $offers = [];
+            try {
+                $offersShort = $this->getAllOffresShorts();
+                foreach ($codesCgt as $codeCgt) {
+                    foreach ($offersShort as $offerShort) {
+                        if ($offerShort->codeCgt === $codeCgt) {
+                            $offers[] = $offerShort;
+                            break;
+                        }
                     }
                 }
+
+            } catch (InvalidArgumentException $e) {
+                return [];
             }
 
-        } catch (InvalidArgumentException $e) {
-        }
-
-        return $offers;
+            return $offers;
+        });
     }
 
     /**
@@ -495,21 +532,27 @@ class WpRepository
      */
     public function getAllOffresShorts(): array
     {
-        $offres = [];
-        $pivotRepository = PivotContainer::getPivotRepository(WP_DEBUG);
-        $responseJson = $pivotRepository->getAllDataFromRemote(true, QueryDetailEnum::QUERY_DETAIL_LVL_RESUME);
+        $cacheKey = Cache::generateKey('alloffershort-');
+        $cache = Cache::instance('visit-wp');
 
-        $tmp = json_decode($responseJson)->offre;
+        return $cache->get($cacheKey, function () {
+            $offres = [];
+            $pivotRepository = PivotContainer::getPivotRepository(WP_DEBUG);
+            $responseJson = $pivotRepository->getAllDataFromRemote(true, QueryDetailEnum::QUERY_DETAIL_LVL_RESUME);
 
-        foreach ($tmp as $offre) {
-            $std = new \stdClass();
-            $std->codeCgt = $offre->codeCgt;
-            $std->name = $offre->nom;
-            $std->type = $offre->typeOffre->label[0]->value;
-            $offres[] = $std;
-        }
+            $tmp = json_decode($responseJson)->offre;
 
-        return PostUtils::sortOffresByName($offres);
+            foreach ($tmp as $offre) {
+                $std = new \stdClass();
+                $std->codeCgt = $offre->codeCgt;
+                $std->name = $offre->nom;
+                $std->type = $offre->typeOffre->label[0]->value;
+                $offres[] = $std;
+            }
+
+            return PostUtils::sortOffresByName($offres);
+        });
+
     }
 
     /**
@@ -517,9 +560,14 @@ class WpRepository
      */
     public function getOffreByCgtAndParse(string $codeCgt): ?Offre
     {
-        $pivotRepository = PivotContainer::getPivotRepository(WP_DEBUG);
+        $cacheKey = Cache::generateKey('offrecgt-'.$codeCgt);
+        $cache = Cache::instance('visit-wp');
 
-        return $pivotRepository->fetchOffreByCgtAndParse($codeCgt);
+        return $cache->get($cacheKey, function () use ($codeCgt) {
+            $pivotRepository = PivotContainer::getPivotRepository(WP_DEBUG);
+
+            return $pivotRepository->fetchOffreByCgtAndParse($codeCgt);
+        });
     }
 
     public function groupSpecifications(Offre $offre): array
