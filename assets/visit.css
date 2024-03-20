@@ -1862,10 +1862,6 @@ img, video, iframe {
   height: 100%;
 }
 
-.h-72 {
-  height: 18rem;
-}
-
 .max-h-72 {
   max-height: 18rem;
 }
@@ -3256,6 +3252,10 @@ img, video, iframe {
   border-color: rgb(253 131 131 / var(--tw-border-opacity));
 }
 
+.hover\:bg-art:hover {
+  background-color: #F5CC73FF;
+}
+
 .hover\:bg-blue-800:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(30 64 175 / var(--tw-bg-opacity));
@@ -3274,9 +3274,25 @@ img, video, iframe {
   background-color: rgb(253 131 131 / var(--tw-bg-opacity));
 }
 
+.hover\:bg-delicacy:hover {
+  background-color: #EFBFB1FF;
+}
+
 .hover\:bg-gray-200:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(229 231 235 / var(--tw-bg-opacity));
+}
+
+.hover\:bg-party:hover {
+  background-color: #EFD7CDFF;
+}
+
+.hover\:bg-patrimony:hover {
+  background-color: #AAB7D8FF;
+}
+
+.hover\:bg-walk:hover {
+  background-color: #64966FFF;
 }
 
 .hover\:bg-white:hover {
@@ -3481,10 +3497,6 @@ img, video, iframe {
     margin-right: 1rem;
   }
 
-  .md\:max-h-96 {
-    max-height: 24rem;
-  }
-
   .md\:max-h-80 {
     max-height: 20rem;
   }
@@ -3495,10 +3507,6 @@ img, video, iframe {
 
   .md\:w-64 {
     width: 16rem;
-  }
-
-  .md\:max-w-xl {
-    max-width: 36rem;
   }
 
   .md\:grid-cols-3 {

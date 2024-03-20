@@ -66,7 +66,7 @@ class Menu
                 'sorganiser' => get_category_by_slug('sorganiser'),
                 'sejourner' => get_category_by_slug('sejourner'),
                 'savourer' => get_category_by_slug('savourer'),
-                'bouger' => get_category_by_slug('bouger'),
+                'barbecue' => get_category_by_slug('aires-de-pique-nique-et-barbecue'),
                 'mice' => get_category_by_slug('mice'),
                 'inspirations' => get_category_by_slug('inspirations'),
                 'pratique' => get_category_by_slug('pratique'),
