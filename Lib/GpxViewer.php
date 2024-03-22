@@ -24,9 +24,11 @@ class GpxViewer
     {
         $fileName = $gpx->codeCgt.'.'.phpGPX::XML_FORMAT;
         $filePath = ABSPATH.$this->folder_gpx.$fileName;
-        if ($gpx->url) {
-            if (!$this->writeTmpFile($filePath, $gpx->url)) {
-                $this->elevation($filePath, $gpx);
+        if (!is_readable($filePath)) {
+            if ($gpx->data_raw) {
+                if ($this->writeTmpFile($filePath, $gpx->data_raw)) {
+                    $this->elevation($filePath, $gpx);
+                }
             }
         }
     }
@@ -234,27 +236,13 @@ class GpxViewer
         return ['locations' => $locations, 'missing' => $missing];
     }
 
-    public function writeTmpFile(string $filePath, string $url): bool
+    public function writeTmpFile(string $filePath, string $data_raw): bool
     {
-        if (is_readable($filePath)) {
-            return false;
-        }
-        $httpClient = HttpClient::create();
-        try {
-            $response = $httpClient->request(
-                'GET',
-                $url,
-            );
-            $data_raw = $response->getContent();
-        } catch (ClientExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface|TransportExceptionInterface $e) {
-            Mailer::sendError("Visit error get gpx", $e->getMessage());
-
-            return false;
-        }
-
         try {
             $filesystem = new Filesystem();
             $filesystem->dumpFile($filePath, $data_raw);
+
+            return true;
         } catch (IOExceptionInterface $exception) {
             $error = "An error occurred while creating your directory at ".$exception->getPath();
             Mailer::sendError("Visit error write gpx", $error);

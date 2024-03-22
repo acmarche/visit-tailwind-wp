@@ -71,11 +71,12 @@ foreach ($offre->pois as $poi) {
     $poi->image = $poi->firstImage();
     $postUtils->tagsOffre($poi, $language, $urlcurrentCategory);
 }
-$gpxMap = $gpx = null;
+$gpx = null;
 $locations = [];
-$gpxViewer = new GpxViewer();
+
 if (count($offre->gpxs) > 0) {
     $gpx = $offre->gpxs[0];
+    $gpxViewer = new GpxViewer();
     $gpxViewer->renderWithPlugin($gpx);
     if ($gpx && isset($gpx->data['locations'])) {
         foreach ($gpx->data['locations'] as $location) {
@@ -101,7 +102,6 @@ Twig::rendPage(
         'categoryName' => $currentCategory->name,
         'nameBack' => $currentCategory->name,
         'specs' => $specs,
-        'gpxMap' => $gpxMap,
         'gpx' => $gpx,
         'locations' => $locations,
     ]
