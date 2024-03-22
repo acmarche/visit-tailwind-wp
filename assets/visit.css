@@ -1914,6 +1914,10 @@ img, video, iframe {
   width: 8rem;
 }
 
+.w-36 {
+  width: 9rem;
+}
+
 .w-4 {
   width: 1rem;
 }
@@ -1965,6 +1969,18 @@ img, video, iframe {
 .w-max {
   width: -moz-max-content;
   width: max-content;
+}
+
+.w-44 {
+  width: 11rem;
+}
+
+.w-48 {
+  width: 12rem;
+}
+
+.w-52 {
+  width: 13rem;
 }
 
 .max-w-full {
