@@ -6,8 +6,6 @@ use AcMarche\Pivot\Entities\Specification\Gpx;
 use Exception;
 use phpGPX\Models\Point;
 use phpGPX\phpGPX;
-use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpClient\Exception\ClientException;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
@@ -26,17 +24,14 @@ class GpxViewer
         $filePath = ABSPATH.$this->folder_gpx.$fileName;
         if (!is_readable($filePath)) {
             if ($gpx->data_raw) {
-                if ($this->writeTmpFile($filePath, $gpx->data_raw)) {
-                    $this->elevation($filePath, $gpx);
-                }
+                $this->elevation($filePath, $gpx);
             }
         }
     }
 
-    public function elevation(string $pathName, Gpx $gpx)
+    public function elevation(string $filePath, Gpx $gpx)
     {
-        $phpGPX = new phpGPX();
-        $fileGpx = $phpGPX->load($pathName);
+        $fileGpx = phpGPX::parse($gpx->data_raw);
         $locations = [];
         foreach ($fileGpx->tracks as $track) {
             // Statistics for whole track
@@ -48,46 +43,45 @@ class GpxViewer
                 }
             }
         }
+
         $tab = $this->findElevations($locations);
-        $missing = $tab['missing'];
-        $locations = $tab['locations'];
-        if (count($missing) > 0) {
-            $this->requestElevations($missing);
+        if (count($tab['missing']) > 0) {
+            $this->requestElevations($tab['missing']);
             $tab = $this->findElevations($locations);
-            $missing = $tab['missing'];
-            $locations = $tab['locations'];
         }
-        $a = 1;
+
+        $firstItem = 1;
         $distances = [0 => 0];
-        $countLocations = count($locations);
-        foreach ($locations as $location) {
-            $b = $a + 1;
-            if ($b == $countLocations) {
+        $locationsWithElevations = $tab['locations'];
+        $countLocations = count($locationsWithElevations);
+        foreach ($locationsWithElevations as $location) {
+            $nextItem = $firstItem + 1;
+            if ($nextItem == $countLocations) {
                 break;
             }
             $distances[] = $this->vincentyGreatCircleDistance(
-                $locations[$a]['latitude'],
-                $locations[$a]['longitude'],
-                $locations[$b]['latitude'],
-                $locations[$b]['longitude']
+                $locations[$firstItem]['latitude'],
+                $locations[$firstItem]['longitude'],
+                $locations[$nextItem]['latitude'],
+                $locations[$nextItem]['longitude']
             );
-            $a++;
+            $firstItem++;
         }
         $tab['distances'] = $distances;
 
-        $a = 0;
-        $metres = [0 => $distances[$a]];
+        $firstItem = 0;
+        $metres = [0 => $distances[$firstItem]];
         $countDistances = count($distances);
-        $a++;
+        $firstItem++;
         foreach ($distances as $distance) {
-            $b = $a + 1;
-            if ($b == $countDistances) {
+            $nextItem = $firstItem + 1;
+            if ($nextItem == $countDistances) {
                 break;
             }
-            $precedent = $a - 1;
-            $cal = $metres[$precedent] + $distances[$b];
-            $metres[$a] = $cal;
-            $a++;
+            $precedent = $firstItem - 1;
+            $cal = $metres[$precedent] + $distances[$nextItem];
+            $metres[$firstItem] = $cal;
+            $firstItem++;
         }
 
         foreach ($metres as $key => $metre) {
@@ -109,12 +103,18 @@ class GpxViewer
                 }
             }
         }
-        $fileGpx->metadata->description = htmlentities($fileGpx->metadata->description);
-        if ($fileGpx->metadata->author) {
-            $fileGpx->metadata->author->name = htmlentities($fileGpx->metadata->author->name);
+        if ($fileGpx->metadata) {
+            $fileGpx->metadata->description = htmlentities($fileGpx->metadata->description);
+            if ($fileGpx->metadata->author) {
+                $fileGpx->metadata->author->name = htmlentities($fileGpx->metadata->author->name);
+            }
         }
         if ($elevationOk) {
-            $fileGpx->save($pathName, phpGPX::XML_FORMAT);
+            try {
+                $fileGpx->save($filePath, phpGPX::XML_FORMAT);
+            } catch (Exception $exception) {
+                Mailer::sendError('save gpx file', 'el '.$exception->getMessage());
+            }
         }
     }
 
@@ -234,21 +234,6 @@ class GpxViewer
         }
 
         return ['locations' => $locations, 'missing' => $missing];
-    }
-
-    public function writeTmpFile(string $filePath, string $data_raw): bool
-    {
-        try {
-            $filesystem = new Filesystem();
-            $filesystem->dumpFile($filePath, $data_raw);
-
-            return true;
-        } catch (IOExceptionInterface $exception) {
-            $error = "An error occurred while creating your directory at ".$exception->getPath();
-            Mailer::sendError("Visit error write gpx", $error);
-        }
-
-        return false;
     }
 
     public function render(array $args): string
