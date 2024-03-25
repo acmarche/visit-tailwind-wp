@@ -18,14 +18,16 @@ class GpxViewer
 {
     public string $folder_gpx = 'var/gpx/';
 
+    /**
+     * @param Gpx $gpx
+     * @return void
+     */
     public function renderWithPlugin(Gpx $gpx): void
     {
         $fileName = $gpx->codeCgt.'.'.phpGPX::XML_FORMAT;
         $filePath = ABSPATH.$this->folder_gpx.$fileName;
-        if (!is_readable($filePath)) {
-            if ($gpx->data_raw) {
-                $this->elevation($filePath, $gpx);
-            }
+        if ($gpx->data_raw) {
+            $this->elevation($filePath, $gpx);
         }
     }
 
@@ -91,29 +93,31 @@ class GpxViewer
         $tab['metres'] = $metres;
 
         $gpx->data = $tab;
-        $elevationOk = false;
-
-        foreach ($fileGpx->tracks as $track) {
-            // Statistics for whole track
-            $stats = $track->stats;
-            foreach ($track->segments as $segment) {
-                // Statistics for segment of track
-                foreach ($segment->getPoints() as $point) {
-                    $elevationOk = $this->findSegment($point, $locations);
+        if (!is_readable($filePath)) {
+            $elevationOk = false;
+            foreach ($fileGpx->tracks as $track) {
+                // Statistics for whole track
+                $stats = $track->stats;
+                foreach ($track->segments as $segment) {
+                    // Statistics for segment of track
+                    foreach ($segment->getPoints() as $point) {
+                        $elevationOk = $this->findSegment($point, $locations);
+                    }
                 }
             }
-        }
-        if ($fileGpx->metadata) {
-            $fileGpx->metadata->description = htmlentities($fileGpx->metadata->description);
-            if ($fileGpx->metadata->author) {
-                $fileGpx->metadata->author->name = htmlentities($fileGpx->metadata->author->name);
+            if ($fileGpx->metadata) {
+                $fileGpx->metadata->description = htmlentities($fileGpx->metadata->description);
+                if ($fileGpx->metadata->author) {
+                    $fileGpx->metadata->author->name = htmlentities($fileGpx->metadata->author->name);
+                }
             }
-        }
-        if ($elevationOk) {
-            try {
-                $fileGpx->save($filePath, phpGPX::XML_FORMAT);
-            } catch (Exception $exception) {
-                Mailer::sendError('save gpx file', 'el '.$exception->getMessage());
+
+            if ($elevationOk) {
+                try {
+                    $fileGpx->save($filePath, phpGPX::XML_FORMAT);
+                } catch (Exception $exception) {
+                    Mailer::sendError('save gpx file', 'el '.$exception->getMessage());
+                }
             }
         }
     }
@@ -131,7 +135,7 @@ class GpxViewer
         return false;
     }
 
-    public function requestElevations(array $locations): array
+    private function requestElevations(array $locations): array
     {
         $tmps = [];
         foreach ($locations as $location) {
