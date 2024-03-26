@@ -73,6 +73,7 @@ $imgs = [
     '05.jpg',
     '06.jpg',
     '07.jpg',
+    '08.jpg',
     ];
 $img = array_rand($imgs);
 $bgImg = $imgs[$img];
