@@ -65,6 +65,14 @@ $imgs = [
     '220115DJI_0385 (2).jpg',
     '220305DJI_0135-HDR.jpg',
 ];
+$imgs = [
+    '01.jpg',
+    '02.jpg',
+    '03.jpg',
+    '04.jpg',
+    '05.jpg',
+    '06.jpg',
+    ];
 $img = array_rand($imgs);
 $bgImg = $imgs[$img];
 
