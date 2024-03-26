@@ -67,9 +67,6 @@ class WpFilterRepository
         bool $removeFilterEmpty = true,
         bool $unsetParent = false
     ): array {
-        if (in_array($categoryWpId, Theme::CATEGORIES_HEBERGEMENT)) {
-            return self::getChildrenHebergements($removeFilterEmpty);
-        }
         if (in_array($categoryWpId, Theme::CATEGORIES_AGENDA)) {
             return self::getChildrenEvents($removeFilterEmpty);
         }
@@ -157,31 +154,6 @@ class WpFilterRepository
         $barVin = $filtreRepository->findOneByUrn(UrnList::BAR_VIN->value);
 
         return $filtreRepository->findByParent($barVin->parent->id, $removeFilterEmpty);
-    }
-
-    /**
-     * @return TypeOffre[]
-     * @throws NonUniqueResultException
-     */
-    public static function getChildrenHebergements(bool $removeFilterEmpty): array
-    {
-        $filtreRepository = PivotContainer::getTypeOffreRepository(WP_DEBUG);
-        $filtre = $filtreRepository->findOneByUrn(UrnList::HERGEMENT->value);
-
-        $filters = $filtreRepository->findByParent($filtre->id, $removeFilterEmpty);
-        foreach ($filters as $key => $filter) {
-            if ($filter->urn == 'urn:val:typeheb:chbhot') {
-                unset($filters[$key]);
-            }
-           if ($filter->urn == 'urn:typ:270') {
-                unset($filters[$key]);
-            }
-            if ($filter->id == 188) {
-                unset($filters[$key]);
-            }
-        }
-
-        return array_values($filters);
     }
 
     public static function getMetaPivotTypesOffre(int $wpCategoryId): array
