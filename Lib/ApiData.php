@@ -230,6 +230,9 @@ class ApiData
                         'localite' => $offre->adresse1->localite[0]->value,
                         'type' => self::getTypeWalk($offre->codeCgt),
                         'locations' => $locations,
+                        'gpx_duree' => $offre->gpx_duree,
+                        'gpx_difficulte' => $offre->gpx_difficulte,
+                        'gpx_distance' => $offre->gpx_distance,
                     ];
                 } catch (\Exception|InvalidArgumentException $e) {
 
