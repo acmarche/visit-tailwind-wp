@@ -198,10 +198,9 @@ class ApiData
     public static function getAllWalks(WP_REST_Request $request
     ): WP_Error|WP_REST_Response|WP_HTTP_Response {
         $categoryWpId = (int)$request->get_param('categoryId');
-        $args = $request->get_param('args');
-        $localite = $args['localite'];
         $cache = Cache::instance('walks');
-        $data = $cache->get('walks-'.$categoryWpId, function () use ($categoryWpId) {
+
+        return rest_ensure_response($cache->get('walks-'.$categoryWpId.time(), function () use ($categoryWpId) {
 
             $wpRepository = new WpRepository();
 
@@ -214,50 +213,48 @@ class ApiData
             $gpxViewer = new GpxViewer();
             $offers = [];
             foreach ($offres as $offre) {
-                $locations = [];
                 try {
+                    $locations = [];
                     if (count($offre->gpxs) > 0) {
                         $gpx = $offre->gpxs[0];
-                        $gpxViewer->renderWithPlugin($gpx);
-                        if ($gpx && isset($gpx->data['locations'])) {
-                            foreach ($gpx->data['locations'] as $location) {
-                                $locations[] = [$location['latitude'], $location['longitude']];
-                            }
+                        foreach ($gpxViewer->getLocations($gpx) as $location) {
+                            $locations[] = [$location['latitude'], $location['longitude']];
                         }
                     }
-
                     $offers[] = [
                         'codeCgt' => $offre->codeCgt,
                         'nom' => $offre->nom,
                         'url' => RouterPivot::getUrlOffre($categoryWpId, $offre->codeCgt),
                         'images' => $offre->images,
                         'address' => $offre->adresse1,
+                        'localite' => $offre->adresse1->localite[0]->value,
+                        'type' => self::getTypeWalk($offre->codeCgt),
                         'locations' => $locations,
                     ];
                 } catch (\Exception|InvalidArgumentException $e) {
 
                 }
             }
-            if (count($offers) > 0) {
-                return $offers;
-            }
 
-            return null;
-        });
-        if (!$localite) {
-            return rest_ensure_response($data);
-        }
-        $offers = [];
-        foreach ($data as $offre) {
-            if ($offre['address']) {
-                if ($offre['address']->localite[0]->value === $localite) {
-                    $offers[] = $offre;
-                }
-            }
-        }
-
-        return rest_ensure_response($offers);
+            return rest_ensure_response($offers);
+        }));
     }
+
+    private static function getTypeWalk(string $codeCgt): int
+    {
+        $wpFilterRepository = new WpFilterRepository();
+        $id = 130;//bike
+        if (in_array($codeCgt, $wpFilterRepository->getCodesCgtByCategoryId($id))) {
+            return $id;
+        }
+        $id = 132;//horse
+        if (in_array($codeCgt, $wpFilterRepository->getCodesCgtByCategoryId($id))) {
+            return $id;
+        }
+
+        return 131;//foot
+    }
+
 
     public static function offerByCodeCgt(WP_REST_Request $request
     ): WP_Error|WP_REST_Response|WP_HTTP_Response {

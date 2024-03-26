@@ -31,7 +31,7 @@ class GpxViewer
         }
     }
 
-    public function elevation(string $filePath, Gpx $gpx)
+    public function getLocations(Gpx $gpx): array
     {
         $fileGpx = phpGPX::parse($gpx->data_raw);
         $locations = [];
@@ -46,9 +46,16 @@ class GpxViewer
             }
         }
 
+        return $locations;
+    }
+
+    public function elevation(string $filePath, Gpx $gpx)
+    {
+        $locations = $this->getLocations($gpx);
+
         $tab = $this->findElevations($locations);
         if (count($tab['missing']) > 0) {
-            $this->requestElevations($tab['missing']);
+            //   $this->requestElevations($tab['missing']);
             $tab = $this->findElevations($locations);
         }
 
@@ -94,6 +101,7 @@ class GpxViewer
 
         $gpx->data = $tab;
         if (!is_readable($filePath)) {
+            $fileGpx = phpGPX::parse($gpx->data_raw);
             $elevationOk = false;
             foreach ($fileGpx->tracks as $track) {
                 // Statistics for whole track

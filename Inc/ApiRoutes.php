@@ -148,7 +148,7 @@ class ApiRoutes
                     'pivot',
                     'walks_list/(?P<categoryId>[\w]+)',
                     [
-                        'methods' => 'POST',
+                        'methods' => 'GET',
                         'callback' => fn($args) => ApiData::getAllWalks($args),
                         'permission_callback' => fn() => true,
                     ]
