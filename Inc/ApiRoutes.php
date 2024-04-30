@@ -110,7 +110,7 @@ class ApiRoutes
             function () {
                 register_rest_route(
                     'pivot',
-                    'find-offers-by-name/(?P<name>[\w]+)',
+                    'find-offers-by-name/(?P<name>[\w\s%20]+)',
                     [
                         'methods' => 'GET',
                         'callback' => fn($args) => ApiData::findShortsByNameOrCode($args),

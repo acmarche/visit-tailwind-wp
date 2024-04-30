@@ -111,7 +111,7 @@ class ApiData
 
     public static function findShortsByNameOrCode(WP_REST_Request $request): \WP_Error|WP_HTTP_Response|WP_REST_Response
     {
-        $name = $request->get_param('name');
+        $name = urldecode($request->get_param('name'));
         $wpRepository = new WpRepository();
         try {
             $offres = array_filter($wpRepository->getAllOffresShorts(), function (\stdClass $offre) use ($name) {
