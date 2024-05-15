@@ -12,7 +12,7 @@ $hits = [];
 if ($keyword) {
     try {
         $results = $searcher->search($keyword);
-        $hits = json_decode($results, null, 512, JSON_THROW_ON_ERROR);
+        $hits = $results->getHits();
     } catch (Exception $exception) {
         Twig::rend500Page($exception->getMessage());
         Mailer::sendError('visit error search', $exception->getMessage());
@@ -21,14 +21,6 @@ if ($keyword) {
         return;
     }
 }
-if (isset($hits['error'])) {
-    Twig::rend500Page($hits['error']);
-    Mailer::sendError('visit error search', $hits['error']);
-    get_footer();
-
-    return;
-}
-
 Twig::rendPage(
     '@VisitTail/search.html.twig',
     [
@@ -39,7 +31,7 @@ Twig::rendPage(
         'image' => get_template_directory_uri().'/assets/tartine/bg_search.png',
         'keyword' => $keyword,
         'results' => $hits,
-        'count' => is_countable($hits) ? \count($hits) : 0,
+        'count' => $results->count(),
     ]
 );
 get_footer();
