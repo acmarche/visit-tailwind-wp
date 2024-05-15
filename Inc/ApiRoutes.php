@@ -89,22 +89,6 @@ class ApiRoutes
             }
         );
 
-        //https://www.visitmarche.be/wp-json/visit/all
-        add_action(
-            'rest_api_init',
-            function () {
-                register_rest_route(
-                    'visit',
-                    'all',
-                    [
-                        'methods' => 'GET',
-                        'callback' => fn() => ApiData::getAll(),
-                        'permission_callback' => fn() => true,
-                    ],
-                );
-            }
-        );
-
         add_action(
             'rest_api_init',
             function () {

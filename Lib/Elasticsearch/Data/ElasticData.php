@@ -2,7 +2,6 @@
 
 namespace VisitMarche\ThemeTail\Lib\Elasticsearch\Data;
 
-use AcMarche\Pivot\DependencyInjection\PivotContainer;
 use AcMarche\Pivot\Entities\Offre\Offre;
 use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
@@ -13,7 +12,6 @@ use VisitMarche\ThemeTail\Lib\PostUtils;
 use VisitMarche\ThemeTail\Lib\RouterPivot;
 use VisitMarche\ThemeTail\Lib\WpRepository;
 use WP_Post;
-use WP_Term;
 
 class ElasticData
 {
@@ -60,7 +58,7 @@ class ElasticData
             }
 
             $document = new DocumentElastic();
-            $document->id = $category->cat_ID;
+            $document->id = $this->createId($category->cat_ID, 'category');
             $document->name = Cleaner::cleandata($category->name);
             $document->excerpt = $description;
             $document->content = $content;
@@ -155,7 +153,7 @@ class ElasticData
         $content = apply_filters('the_content', $content);
 
         $document = new DocumentElastic();
-        $document->id = $post->ID;
+        $document->id = $this->createId($post->ID, 'post');
         $document->name = Cleaner::cleandata($post->post_title);
         $document->excerpt = Cleaner::cleandata($post->post_excerpt);
         $document->content = Cleaner::cleandata($content);
@@ -185,7 +183,7 @@ class ElasticData
 
         $today = new DateTime();
         $document = new DocumentElastic();
-        $document->id = $offre->codeCgt;
+        $document->id = $this->createId($offre->codeCgt, 'offer');
         $document->name = Cleaner::cleandata($offre->nameByLanguage($language));
         $document->excerpt = Cleaner::cleandata($offre->description);
         $document->content = Cleaner::cleandata($content);
@@ -197,36 +195,8 @@ class ElasticData
         return $document;
     }
 
-    private function getContentHades(WP_Term $category, string $language): string
+    private function createId(int|string $postId, string $type): string
     {
-        $content = '';
-        $categoryUtils = new WpRepository();
-        $filtres = $categoryUtils->getCategoryFilters($category->cat_ID);
-
-        if ([] !== $filtres) {
-            $pivotRepository = PivotContainer::getPivotRepository(WP_DEBUG);
-            $offres = $pivotRepository->fetchOffres($filtres);
-            array_map(
-                function ($offre) use ($category, $language) {
-                    $offre->url = RouterPivot::getUrlOffre($category->cat_ID, $offre->codeCgt);
-                    $offre->titre = $offre->nameByLanguage($language);
-                },
-                $offres
-            );
-            foreach ($offres as $offre) {
-                $content .= $offre->nameByLanguage($language);
-                $descriptions = $offre->descriptionsByLanguage($language);
-                if ([] !== $descriptions) {
-                    foreach ($descriptions as $description) {
-                        $content .= ' '.$description->value;
-                    }
-                }
-                foreach ($offre->tags as $tag) {
-                    $content .= ' '.$tag->labelByLanguage($language);
-                }
-            }
-        }
-
-        return $content;
+        return $type.'_'.$postId;
     }
 }

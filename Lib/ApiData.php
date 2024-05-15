@@ -6,7 +6,6 @@ use AcMarche\Pivot\DependencyInjection\PivotContainer;
 use Doctrine\ORM\NonUniqueResultException;
 use Psr\Cache\InvalidArgumentException;
 use VisitMarche\ThemeTail\Inc\Theme;
-use VisitMarche\ThemeTail\Lib\Elasticsearch\Data\ElasticData;
 use WP_Error;
 use WP_HTTP_Response;
 use WP_REST_Request;
@@ -93,20 +92,6 @@ class ApiData
         }
 
         return rest_ensure_response($offres);
-    }
-
-    /**
-     * Pour alimenter le moteur de recherche depuis l'extérieur.
-     */
-    public static function getAll(): \WP_Error|WP_HTTP_Response|WP_REST_Response
-    {
-        $data = [];
-        $elasticData = new ElasticData();
-        $data['posts'] = $elasticData->getPosts();
-        $data['categories'] = $elasticData->getCategories();
-        $data['offres'] = $elasticData->getOffres();
-
-        return rest_ensure_response($data);
     }
 
     public static function findShortsByNameOrCode(WP_REST_Request $request): \WP_Error|WP_HTTP_Response|WP_REST_Response
