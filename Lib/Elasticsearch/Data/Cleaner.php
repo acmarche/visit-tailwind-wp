@@ -4,7 +4,7 @@ namespace VisitMarche\ThemeTail\Lib\Elasticsearch\Data;
 
 class Cleaner
 {
-    public static function cleandata($data): string
+    public static function cleandata(string $data): string
     {
         $data = wp_strip_all_tags($data);
         $data = preg_replace('#&nbsp;#', ' ', $data);
