@@ -13,7 +13,6 @@ use Psr\Cache\InvalidArgumentException;
 use VisitMarche\ThemeTail\Entity\CommonItem;
 use VisitMarche\ThemeTail\Inc\CategoryMetaBox;
 use VisitMarche\ThemeTail\Inc\Theme;
-use VisitMarche\ThemeTail\Lib\Elasticsearch\Searcher;
 use WP_Post;
 use WP_Query;
 use WP_Term;
@@ -381,7 +380,7 @@ class WpRepository
         return $cache->get($cacheKey, function () use ($post) {
             $recommandations = $this->getSamePosts($post->ID);
             if (0 === \count($recommandations)) {
-                $searcher = new Searcher();
+                $searcher = PivotContainer::getSearchMeili(WP_DEBUG);
                 global $wp_query;
                 $recommandations = $searcher->searchRecommandations($wp_query);
             }

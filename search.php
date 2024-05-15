@@ -1,17 +1,17 @@
 <?php
 
-use VisitMarche\ThemeTail\Lib\Elasticsearch\Searcher;
+use AcMarche\Pivot\DependencyInjection\PivotContainer;
 use VisitMarche\ThemeTail\Lib\Mailer;
 use VisitMarche\ThemeTail\Lib\Twig;
 
 get_header();
-$searcher = new Searcher();
+$searcher = PivotContainer::getSearchMeili(WP_DEBUG);
 $keyword = get_search_query();
 $hits = [];
 
 if ($keyword) {
     try {
-        $results = $searcher->searchFromWww($keyword);
+        $results = $searcher->search($keyword);
         $hits = json_decode($results, null, 512, JSON_THROW_ON_ERROR);
     } catch (Exception $exception) {
         Twig::rend500Page($exception->getMessage());
