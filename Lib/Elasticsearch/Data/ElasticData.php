@@ -7,6 +7,7 @@ use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Exception;
 use InvalidArgumentException;
+use Symfony\Component\String\Slugger\AsciiSlugger;
 use VisitMarche\ThemeTail\Lib\Mailer;
 use VisitMarche\ThemeTail\Lib\PostUtils;
 use VisitMarche\ThemeTail\Lib\RouterPivot;
@@ -16,10 +17,12 @@ use WP_Post;
 class ElasticData
 {
     private WpRepository $wpRepository;
+    private AsciiSlugger $slugger;
 
     public function __construct()
     {
         $this->wpRepository = new WpRepository();
+        $this->slugger = new AsciiSlugger('fr_FR');
     }
 
     /**
@@ -60,8 +63,8 @@ class ElasticData
             $document = new DocumentElastic();
             $document->id = $this->createId($category->cat_ID, 'category');
             $document->name = Cleaner::cleandata($category->name);
-            $document->excerpt = $description;
-            $document->content = $content;
+            $document->excerpt = $this->slugger->slug($description, ' ')->toString();
+            $document->content = $this->slugger->slug($content, ' ')->toString();
             $document->tags = $tags;
             $document->date = $date;
             $document->url = get_category_link($category->cat_ID);
@@ -115,7 +118,6 @@ class ElasticData
         $datas = [];
 
         foreach ($this->wpRepository->getCategoriesFromWp() as $category) {
-
             try {
                 $offres = $this->wpRepository->findOffersByCategory($category->cat_ID);
             } catch (NonUniqueResultException|InvalidArgumentException|\Psr\Cache\InvalidArgumentException $e) {
@@ -177,16 +179,18 @@ class ElasticData
         if ([] !== $descriptions) {
             $offre->description = $offre->descriptions[0]->value;
             foreach ($descriptions as $description) {
-                $content .= ' '.$description->value;
+                if ($description->urn == 'urn:fld:descmarket') {
+                    $content .= ' '.$description->value;
+                }
             }
         }
 
         $today = new DateTime();
         $document = new DocumentElastic();
-        $document->id = $this->createId($offre->codeCgt, 'offer');
+        $document->id = $this->createId($offre->codeCgt.'-'.$language, 'offer');
         $document->name = Cleaner::cleandata($offre->nameByLanguage($language));
-        $document->excerpt = Cleaner::cleandata($offre->description);
-        $document->content = Cleaner::cleandata($content);
+        $document->excerpt = $this->slugger->slug($offre->description, ' ')->toString();
+        $document->content = $this->slugger->slug($content, ' ')->toString();
         $document->tags = $categories;
         $document->date = $today->format('Y-m-d');
         $document->url = $offre->url;
