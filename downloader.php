@@ -6,14 +6,12 @@ use phpGPX\phpGPX;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
-//define('ABSPATH', dirname(__DIR__).'/../../');//local
-define('ABSPATH', dirname(__DIR__).'/../../../');//ovh
-define('PATHGPX', dirname(__DIR__).'/../../');//ovh
+define('ABSPATH', dirname(__DIR__).'/../../');
 
 require_once ABSPATH.'vendor/autoload.php';
 
 $codeCgt = $_GET['codecgt'];
-$filePath = PATHGPX.'var/gpx/'.$codeCgt.'.'.phpGPX::XML_FORMAT;
+$filePath = ABSPATH.'var/gpx/'.$codeCgt.'.'.phpGPX::XML_FORMAT;
 $fileName = $codeCgt.'-file.gpx';
 
 if (is_readable($filePath)) {
