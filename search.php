@@ -31,7 +31,7 @@ Twig::rendPage(
         'image' => get_template_directory_uri().'/assets/tartine/bg_search.png',
         'keyword' => $keyword,
         'results' => $hits,
-        'count' => $results->count(),
+        'count' => $results?->count() ?? 0,
     ]
 );
 get_footer();
