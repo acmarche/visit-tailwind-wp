@@ -3,8 +3,10 @@
 namespace VisitMarche\ThemeTail\Lib;
 
 use AcMarche\Pivot\DependencyInjection\PivotContainer;
+use AcMarche\Pivot\Utils\CacheUtils;
 use Doctrine\ORM\NonUniqueResultException;
 use Psr\Cache\InvalidArgumentException;
+use Symfony\Contracts\Cache\ItemInterface;
 use VisitMarche\ThemeTail\Inc\Theme;
 use WP_Error;
 use WP_HTTP_Response;
@@ -155,7 +157,9 @@ class ApiData
     {
         $categoryWpId = 11;
         $cache = Cache::instance('walks');
-        $localites = $cache->get('localitesWalks-'.$categoryWpId, function () use ($categoryWpId) {
+        $localites = $cache->get('localitesWalks-'.$categoryWpId, function (ItemInterface $item) use ($categoryWpId) {
+            $item->expiresAfter(CacheUtils::DURATION);
+            $item->tag(CacheUtils::TAG);
             $localites = [];
             $wpRepository = new WpRepository();
             try {
@@ -185,7 +189,9 @@ class ApiData
         $categoryWpId = (int)$request->get_param('categoryId');
         $cache = Cache::instance('walks');
 
-        return rest_ensure_response($cache->get('walks-'.$categoryWpId.time(), function () use ($categoryWpId) {
+        return rest_ensure_response($cache->get('walks-'.$categoryWpId.time(), function (ItemInterface $item) use ($categoryWpId) {
+            $item->expiresAfter(CacheUtils::DURATION);
+            $item->tag(CacheUtils::TAG);
 
             $wpRepository = new WpRepository();
 

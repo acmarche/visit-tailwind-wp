@@ -7,9 +7,11 @@ use AcMarche\Pivot\DependencyInjection\PivotContainer;
 use AcMarche\Pivot\Entities\Offre\Offre;
 use AcMarche\Pivot\Entity\TypeOffre;
 use AcMarche\Pivot\Event\EventEnum;
+use AcMarche\Pivot\Utils\CacheUtils;
 use AcSort;
 use Doctrine\ORM\NonUniqueResultException;
 use Psr\Cache\InvalidArgumentException;
+use Symfony\Contracts\Cache\ItemInterface;
 use VisitMarche\ThemeTail\Entity\CommonItem;
 use VisitMarche\ThemeTail\Inc\CategoryMetaBox;
 use VisitMarche\ThemeTail\Inc\Theme;
@@ -91,7 +93,9 @@ class WpRepository
         $cacheKey = Cache::generateKey('sampepost'.$postId);
         $cache = Cache::instance('visit-wp');
 
-        return $cache->get($cacheKey, function () use ($postId) {
+        return $cache->get($cacheKey, function (ItemInterface $item) use ($postId) {
+            $item->expiresAfter(CacheUtils::DURATION);
+            $item->tag(CacheUtils::TAG);
             $categories = get_the_category($postId);
             $args = [
                 'category__in' => array_map(
@@ -231,34 +235,39 @@ class WpRepository
         }
         $cacheKey = Cache::generateKey($key);
 
-        return $cache->get($cacheKey, function () use ($currentCategoryId, $filtreSelected, $filtreType) {
-            if ($filtreSelected) {
-                if ($filtreType == FilterStd::TYPE_WP) {
-                    if ($category = get_category($filtreSelected)) {
-                        $offers = $this->findOffersByCategory(
-                            $category->term_id,
-                        );
+        return $cache->get(
+            $cacheKey,
+            function (ItemInterface $item) use ($currentCategoryId, $filtreSelected, $filtreType) {
+                $item->expiresAfter(CacheUtils::DURATION);
+                $item->tag(CacheUtils::TAG);
+                if ($filtreSelected) {
+                    if ($filtreType == FilterStd::TYPE_WP) {
+                        if ($category = get_category($filtreSelected)) {
+                            $offers = $this->findOffersByCategory(
+                                $category->term_id,
+                            );
 
-                        $posts = $this->getPostsByCatId($filtreSelected);
+                            $posts = $this->getPostsByCatId($filtreSelected);
 
-                        return $this->treatment($currentCategoryId, $offers, $posts);
-                    }
-                } else {
-                    $typeOffreRepository = PivotContainer::getTypeOffreRepository(WP_DEBUG);
-                    if ($typeOffre = $typeOffreRepository->find($filtreSelected)) {
-                        $offers = $this->findOffresByTypesOffre([$typeOffre]);
-                        $posts = [];
+                            return $this->treatment($currentCategoryId, $offers, $posts);
+                        }
+                    } else {
+                        $typeOffreRepository = PivotContainer::getTypeOffreRepository(WP_DEBUG);
+                        if ($typeOffre = $typeOffreRepository->find($filtreSelected)) {
+                            $offers = $this->findOffresByTypesOffre([$typeOffre]);
+                            $posts = [];
 
-                        return $this->treatment($currentCategoryId, $offers, $posts);
+                            return $this->treatment($currentCategoryId, $offers, $posts);
+                        }
                     }
                 }
+
+                $offres = $this->findOffersByCategory($currentCategoryId);
+                $posts = $this->getPostsByCatId($currentCategoryId);
+
+                return $this->treatment($currentCategoryId, $offres, $posts);
             }
-
-            $offres = $this->findOffersByCategory($currentCategoryId);
-            $posts = $this->getPostsByCatId($currentCategoryId);
-
-            return $this->treatment($currentCategoryId, $offres, $posts);
-        });
+        );
     }
 
     /**
@@ -377,7 +386,9 @@ class WpRepository
         $cacheKey = Cache::generateKey($key);
         $cache = Cache::instance('wprepo');
 
-        return $cache->get($cacheKey, function () use ($post) {
+        return $cache->get($cacheKey, function (ItemInterface $item) use ($post) {
+            $item->expiresAfter(CacheUtils::DURATION);
+            $item->tag(CacheUtils::TAG);
             $recommandations = $this->getSamePosts($post->ID);
             if (0 === \count($recommandations)) {
                 $searcher = PivotContainer::getSearchMeili(WP_DEBUG);
@@ -396,7 +407,9 @@ class WpRepository
         $cache = Cache::instance('wprepo');
 
         try {
-            return $cache->get($cacheKey, function () use ($offerRefer, $category, $language) {
+            return $cache->get($cacheKey, function (ItemInterface $item) use ($offerRefer, $category, $language) {
+                $item->expiresAfter(CacheUtils::DURATION);
+                $item->tag(CacheUtils::TAG);
                 if (count($offerRefer->see_also)) {
                     $offres = $offerRefer->see_also;
                 } else {
@@ -445,7 +458,9 @@ class WpRepository
         }
         $cache = Cache::instance('visit-wp');
 
-        return $cache->get($cacheKey, function () use ($filterSelected) {
+        return $cache->get($cacheKey, function (ItemInterface $item) use ($filterSelected) {
+            $item->expiresAfter(CacheUtils::DURATION);
+            $item->tag(CacheUtils::TAG);
             $pivotRepository = PivotContainer::getPivotRepository(WP_DEBUG);
             $args = [];
             if ($filterSelected) {
@@ -503,8 +518,9 @@ class WpRepository
         $cacheKey = Cache::generateKey('OffersShortByCodesCgt-'.json_encode($codesCgt));
         $cache = Cache::instance('visit-wp');
 
-        return $cache->get($cacheKey, function () use ($codesCgt) {
-
+        return $cache->get($cacheKey, function (ItemInterface $item) use ($codesCgt) {
+            $item->expiresAfter(CacheUtils::DURATION);
+            $item->tag(CacheUtils::TAG);
             $offers = [];
             try {
                 $offersShort = $this->getAllOffresShorts();
@@ -534,7 +550,10 @@ class WpRepository
         $cacheKey = Cache::generateKey('alloffershort-');
         $cache = Cache::instance('visit-wp');
 
-        return $cache->get($cacheKey, function () {
+        return $cache->get($cacheKey, function (ItemInterface $item) {
+            $item->expiresAfter(CacheUtils::DURATION);
+            $item->tag(CacheUtils::TAG);
+
             $offres = [];
             $pivotRepository = PivotContainer::getPivotRepository(WP_DEBUG);
             $responseJson = $pivotRepository->getAllDataFromRemote(true, QueryDetailEnum::QUERY_DETAIL_LVL_RESUME);
@@ -562,7 +581,9 @@ class WpRepository
         $cacheKey = Cache::generateKey('offrecgt-'.$codeCgt);
         $cache = Cache::instance('visit-wp');
 
-        return $cache->get($cacheKey, function () use ($codeCgt) {
+        return $cache->get($cacheKey, function (ItemInterface $item) use ($codeCgt) {
+            $item->expiresAfter(CacheUtils::DURATION);
+            $item->tag(CacheUtils::TAG);
             $pivotRepository = PivotContainer::getPivotRepository(WP_DEBUG);
 
             return $pivotRepository->fetchOffreByCgtAndParse($codeCgt);

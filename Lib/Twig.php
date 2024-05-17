@@ -45,6 +45,7 @@ class Twig
                 'cache' => $_ENV['APP_CACHE_DIR'] ?? Cache::getPathCache('twig'),
                 'debug' => WP_DEBUG,
                 'strict_variables' => WP_DEBUG,
+                'use_yield' => true,
             ]
         );
 

@@ -2,6 +2,7 @@
 
 namespace VisitMarche\ThemeTail\Lib;
 
+use AcMarche\Pivot\Utils\CacheUtils;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\String\UnicodeString;
@@ -25,9 +26,15 @@ class Cache
 
     public static function instance(string $folder): CacheInterface
     {
+        $cacheUtils = new CacheUtils();
+
         if (null !== self::$instanceObject) {
             return self::$instanceObject;
         }
+
+        self::$instanceObject = $cacheUtils->instance();
+
+        return self::$instanceObject;
 
         if (!isset($_ENV['APP_CACHE_DIR'])) {
             (new Dotenv())
@@ -43,6 +50,7 @@ class Cache
 
         return self::$instanceObject;
     }
+
     public static function generateKey(string $cacheKey): string
     {
         $keyUnicode = new UnicodeString($cacheKey);

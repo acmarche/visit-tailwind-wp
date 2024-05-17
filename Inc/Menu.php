@@ -2,8 +2,10 @@
 
 namespace VisitMarche\ThemeTail\Inc;
 
+use AcMarche\Pivot\Utils\CacheUtils;
 use Psr\Cache\InvalidArgumentException;
 use Symfony\Contracts\Cache\CacheInterface;
+use Symfony\Contracts\Cache\ItemInterface;
 use VisitMarche\ThemeTail\Lib\Cache;
 use VisitMarche\ThemeTail\Lib\IconeEnum;
 use VisitMarche\ThemeTail\Lib\LocaleHelper;
@@ -24,7 +26,10 @@ class Menu
     {
         $language = LocaleHelper::getSelectedLanguage();
 
-        return $this->cache->get(Cache::ICONES_NAME.$language.time(), function ($item) {
+        return $this->cache->get(Cache::ICONES_NAME.$language.time(), function (ItemInterface $item) {
+            $item->expiresAfter(CacheUtils::DURATION);
+            $item->tag(CacheUtils::TAG);
+
             $icones = [
                 'arts' => get_category_by_slug('arts'),
                 'balades' => get_category_by_slug('balades'),
@@ -61,7 +66,9 @@ class Menu
     {
         $language = LocaleHelper::getSelectedLanguage();
 
-        return $this->cache->get(Cache::MENU_NAME.$language, function ($item) {
+        return $this->cache->get(Cache::MENU_NAME.$language, function (ItemInterface $item) {
+            $item->expiresAfter(CacheUtils::DURATION);
+            $item->tag(CacheUtils::TAG);
             $menu = [
                 'sorganiser' => get_category_by_slug('sorganiser'),
                 'sejourner' => get_category_by_slug('sejourner'),
