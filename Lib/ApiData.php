@@ -189,7 +189,7 @@ class ApiData
         $categoryWpId = (int)$request->get_param('categoryId');
         $cache = Cache::instance('walks');
 
-        return rest_ensure_response($cache->get('walks-'.$categoryWpId.time(), function (ItemInterface $item) use ($categoryWpId) {
+        return rest_ensure_response($cache->get('walks-'.$categoryWpId, function (ItemInterface $item) use ($categoryWpId) {
             $item->expiresAfter(CacheUtils::DURATION);
             $item->tag(CacheUtils::TAG);
 
