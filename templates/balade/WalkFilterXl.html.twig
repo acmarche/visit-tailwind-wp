@@ -1,0 +1,45 @@
+<aside>
+    <h2 class="sr-only">Filières et localités</h2>
+    <!-- Mobile filter dialog toggle, controls the 'mobileFilterDialogOpen' state. -->
+    <button type="button" class="inline-flex items-center px-4 sm:px-0 lg:hidden" @click="menuOpen = true">
+          <img src="{{ template_uri() }}/assets/images/map/filter.svg" alt="icon">
+        <span class="text-sm font-medium text-carto-main">Filières et localités</span>
+        <svg class="ml-1 h-5 w-5 flex-shrink-0 text-gray-400" viewBox="0 0 20 20" fill="currentColor"
+             aria-hidden="true">
+            <path
+                    d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z"/>
+        </svg>
+    </button>
+    <div class="hidden lg:block lg:min-w-36">
+        <form class="space-y-10 divide-y divide-gray-200">
+            {% for facetName,filter in filters %}
+                <div>
+                    <div class="[&:not(:first-child)]:pt-10">
+                        <fieldset>
+                            <legend class="block text-sm font-medium text-gray-900">
+                                {{ facetName|title }}
+                            </legend>
+                            <div class="space-y-3 pt-6">
+                                {% for item in filter %}
+                                    <div class="flex flex-row items-center">
+                                        <input id="filter-{{ item.id }}" name="{{ facetName }}" value="{{ item.id }}"
+                                               :checked="isChecked('{{ facetName }}','{{ item.id }}')"
+                                               @change="manageFilters('{{ facetName }}','{{ item.id }}',$event)"
+                                               type="checkbox"
+                                               class="h-4 w-4 rounded border-carto-gray200 text-carto-pink focus:ring-carto-pink"
+                                        >
+                                        <label for="filter-{{ item.id }}"
+                                               class="ml-3 flex flex-row gap-2 items-center">
+                                            {% include '@VisitTail/balade/_icon_filter.html.twig' %}
+                                            <span class="text-sm text-carto-main">{{ item.name }}</span>
+                                        </label>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+            {% endfor %}
+        </form>
+    </div>
+</aside>
