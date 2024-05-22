@@ -78,6 +78,14 @@ class AssetsLoad
         );
 
         wp_enqueue_script(
+            'balades-js',
+            get_template_directory_uri().'/assets/js/alpine/balade.js',
+            [],
+            false,
+            false
+        );
+
+        wp_enqueue_script(
             'share-js',
             get_template_directory_uri().'/assets/js/alpine/share.js',
             [],
@@ -105,6 +113,18 @@ class AssetsLoad
         wp_register_script(
             'visitmarche-leaflet-js',
             'https://unpkg.com/leaflet@latest/dist/leaflet.js',
+            [],
+            null
+        );
+        wp_register_script(
+            'visitmarche-leaflet-markercluster-js',
+            'https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js',
+            [],
+            null
+        );
+        wp_register_style(
+            'visitmarche-leaflet-markercluster-css',
+            'https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css',
             [],
             null
         );
@@ -159,7 +179,7 @@ class AssetsLoad
 
     function addScriptAsModule(string $tag, string $handle, string $src): string
     {
-        if (!in_array($handle, ['vue-admin-filters-js', 'vue-admin-offers-js'])) {
+        if (!in_array($handle, ['balades-js', 'vue-admin-filters-js', 'vue-admin-offers-js'])) {
             return $tag;
         }
 
@@ -212,5 +232,11 @@ class AssetsLoad
     {
         wp_enqueue_style('visitmarche-slider-css');
         wp_enqueue_script('visitmarche-slider-js');
+    }
+
+    public static function enqueueMarkercluster(): void
+    {
+        wp_enqueue_style('visitmarche-leaflet-markercluster-css');
+        wp_enqueue_script('visitmarche-leaflet-markercluster-js');
     }
 }
