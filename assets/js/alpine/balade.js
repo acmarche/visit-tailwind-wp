@@ -7,9 +7,10 @@ document.addEventListener('alpine:init', () => {
         menuOpen: false,
         leafletLoaded: false,
         polyline: null,
-        markers:null,
+        markers: null,
         walksCount: 0,
         filtersSelected: {type: 11, localite: null},
+        offerSelected: null,
         codeCgtSelected: null,
         previewOpen: false,
         toggle() {
@@ -120,6 +121,11 @@ document.addEventListener('alpine:init', () => {
         },
         walkPreview(codeCgtSelected) {
             this.codeCgtSelected = codeCgtSelected
+            let allWalks = JSON.parse(document.getElementById('maincarto').dataset.markers)
+            let offerSelected = allWalks.filter(offer => offer.codeCgt == codeCgtSelected)
+            if (offerSelected.length > 0)
+                this.offerSelected = offerSelected[0]
+            console.log(this.offerSelected)
             this.previewOpen = true
             //   scrollUp()
         },
@@ -130,7 +136,7 @@ document.addEventListener('alpine:init', () => {
                     "weight": 5,
                     "opacity": 1
                 };
-                this.polyline = L.polyline(offer.locations, myStyle).addTo(map)
+                this.polyline = L.polyline(offer.locations, myStyle).addTo(this.map)
             }
         },
         removePolyline() {

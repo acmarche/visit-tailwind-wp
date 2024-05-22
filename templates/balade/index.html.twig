@@ -1,11 +1,7 @@
 <main x-data="balades" class="min-h-screen" data-markers="{{ dataString }}" id="maincarto">
     {{ include('@VisitTail/balade/WalkFilterMobile.html.twig') }}
-    {#   <VisitWalkFilterMobile v-model:filters-selected="filtersSelected" :filters="filters" v-model:menu-open="menuOpen"
-                           :data="data"/> #}
+    {{ include('@VisitTail/balade/WalkPreview.html.twig') }}
 
-    {#   {{ include('@VisitTail/balade/VisitWalkPreview.html.twig') }}
-    <VisitWalkPreview v-model:preview-open="previewOpen" :offer-selected="offerSelected"
-                      :key="codeCgt"/> #}
     <div class="mx-auto max-w-full px-0 py-8 sm:px-6 sm:py-12 lg:px-8">
         <div class="border-b border-gray-200 pb-6 px-4 sm:px-0">
             <h1 class="lobster-two-bold
@@ -27,8 +23,6 @@
         </div>
         <div class="pt-8 grid grid-cols-1 lg:gap-x-8 lg:grid-cols-[auto_minmax(0,1fr)]">
             {{ include('@VisitTail/balade/WalkFilterXl.html.twig') }}
-            {#   <VisitWalkFilterXl v-model:filters-selected="filtersSelected" :filters="filters" v-model:menu-open="menuOpen"
-                               :data/> #}
             <div class="mt-6 lg:mt-0">
                 <h2 class="text-xl lg:text-3xl text-carto-pink py-3 px-3" id="count-result">
                    <span x-text="walksCount"></span> balades trouvées
@@ -38,8 +32,6 @@
                     {#     <VisitList :data/> #}
                 </div>
                 {{ include('@VisitTail/balade/MapWalk.html.twig') }}
-                {#  <VisitMapWalk :data v-model:preview-open="previewOpen" :menu-selected="menuSelected"
-                              v-model:code-cgt="codeCgt"/> #}
             </div>
         </div>
     </div>

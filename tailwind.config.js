@@ -1,10 +1,10 @@
 /** @type {import('tailwindcss').Config} */
 const defaultTheme = require('tailwindcss/defaultTheme');
 module.exports = {
-  content: [
-         "./templates/**/*.{js,ts,jsx,html,twig}",
-  ],
-  theme: {
+    content: [
+        "./templates/**/*.{js,ts,jsx,html,twig}",
+    ],
+    theme: {
         extend: {
             fontFamily: {
                 montserrat: ["Montserrat", ...defaultTheme.fontFamily.sans],
@@ -56,7 +56,15 @@ module.exports = {
                     basic: '#808080FF',
                 },
                 bglighter: '#ededec',
-                body: '#212529'
+                body: '#212529',
+                carto: {
+                    main: '#354254',
+                    pink: '#bd2d86',
+                    gray300: '#6b7e9b',
+                    gray200: '#a8b2c1',
+                    gray100: '#e6e3e3',
+                    green: '#bdc900',
+                }
             },
             boxShadow: {
                 topNav: '0 -3px 0 0 #fd8383 inset',
@@ -68,7 +76,23 @@ module.exports = {
                 'top-center': 'top center',
                 'center-center': 'center center',
                 'bottom-center': 'bottom center',
-            }
+            },
+            keyframes: {
+                shimmer: {
+                    '0%': {
+                        backgroundPosition: 'left',
+                    },
+                    '50%': {
+                        backgroundPosition: 'right',
+                    },
+                    '100%': {
+                        backgroundPosition: 'left',
+                    },
+                },
+            },
+            animation: {
+                shimmer: '6s infinite shimmer ease-in-out',
+            },
         },
     },
     plugins: [
