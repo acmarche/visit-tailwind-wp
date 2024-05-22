@@ -1,4 +1,4 @@
-<main x-data="balades" class="min-h-screen">
+<main x-data="balades" class="min-h-screen" data-markers="{{ dataString }}" id="maincarto">
     {{ include('@VisitTail/balade/WalkFilterMobile.html.twig') }}
     {#   <VisitWalkFilterMobile v-model:filters-selected="filtersSelected" :filters="filters" v-model:menu-open="menuOpen"
                            :data="data"/> #}
@@ -31,7 +31,7 @@
                                :data/> #}
             <div class="mt-6 lg:mt-0">
                 <h2 class="text-xl lg:text-3xl text-carto-pink py-3 px-3" id="count-result">
-                    {{ data|length }} balades trouvées
+                   <span x-text="walksCount"></span> balades trouvées
                 </h2>
                 <div x-show="menuSelected === 'list'">
                     {#  {{ include('@VisitTail/balade/VisitList.html.twig') }} #}
@@ -44,28 +44,3 @@
         </div>
     </div>
 </main>
-<script type="module">
-    document.addEventListener('alpine:init', () => {
-        /*   Alpine.data('balades', () => ({
-               isOpen: false,
-               leafletLoaded: false,
-               toggle() {
-                   this.isOpen = !this.isOpen
-                   this.$refs.leaflet.innerHTML = 'Loading...';
-                   this.loadLeaflet();
-               },
-               jf() {
-                   console.log('jf')
-               },
-               loadLeaflet() {
-                   if (this.leafletLoaded) return;
-                   this.leafletLoaded = true;
-                   // do something with
-                   const map = new Map("map").setView([51.505, -0.09], 13);
-                   //const map = L.map(this.$refs.leaflet)//... etc
-               }
-           }));*/
-    });
-    //import { initBalades } from '../../wp-content/themes/visittail/assets/js/alpine/balade.js';
-    //initBalades()
-</script>
