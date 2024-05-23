@@ -21,6 +21,13 @@ $filters = $cache->get('filters_walk3', function () use ($post) {
 });
 AssetsLoad::enqueueLeaflet();
 AssetsLoad::enqueueMarkercluster();
+add_action('wp_head', fn() => my_custom_styles(), 100);
+
+function my_custom_styles()
+{
+    echo "<style>#mainheader {background-color: black;}</style>";
+}
+
 get_header();
 Twig::rendPage(
     '@VisitTail/balade/index.html.twig',
