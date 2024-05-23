@@ -42,7 +42,12 @@ document.addEventListener('alpine:init', () => {
             }
         },
         toggleCollapsation(id) {
-
+            if (this.tabOpen === id) {
+                this.tabOpen = -1 //close
+            } else {
+                this.tabOpen = id
+            }
+            console.log(this.tabOpen)
         },
         isChecked(name, value) {
             if (name === 'localite') {

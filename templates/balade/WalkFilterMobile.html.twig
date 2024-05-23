@@ -31,7 +31,7 @@ Off-canvas menu for mobile, show/hide based on off-canvas menu state.
         <div x-show="menuOpen"
              class="relative ml-auto flex h-full w-full max-w-xs flex-col overflow-y-auto bg-white py-4 pb-6 shadow-xl">
             <div class="flex items-center justify-between px-4">
-                <h2 class="text-lg font-medium text-carto-main">Filières et localités</h2>
+                <h2 class="text-lg font-medium text-carto-main">Types et localités</h2>
                 <button type="button"
                         class="-mr-2 flex h-10 w-10 items-center justify-center p-2 text-carto-gray200 hover:text-carto-gray300"
                         @click="menuOpen = false">
@@ -54,19 +54,19 @@ Off-canvas menu for mobile, show/hide based on off-canvas menu state.
                                     <button type="button"
                                             class="flex w-full items-center justify-between p-2 text-gray-400 hover:text-gray-500"
                                             aria-controls="filter-section-0" aria-expanded="false"
-                                            @click="toggleCollapsation({{ loop.index }})">
-                                        <span class="text-sm font-medium text-gray-900">{{ facetName }}</span>
+                                            @click="toggleCollapsation('{{ loop.index }}')">
+                                        <span class="text-sm font-medium text-gray-900">{{ facetName|title }}</span>
                                         <span class="ml-6 flex h-7 items-center">
                                               <!--
                                                 Expand/collapse icon, toggle classes based on section open state.
 
                                                 Open: "-rotate-180", Closed: "rotate-0"
                                               -->
-                                              <svg class="rotate-0 h-5 w-5 transform" viewBox="0 0 20 20"
+                                              <svg class="h-5 w-5 transform" viewBox="0 0 20 20"
                                                    fill="currentColor"
                                                    aria-hidden="true"
                                                    x-state:on="Open" x-state:off="Closed"
-                                                   :class="tabOpen === {{ loop.index }} ? 'rotate-0': '-rotate-180'">
+                                                   :class="tabOpen == {{ loop.index }} ? 'rotate-0': '-rotate-180'">
                                                 <path fill-rule="evenodd"
                                                       d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
                                                       clip-rule="evenodd"/>
@@ -74,7 +74,7 @@ Off-canvas menu for mobile, show/hide based on off-canvas menu state.
                                         </span>
                                     </button>
                                 </legend>
-                                <div class="px-4 pb-2 pt-4" id="filter-section-0" v-show="tabOpen === index">
+                                <div class="px-4 pb-2 pt-4" id="filter-section-0" x-show="tabOpen == {{ loop.index }}">
                                     <div class="space-y-6">
                                         {% for item in filter %}
                                             <div class="flex items-center">
