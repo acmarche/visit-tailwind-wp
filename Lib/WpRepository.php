@@ -602,4 +602,56 @@ class WpRepository
         return $categories;
     }
 
+    public function getAllWalks(): array
+    {
+        try {
+            $offres = $this->findOffersByCategory(Theme::CATEGORY_BALADES);
+        } catch (NonUniqueResultException|InvalidArgumentException $e) {
+            return [];
+        }
+
+        $gpxViewer = new GpxViewer();
+        $offers = [];
+        foreach ($offres as $offre) {
+            try {
+                $locations = [];
+                if (count($offre->gpxs) > 0) {
+                    $gpx = $offre->gpxs[0];
+                    foreach ($gpxViewer->getLocations($gpx) as $location) {
+                        $locations[] = [$location['latitude'], $location['longitude']];
+                    }
+                }
+                $offers[] = [
+                    'codeCgt' => $offre->codeCgt,
+                    'nom' => $offre->nom,
+                    'url' => RouterPivot::getUrlOffre(Theme::CATEGORY_BALADES, $offre->codeCgt),
+                    'images' => $offre->images,
+                    'address' => $offre->adresse1,
+                    'localite' => $offre->adresse1->localite[0]->value,
+                    'type' => self::getTypeWalk($offre->codeCgt),
+                    'locations' => $locations,
+                    'gpx_duree' => $offre->gpx_duree,
+                    'gpx_difficulte' => $offre->gpx_difficulte,
+                    'gpx_distance' => $offre->gpx_distance,
+                ];
+            } catch (\Exception $e) {
+                return [];
+            }
+        }
+
+        return $offers;
+    }
+
+    private static function getTypeWalk(string $codeCgt): int
+    {
+        $wpFilterRepository = new WpFilterRepository();
+        if (in_array($codeCgt, $wpFilterRepository->getCodesCgtByCategoryId(Theme::CATEGORY_BIKE))) {
+            return Theme::CATEGORY_BIKE;
+        }
+        if (in_array($codeCgt, $wpFilterRepository->getCodesCgtByCategoryId(Theme::CATEGORY_HORSE))) {
+            return Theme::CATEGORY_HORSE;
+        }
+
+        return Theme::CATEGORY_FOOT;
+    }
 }

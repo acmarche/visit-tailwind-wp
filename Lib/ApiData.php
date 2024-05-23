@@ -3,10 +3,8 @@
 namespace VisitMarche\ThemeTail\Lib;
 
 use AcMarche\Pivot\DependencyInjection\PivotContainer;
-use AcMarche\Pivot\Utils\CacheUtils;
 use Doctrine\ORM\NonUniqueResultException;
 use Psr\Cache\InvalidArgumentException;
-use Symfony\Contracts\Cache\ItemInterface;
 use VisitMarche\ThemeTail\Inc\Theme;
 use WP_Error;
 use WP_HTTP_Response;
@@ -138,117 +136,6 @@ class ApiData
 
         return rest_ensure_response($offers);
     }
-
-    public static function getAllWalkFilters(WP_REST_Request $request
-    ): WP_Error|WP_REST_Response|WP_HTTP_Response {
-
-        $categoryWpId = (int)$request->get_param('categoryId');
-
-        $wpFilterRepository = new WpFilterRepository();
-        $types = $wpFilterRepository->getCategoryFilters($categoryWpId);
-
-        return rest_ensure_response([
-            'type' => $types,
-            'localite' => self::localites(),
-        ]);
-    }
-
-    private static function localites(): array
-    {
-        $categoryWpId = 11;
-        $cache = Cache::instance('walks');
-        $localites = $cache->get('localitesWalks-'.$categoryWpId, function (ItemInterface $item) use ($categoryWpId) {
-            $item->expiresAfter(CacheUtils::DURATION);
-            $item->tag(CacheUtils::TAG);
-            $localites = [];
-            $wpRepository = new WpRepository();
-            try {
-                $offres = $wpRepository->findOffersByCategory($categoryWpId);
-                foreach ($offres as $offre) {
-                    if ($offre->adresse1) {
-                        if ($localite = $offre->adresse1->localite) {
-                            $localites[$localite[0]->value] = [
-                                'id' => $localite[0]->value,
-                                'name' => $localite[0]->value,
-                            ];
-                        }
-                    }
-                }
-
-                return PostUtils::sortArrayByName(array_values($localites));
-            } catch (NonUniqueResultException|InvalidArgumentException $e) {
-                return [];
-            }
-        });
-
-        return $localites;
-    }
-
-    public static function getAllWalks(WP_REST_Request $request
-    ): WP_Error|WP_REST_Response|WP_HTTP_Response {
-        $categoryWpId = (int)$request->get_param('categoryId');
-        $cache = Cache::instance('walks');
-
-        return rest_ensure_response($cache->get('walks-'.$categoryWpId, function (ItemInterface $item) use ($categoryWpId) {
-            $item->expiresAfter(CacheUtils::DURATION);
-            $item->tag(CacheUtils::TAG);
-
-            $wpRepository = new WpRepository();
-
-            try {
-                $offres = $wpRepository->findOffersByCategory($categoryWpId);
-            } catch (NonUniqueResultException|InvalidArgumentException $e) {
-                $offres = [];
-            }
-
-            $gpxViewer = new GpxViewer();
-            $offers = [];
-            foreach ($offres as $offre) {
-                try {
-                    $locations = [];
-                    if (count($offre->gpxs) > 0) {
-                        $gpx = $offre->gpxs[0];
-                        foreach ($gpxViewer->getLocations($gpx) as $location) {
-                            $locations[] = [$location['latitude'], $location['longitude']];
-                        }
-                    }
-                    $offers[] = [
-                        'codeCgt' => $offre->codeCgt,
-                        'nom' => $offre->nom,
-                        'url' => RouterPivot::getUrlOffre($categoryWpId, $offre->codeCgt),
-                        'images' => $offre->images,
-                        'address' => $offre->adresse1,
-                        'localite' => $offre->adresse1->localite[0]->value,
-                        'type' => self::getTypeWalk($offre->codeCgt),
-                        'locations' => $locations,
-                        'gpx_duree' => $offre->gpx_duree,
-                        'gpx_difficulte' => $offre->gpx_difficulte,
-                        'gpx_distance' => $offre->gpx_distance,
-                    ];
-                } catch (\Exception|InvalidArgumentException $e) {
-
-                }
-            }
-
-            return rest_ensure_response($offers);
-        }));
-    }
-
-    private static function getTypeWalk(string $codeCgt): int
-    {
-        $wpFilterRepository = new WpFilterRepository();
-        $id = 130;//bike
-        if (in_array($codeCgt, $wpFilterRepository->getCodesCgtByCategoryId($id))) {
-            return $id;
-        }
-        $id = 132;//horse
-        if (in_array($codeCgt, $wpFilterRepository->getCodesCgtByCategoryId($id))) {
-            return $id;
-        }
-
-        return 131;//foot
-    }
-
 
     public static function offerByCodeCgt(WP_REST_Request $request
     ): WP_Error|WP_REST_Response|WP_HTTP_Response {

@@ -4,21 +4,30 @@ namespace VisitMarche\ThemeTail;
 
 use AcMarche\Pivot\Utils\CacheUtils;
 use VisitMarche\ThemeTail\Inc\AssetsLoad;
+use VisitMarche\ThemeTail\Inc\Theme;
 use VisitMarche\ThemeTail\Lib\Twig;
+use VisitMarche\ThemeTail\Lib\WpFilterRepository;
+use VisitMarche\ThemeTail\Lib\WpRepository;
 
 global $post;
 $cacheUtils = new CacheUtils();
 $cache = $cacheUtils->instance();
 
-$dataString = $cache->get('list_walks2', function () use ($post) {
-    return file_get_contents('https://www.visitmarche.be/wp-json/pivot/walks_list/11');
+$dataString = $cache->get('list_walks', function () use ($post) {
+    $wpRepository = new WpRepository();
+
+    return json_encode($wpRepository->getAllWalks());
 });
 
-$filters = $cache->get('filters_walk3', function () use ($post) {
-    $object = json_decode(file_get_contents('https://www.visitmarche.be/wp-json/pivot/walk_filters/11'));
+$filters = $cache->get('filters_walk', function () use ($post) {
+    $wpFilterRepository = new WpFilterRepository();
 
-    return ['type' => $object->type, 'localites' => $object->localite];
+    return [
+        'type' => $wpFilterRepository->getCategoryFilters(Theme::CATEGORY_BALADES),
+        'localite' => WpFilterRepository::getLocalites(),
+    ];
 });
+
 AssetsLoad::enqueueLeaflet();
 AssetsLoad::enqueueMarkercluster();
 add_action('wp_head', fn() => my_custom_styles(), 100);

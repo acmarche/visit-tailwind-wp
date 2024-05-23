@@ -175,4 +175,27 @@ class WpFilterRepository
 
         return $offers;
     }
+
+    public static function getLocalites(): array
+    {
+        $wpRepository = new WpRepository();
+        try {
+            $localites = [];
+            $offres = $wpRepository->findOffersByCategory(Theme::CATEGORY_BALADES);
+            foreach ($offres as $offre) {
+                if ($offre->adresse1) {
+                    if ($localite = $offre->adresse1->localite) {
+                        $localites[$localite[0]->value] = [
+                            'id' => $localite[0]->value,
+                            'name' => $localite[0]->value,
+                        ];
+                    }
+                }
+            }
+
+            return PostUtils::sortArrayByName(array_values($localites));
+        } catch (\Exception) {
+            return [];
+        }
+    }
 }
