@@ -1,10 +1,10 @@
-<main x-data="balades" class="min-h-screen mt-24" data-markers="{{ dataString }}" id="maincarto">
+<main x-data="balades" class="min-h-screen mt-16 md:mt-24" data-markers="{{ dataString }}" id="maincarto">
     {{ include('@VisitTail/balade/WalkFilterMobile.html.twig') }}
     {{ include('@VisitTail/balade/WalkPreview.html.twig') }}
 
     <div class="mx-auto max-w-full px-0 py-8 sm:px-6 sm:py-12 lg:px-8">
         <div class="border-b border-gray-200 pb-6 px-4 sm:px-0">
-            <h1 class="lobster-two-bold
+            <h1 class="hidden md:block montserrat-medium
         mx-auto max-w-max
         bg-slate-400
         bg-gradient-to-r from-carto-pink via-carto-main to-carto-gray200
@@ -14,9 +14,9 @@
         animate-shimmer">
                 Réseau balades Marche-en-Famenne
             </h1>
-            <h1 class="text-4xl font-bold lobster-two-bold tracking-tight text-carto-pink">Carte dynamique</h1>
+            <h1 class="text-2xl md:text-4xl font-bold montserrat-medium tracking-tight text-carto-pink">Carte dynamique</h1>
             <p class="mt-4 text-2xl text-carto-main lobster-two-regular-italic">
-                Vous trouverez sur cette carte les balades à pied, à vélo au sein de la commune de Marche-en-Famenne
+                Vous trouverez sur cette carte les balades à pied, à vélo au sein de la commune de Marche-en-Famenne.
             </p>
         </div>
         <div class="pt-8 grid grid-cols-1 lg:gap-x-8 lg:grid-cols-[auto_minmax(0,1fr)]">
