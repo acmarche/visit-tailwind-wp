@@ -3,7 +3,7 @@
     <div class="mx-auto px-0 py-0 sm:px-4 sm:py-2 w-screen h-dvh" id="walks_map">
 
     </div>
-    <button type="button" class="absolute bottom-0 right-0 mx-2 mb-6 z-[1000] md:hidden" @click="scrollUp"
+    <button type="button" class="absolute bottom-0 right-0 mx-2 mb-6 z-[1000] md:hidden" @click="window.scrollTo(0, 0);"
             title="Remonter">
         <img src="{{ template_uri() }}/assets/images/map/map-up.svg" alt="icon" class="w-12 h-12 hover:text-carto-pink">
     </button>
