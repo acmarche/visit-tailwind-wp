@@ -74,6 +74,8 @@
                        class="flex flex-row text-carto-pink mt-3" x-text="`Détails de la balade`">
                         <img src="{{ template_uri() }}/assets/images/map/link.svg" alt="icon">
                     </a>
+
+                    <img :src="offerSelected?.image" class="" alt="img"/>
                 </div>
                 <footer class="h-12 bg-carto-green text-white flex flex-col w-full p-3">visitmarche.be</footer>
             </section>

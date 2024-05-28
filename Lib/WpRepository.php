@@ -631,6 +631,7 @@ class WpRepository
                     'nom' => $offre->nom,
                     'url' => RouterPivot::getUrlOffre(Theme::CATEGORY_BALADES, $offre->codeCgt),
                     'images' => $offre->images,
+                    'image' => count($offre->images) > 0 ? $offre->images[0] : null,
                     'address' => $offre->adresse1,
                     'localite' => $offre->adresse1->localite[0]->value,
                     'type' => self::getTypeWalk($offre->codeCgt),
