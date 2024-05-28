@@ -2569,6 +2569,11 @@ img, video, iframe {
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
 }
 
+.bg-amber-200 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(253 230 138 / var(--tw-bg-opacity));
+}
+
 .bg-opacity-25 {
   --tw-bg-opacity: 0.25;
 }
@@ -2957,6 +2962,10 @@ img, video, iframe {
 
 .tracking-tight {
   letter-spacing: -0.025em;
+}
+
+.tracking-wider {
+  letter-spacing: 0.05em;
 }
 
 .text-bglighter {
@@ -4087,12 +4096,24 @@ img, video, iframe {
     width: 100%;
   }
 
+  .xl\:w-\[560px\] {
+    width: 560px;
+  }
+
+  .xl\:w-\[580px\] {
+    width: 580px;
+  }
+
   .xl\:max-w-3xl {
     max-width: 48rem;
   }
 
   .xl\:max-w-\[36rem\] {
     max-width: 36rem;
+  }
+
+  .xl\:max-w-\[39rem\] {
+    max-width: 39rem;
   }
 
   .xl\:basis-1\/5 {
