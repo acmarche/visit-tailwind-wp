@@ -604,6 +604,7 @@ class WpRepository
 
     public function getAllWalks(): array
     {
+        $skip = ["LOD-01-0AVJ-77ZN"];
         try {
             $offres = $this->findOffersByCategory(Theme::CATEGORY_BALADES);
         } catch (NonUniqueResultException|InvalidArgumentException $e) {
@@ -613,6 +614,10 @@ class WpRepository
         $gpxViewer = new GpxViewer();
         $offers = [];
         foreach ($offres as $offre) {
+            if (in_array($offre->codeCgt, $skip)) {
+                continue;
+            }
+
             try {
                 $locations = [];
                 if (count($offre->gpxs) > 0) {
@@ -621,7 +626,7 @@ class WpRepository
                         $locations[] = [$location['latitude'], $location['longitude']];
                     }
                 }
-                $offers[] = [
+                $offers[$offre->codeCgt] = [
                     'codeCgt' => $offre->codeCgt,
                     'nom' => $offre->nom,
                     'url' => RouterPivot::getUrlOffre(Theme::CATEGORY_BALADES, $offre->codeCgt),
@@ -639,7 +644,7 @@ class WpRepository
             }
         }
 
-        return $offers;
+        return array_values($offers);
     }
 
     private static function getTypeWalk(string $codeCgt): int

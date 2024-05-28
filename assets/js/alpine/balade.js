@@ -47,7 +47,6 @@ document.addEventListener('alpine:init', () => {
             } else {
                 this.tabOpen = id
             }
-            console.log(this.tabOpen)
         },
         isChecked(name, value) {
             if (name === 'localite') {
@@ -130,7 +129,7 @@ document.addEventListener('alpine:init', () => {
             let offerSelected = allWalks.filter(offer => offer.codeCgt == codeCgtSelected)
             if (offerSelected.length > 0)
                 this.offerSelected = offerSelected[0]
-            console.log(this.offerSelected)
+            console.log(this.offerSelected.gpx_distance) + ' km'
             this.previewOpen = true
             //   scrollUp()
         },

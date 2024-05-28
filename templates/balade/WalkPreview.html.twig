@@ -30,14 +30,15 @@
                 {{ include('@VisitTail/balade/_headerPreview.html.twig') }}
                 <div class="flex flex-col flex-auto gap-2 p-3">
                     <h3 class="lg roboto-bold">DETAILS DU PARCOURS</h3>
+
                     <address class="flex flex-row items-center gap-2">
-                        <IconNavigation/>
+                        <img src="{{ template_uri() }}/assets/images/map/navigation.svg" alt="icon">
                         <span x-text="offerSelected?.address.rue"></span>
                         <span x-text="offerSelected?.localite"></span>
                         <span x-text="offerSelected?.address.lieuPrecis"></span>
                     </address>
                     <template x-if="offerSelected?.webs?.length > 0 ">
-                        <div>
+                        <div class="flex flex-col items-center gap-2">
                             <p class="">Site web</p>
                             <template x-for="(web, index) in offerSelected?.webs" :key="index">
                                 <a :href="web.value" target="_blank"
@@ -45,28 +46,33 @@
                             </template>
                         </div>
                     </template>
-                    <template x-if="offerSelected?.gpx_duree">
-                        <p class="flex flex-row" x-text="offerSelected.gpx_duree">
-                            <IconClock class="w-6 h-6"/>
-                        </p>
-                    </template>
-                    <template x-if="offerSelected?.gpx_difficulte">
-                        <p class="flex flex-row"
-                           x-text="offerSelected.gpx_difficulte">
-                            <IconGraph class="w-6 h-6"/>
-                        </p>
-                    </template>
-                    <template x-if="offerSelected?.gpx_distance">
-                        <p class="flex flex-row"
-                           x-text="offerSelected.gpx_distance">
-                            <IconWalk class="w-6 h-6"/>
-                            km
-                        </p>
-                    </template>
+
+                    <div class="flex flex-row items-center gap-2">
+                        <span class="montserrat-semi-bold text-cta-dark">Durée:</span>
+                        <span class="flex flex-row" x-text="offerSelected?.gpx_duree">
+                            <img src="{{ template_uri() }}/assets/images/map/clock.svg" alt="icon">
+                        </span>
+                    </div>
+
+                    <div class="flex flex-row items-center gap-2">
+                        <span class="montserrat-semi-bold text-cta-dark">Difficulté:</span>
+                        <span class="flex flex-row"
+                              x-text="offerSelected?.gpx_difficulte">
+                            <img src="{{ template_uri() }}/assets/images/map/graph.svg" alt="icon">
+                        </span>
+                    </div>
+                    <div class="flex flex-row items-center gap-2">
+                        <span class="montserrat-semi-bold text-cta-dark">Distance (Km):</span>
+                        <span class="flex flex-row">
+                            <span x-text="offerSelected?.gpx_distance"></span>
+                            <img src="{{ template_uri() }}/assets/images/map/walk.svg" alt="icon">
+                        </span>
+                    </div>
+
                     <a :href="offerSelected?.url"
                        target="_blank"
-                       class="flex flex-row" x-text="`Détails sur`">
-                        <IconLink class="w-6 h-6"/>
+                       class="flex flex-row text-carto-pink mt-3" x-text="`Détails de la balade`">
+                        <img src="{{ template_uri() }}/assets/images/map/link.svg" alt="icon">
                     </a>
                 </div>
                 <footer class="h-12 bg-carto-green text-white flex flex-col w-full p-3">visitmarche.be</footer>

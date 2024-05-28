@@ -3,7 +3,7 @@
         <h2 class="text-2xl lobster-two-bold" x-text="offerSelected?.nom ?? 'Chargement'"></h2>
         <button type="button"
                 class="-mr-2 flex h-10 w-10 items-center justify-center p-2 text-white hover:text-carto-gray300"
-                @click="previewOpen = false">
+                @click="previewOpen = false;offerSelected=null">
             <span class="sr-only">Fermer le menu</span>
             <svg class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                  stroke="currentColor" aria-hidden="true">
