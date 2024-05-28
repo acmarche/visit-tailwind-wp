@@ -31,11 +31,11 @@
                 <div class="flex flex-col flex-auto gap-2 p-3">
                     <h3 class="lg roboto-bold">DETAILS DU PARCOURS</h3>
 
+                    <h4 class="montserrat-semi-bold text-cta-dark">Point de départ</h4>
                     <address class="flex flex-row items-center gap-2">
                         <img src="{{ template_uri() }}/assets/images/map/navigation.svg" alt="icon">
                         <span x-text="offerSelected?.address.rue"></span>
                         <span x-text="offerSelected?.localite"></span>
-                        <span x-text="offerSelected?.address.lieuPrecis"></span>
                     </address>
                     <template x-if="offerSelected?.webs?.length > 0 ">
                         <div class="flex flex-col items-center gap-2">
