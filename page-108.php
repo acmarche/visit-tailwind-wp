@@ -5,6 +5,8 @@ namespace VisitMarche\ThemeTail;
 use VisitMarche\ThemeTail\Lib\PostUtils;
 use VisitMarche\ThemeTail\Lib\Twig;
 
+header('Location: /fr');
+exit();
 get_header();
 
 global $post;

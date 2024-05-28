@@ -3937,6 +3937,10 @@ img, video, iframe {
     position: absolute;
   }
 
+  .xl\:relative {
+    position: relative;
+  }
+
   .xl\:-top-20 {
     top: -5rem;
   }
