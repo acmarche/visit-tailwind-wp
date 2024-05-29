@@ -3871,6 +3871,10 @@ img, video, iframe {
     padding: 1rem;
   }
 
+  .md\:pt-60 {
+    padding-top: 15rem;
+  }
+
   .md\:text-4xl {
     font-size: 2.25rem;
     line-height: 2.5rem;
