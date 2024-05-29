@@ -129,9 +129,7 @@ document.addEventListener('alpine:init', () => {
             let offerSelected = allWalks.filter(offer => offer.codeCgt == codeCgtSelected)
             if (offerSelected.length > 0)
                 this.offerSelected = offerSelected[0]
-            console.log(this.offerSelected.gpx_distance) + ' km'
             this.previewOpen = true
-            //   scrollUp()
         },
         drawPolyline(offer) {
             if (offer.locations.length > 0) {
