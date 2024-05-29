@@ -2569,11 +2569,6 @@ img, video, iframe {
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
 }
 
-.bg-amber-200 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(253 230 138 / var(--tw-bg-opacity));
-}
-
 .bg-opacity-25 {
   --tw-bg-opacity: 0.25;
 }
@@ -2843,16 +2838,20 @@ img, video, iframe {
   padding-top: 1rem;
 }
 
+.pt-48 {
+  padding-top: 12rem;
+}
+
 .pt-6 {
   padding-top: 1.5rem;
 }
 
-.pt-60 {
-  padding-top: 15rem;
-}
-
 .pt-8 {
   padding-top: 2rem;
+}
+
+.pt-40 {
+  padding-top: 10rem;
 }
 
 .text-left {
@@ -2966,11 +2965,6 @@ img, video, iframe {
 
 .tracking-wider {
   letter-spacing: 0.05em;
-}
-
-.text-bglighter {
-  --tw-text-opacity: 1;
-  color: rgb(237 237 236 / var(--tw-text-opacity));
 }
 
 .text-body {
@@ -3798,6 +3792,10 @@ img, video, iframe {
     padding-bottom: 0.5rem;
   }
 
+  .sm\:pt-60 {
+    padding-top: 15rem;
+  }
+
   .sm\:text-sm {
     font-size: 0.875rem;
     line-height: 1.25rem;
@@ -3882,6 +3880,11 @@ img, video, iframe {
     font-size: 1.125rem;
     line-height: 1.75rem;
   }
+
+  .md\:text-2xl {
+    font-size: 1.5rem;
+    line-height: 2rem;
+  }
 }
 
 @media (min-width: 1024px) {
@@ -3944,10 +3947,6 @@ img, video, iframe {
 
   .xl\:absolute {
     position: absolute;
-  }
-
-  .xl\:relative {
-    position: relative;
   }
 
   .xl\:-top-20 {
@@ -4084,8 +4083,8 @@ img, video, iframe {
     width: 22rem;
   }
 
-  .xl\:w-\[512px\] {
-    width: 512px;
+  .xl\:w-\[580px\] {
+    width: 580px;
   }
 
   .xl\:w-auto {
@@ -4096,20 +4095,8 @@ img, video, iframe {
     width: 100%;
   }
 
-  .xl\:w-\[560px\] {
-    width: 560px;
-  }
-
-  .xl\:w-\[580px\] {
-    width: 580px;
-  }
-
   .xl\:max-w-3xl {
     max-width: 48rem;
-  }
-
-  .xl\:max-w-\[36rem\] {
-    max-width: 36rem;
   }
 
   .xl\:max-w-\[39rem\] {
