@@ -1,35 +1,21 @@
-<div class="h-[37rem] border border-red-300">
-    <div class="relative h-full w-full bg-gradient-to-r from-pink-300/50 via-purple-300/50 to-indigo-400/50">
-        {% if video is defined and video != '' %}
-            <video class="w-full h-full object-cover object-center absolute mix-blend-overlay" controls autoplay loop
-                   muted>
-                <source
-                        src="{{ video }}"
-                        type="video/mp4"
-                        poster="{{ image }}"
-                />
-                <img class="w-full h-full object-cover object-center absolute mix-blend-overlay"
-                        {% if imagePosition is defined %} style="{{ 'object-position :'~ imagePosition }}" {% endif %}
-                     src="{{ image ?? '' }}" alt=""/>
-            </video>
-        {% else %}
-            <img class="w-full h-full object-cover object-center absolute mix-blend-overlay"
-                    {% if imagePosition is defined %} style="{{ 'object-position :'~ imagePosition }}" {% endif %}
-                 src="{{ image ?? '' }}" alt=""/>
-        {% endif %}
-
-        <div class="flex flex-col px-6 absolute left-0 bottom-4">
-            <h2 class="text-white font-montserrat-semi-bold text-3xl mb-3">
-                {{ categoryName ?? '' }}
-            </h2>
-            <a href="{{ urlBack ?? '/' }}"
-               class="flex flex-inline items-center font-montserrat-regular text-body self-start bg-party rounded-lg p-2 hover:text-cta-light group ">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline transition group-hover:-translate-x-1 group-focus:-translate-x-1" viewbox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd"
-                          d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-                          clip-rule="evenodd"/>
-                </svg>
-                {{ 'url.back'|trans }} {{ nameBack ?? '' }}</a>
-        </div>
+<div class="h-[37rem] grid grid-cols-1 grid-rows-3 w-full relative">
+    <div class="col-start-1 row-start-1 col-span-full row-span-full h-[37rem] w-full bg-gradient-to-r from-pink-300/50 via-purple-300/50 to-indigo-400/50"></div>
+    <div class="col-start-1 row-start-1 col-span-full row-span-full h-[37rem] w-full bg-cover bg-center mix-blend-overlay"
+         style="background-image: url('{{ image }}');"></div>
+    <div class="col-start-1 row-start-3 flex flex-col px-6 self-end absolute bottom-4">
+        <h2 class="text-white font-montserrat-semi-bold text-3xl mb-3">
+            {{ categoryName ?? '' }}
+        </h2>
+        <a href="{{ urlBack ?? '/' }}"
+           class="flex flex-inline items-center font-montserrat-regular text-body self-start bg-party rounded-lg p-2 hover:text-cta-light group">
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 class="h-5 w-5 inline transition group-hover:-translate-x-1 group-focus:-translate-x-1"
+                 viewbox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd"
+                      d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                      clip-rule="evenodd"/>
+            </svg>
+            {{ 'url.back'|trans }} {{ nameBack ?? '' }}
+        </a>
     </div>
 </div>
