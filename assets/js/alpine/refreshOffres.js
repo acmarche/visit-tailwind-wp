@@ -13,7 +13,6 @@ document.addEventListener('alpine:init', () => {
                 //pour mode dev
                 //if (this.language === 'fr')
                 //    this.language = ''
-                console.log(this.language)
                 this.launchRefresh(null)
             },
             async changeOffres(f, type) {
