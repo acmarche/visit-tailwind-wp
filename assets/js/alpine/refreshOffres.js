@@ -23,13 +23,11 @@ document.addEventListener('alpine:init', () => {
             },
             async launchRefresh(e) {
                 this.isLoading = true
-                console.log(this.currentCategory)
                 if (e !== null) {
                     this.filtreSelected = e.target.dataset.filtre
                     this.filtreType = e.target.dataset.filtretype
                 }
                 const url = `https://visitmarche.be/wp-json/pivot/offres/${this.currentCategory}/${this.filtreSelected}/${this.filtreType}`;
-                console.log(url)
                 this.offres = await fetch(url)
                     .then(function (response) {
                         // The API call was successful!
