@@ -14,10 +14,10 @@ enum IconeEnum: string
     {
         return match ($key) {
             IconeEnum::ARTS->value => 'icon_arts_white.svg',
-            IconeEnum:: BALADES->value => 'icon_walks_white.svg',
-            IconeEnum:: FETES->value => 'icon_delicaties_white.svg',
-            IconeEnum:: GOURMANDISES->value => 'icon_parties_white.svg',
-            IconeEnum:: PATRIMOINE->value => 'icon_patrimony_white.svg',
+            IconeEnum::BALADES->value => 'icon_walks_white.svg',
+            IconeEnum::FETES->value => 'icon_parties_white.svg',
+            IconeEnum::GOURMANDISES->value => 'icon_delicaties_white.svg',
+            IconeEnum::PATRIMOINE->value => 'icon_patrimony_white.svg',
             default => 'icon_patrimony_white.svg'
         };
     }

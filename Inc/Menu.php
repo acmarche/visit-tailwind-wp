@@ -26,7 +26,7 @@ class Menu
     {
         $language = LocaleHelper::getSelectedLanguage();
 
-        return $this->cache->get(Cache::ICONES_NAME.$language.time(), function (ItemInterface $item) {
+        return $this->cache->get(Cache::ICONES_NAME.$language, function (ItemInterface $item) {
             $item->expiresAfter(CacheUtils::DURATION);
             $item->tag(CacheUtils::TAG);
 
