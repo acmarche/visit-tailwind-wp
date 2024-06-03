@@ -3936,6 +3936,11 @@ img, video, iframe {
   color: rgb(255 255 255 / var(--tw-text-opacity));
 }
 
+.hover\:text-carto-main:hover {
+  --tw-text-opacity: 1;
+  color: rgb(53 66 84 / var(--tw-text-opacity));
+}
+
 .hover\:grayscale-0:hover {
   --tw-grayscale: grayscale(0);
   filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
@@ -4263,6 +4268,14 @@ img, video, iframe {
 
   .md\:mt-12 {
     margin-top: 3rem;
+  }
+
+  .md\:mt-16 {
+    margin-top: 4rem;
+  }
+
+  .md\:mt-8 {
+    margin-top: 2rem;
   }
 
   .md\:block {
