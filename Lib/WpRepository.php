@@ -4,7 +4,10 @@ namespace VisitMarche\ThemeTail\Lib;
 
 use AcMarche\Pivot\Api\QueryDetailEnum;
 use AcMarche\Pivot\DependencyInjection\PivotContainer;
+use AcMarche\Pivot\Entities\Communication\Adresse;
+use AcMarche\Pivot\Entities\Label;
 use AcMarche\Pivot\Entities\Offre\Offre;
+use AcMarche\Pivot\Entities\Specification\Gpx;
 use AcMarche\Pivot\Entity\TypeOffre;
 use AcMarche\Pivot\Event\EventEnum;
 use AcMarche\Pivot\Utils\CacheUtils;
@@ -24,33 +27,6 @@ class WpRepository
     public const PIVOT_REFRUBRIQUE = 'pivot_refrubrique';
     public const PIVOT_REFOFFERS = 'pivot_ref_offers';
 
-    /**
-     * @param int $catId
-     * @return WP_Post[]
-     */
-    public function getPostsByCatId(int $catId): array
-    {
-        $args = [
-            'cat' => $catId,
-            'numberposts' => 5000,
-            'orderby' => 'post_title',
-            'order' => 'ASC',
-            'post_status' => 'publish',
-        ];
-
-        $querynews = new WP_Query($args);
-        $posts = [];
-        while ($querynews->have_posts()) {
-            $post = $querynews->next_post();
-            $post->excerpt = $post->post_excerpt;
-            $post->permalink = get_permalink($post->ID);
-            $post->thumbnail_url = $this->getPostThumbnail($post->ID);
-            $posts[] = $post;
-        }
-
-        return $posts;
-    }
-
     public function getParentCategory(int $cat_ID): array|WP_Term|\WP_Error|null
     {
         $category = get_category($cat_ID);
@@ -64,83 +40,6 @@ class WpRepository
         }
 
         return null;
-    }
-
-    /**
-     * @param int $cat_ID
-     * @return WP_Term[]
-     */
-    public function getChildrenOfCategory(int $cat_ID): array
-    {
-        $args = [
-            'parent' => $cat_ID,
-            'hide_empty' => false,
-        ];
-        $children = get_categories($args);
-        array_map(
-            function ($category) {
-                $category->url = get_category_link($category->term_id);
-                $category->id = $category->term_id;
-            },
-            $children
-        );
-
-        return $children;
-    }
-
-    public function getSamePosts(int $postId): array
-    {
-        $cacheKey = Cache::generateKey('sampepost'.$postId);
-        $cache = Cache::instance('visit-wp');
-
-        return $cache->get($cacheKey, function (ItemInterface $item) use ($postId) {
-            $item->expiresAfter(CacheUtils::DURATION);
-            $item->tag(CacheUtils::TAG);
-            $categories = get_the_category($postId);
-            $args = [
-                'category__in' => array_map(
-                    fn($category) => $category->cat_ID,
-                    $categories
-                ),
-                'post__not_in' => [$postId],
-                'orderby' => 'title',
-                'order' => 'ASC',
-            ];
-            $query = new \WP_Query($args);
-            $recommandations = [];
-            foreach ($query->posts as $post) {
-                $image = null;
-                if (has_post_thumbnail($post)) {
-                    $images = wp_get_attachment_image_src(get_post_thumbnail_id($post), 'original');
-                    if ($images) {
-                        $image = $images[0];
-                    }
-                }
-                $recommandations[] = [
-                    'name' => $post->post_title,
-                    'excerpt' => $post->post_excerpt,
-                    'url' => get_permalink($post->ID),
-                    'image' => $image,
-                    'tags' => PostUtils::tagsPost($post),
-                ];
-            }
-
-            return $recommandations;
-        });
-
-    }
-
-    public function getPostThumbnail(int $id): string
-    {
-        if (has_post_thumbnail($id)) {
-            $attachment_id = get_post_thumbnail_id($id);
-            $images = wp_get_attachment_image_src($attachment_id, 'original');
-            $post_thumbnail_url = $images[0];
-        } else {
-            $post_thumbnail_url = get_template_directory_uri().'/assets/images/404.jpg';
-        }
-
-        return $post_thumbnail_url;
     }
 
     public function getIntro(): array|string
@@ -271,32 +170,6 @@ class WpRepository
     }
 
     /**
-     * @param int $currentCategoryId
-     * @param Offre[] $offers
-     * @param WP_Post[] $posts
-     * @return  CommonItem[]
-     */
-    private function treatment(int $currentCategoryId, array $offers, array $posts): array
-    {
-        $language = LocaleHelper::getSelectedLanguage();
-
-        $category_order = get_term_meta($currentCategoryId, CategoryMetaBox::KEY_NAME_ORDER, true);
-        if ('manual' === $category_order) {
-            $posts = AcSort::getSortedItems($currentCategoryId, $posts);
-        }
-
-        //fusion offres et articles
-        $postUtils = new PostUtils();
-        $posts = $postUtils->convertPostsToArray($posts);
-        $offres = $postUtils->convertOffresToArray($offers, $currentCategoryId, $language);
-
-        $data = PostUtils::removeDoublon([...$posts, ...$offres]);
-        RouterPivot::setLinkOnCommonItems($data, $currentCategoryId, $language);
-
-        return PostUtils::sortOffresByName($data);
-    }
-
-    /**
      * @param int $categoryIdSelected
      * @return Offre[]
      * @throws InvalidArgumentException
@@ -335,6 +208,170 @@ class WpRepository
         }
 
         return [...$offres, ...$offers];
+    }
+
+    /**
+     * @param int $cat_ID
+     * @return WP_Term[]
+     */
+    public function getChildrenOfCategory(int $cat_ID): array
+    {
+        $args = [
+            'parent' => $cat_ID,
+            'hide_empty' => false,
+        ];
+        $children = get_categories($args);
+        array_map(
+            function ($category) {
+                $category->url = get_category_link($category->term_id);
+                $category->id = $category->term_id;
+            },
+            $children
+        );
+
+        return $children;
+    }
+
+    /**
+     * @param TypeOffre[] $filters
+     * @return Offre[]
+     * @throws InvalidArgumentException
+     */
+    public function findOffresByTypesOffre(array $filters): array
+    {
+        $pivotRepository = PivotContainer::getPivotRepository(WP_DEBUG);
+
+        return $pivotRepository->fetchOffres($filters);
+    }
+
+    /**
+     * @param string[] $codesCgt
+     * @return \stdClass[]
+     */
+    public function findOffersShortByCodesCgt(array $codesCgt): array
+    {
+        $cacheKey = Cache::generateKey('OffersShortByCodesCgt-'.json_encode($codesCgt));
+        $cache = Cache::instance('visit-wp');
+
+        return $cache->get($cacheKey, function (ItemInterface $item) use ($codesCgt) {
+            $item->expiresAfter(CacheUtils::DURATION);
+            $item->tag(CacheUtils::TAG);
+            $offers = [];
+            try {
+                $offersShort = $this->getAllOffresShorts();
+                foreach ($codesCgt as $codeCgt) {
+                    foreach ($offersShort as $offerShort) {
+                        if ($offerShort->codeCgt === $codeCgt) {
+                            $offers[] = $offerShort;
+                            break;
+                        }
+                    }
+                }
+
+            } catch (InvalidArgumentException $e) {
+                return [];
+            }
+
+            return $offers;
+        });
+    }
+
+    /**
+     * @return \stdClass{codeCgt: string, name: string, type: string}[]
+     * @throws InvalidArgumentException
+     */
+    public function getAllOffresShorts(): array
+    {
+        $cacheKey = Cache::generateKey('alloffershort-');
+        $cache = Cache::instance('visit-wp');
+
+        return $cache->get($cacheKey, function (ItemInterface $item) {
+            $item->expiresAfter(CacheUtils::DURATION);
+            $item->tag(CacheUtils::TAG);
+
+            $offres = [];
+            $pivotRepository = PivotContainer::getPivotRepository(WP_DEBUG);
+            $responseJson = $pivotRepository->getAllDataFromRemote(true, QueryDetailEnum::QUERY_DETAIL_LVL_RESUME);
+
+            $tmp = json_decode($responseJson)->offre;
+
+            foreach ($tmp as $offre) {
+                $std = new \stdClass();
+                $std->codeCgt = $offre->codeCgt;
+                $std->name = $offre->nom;
+                $std->type = $offre->typeOffre->label[0]->value;
+                $offres[] = $std;
+            }
+
+            return PostUtils::sortOffresByName($offres);
+        });
+
+    }
+
+    /**
+     * @param int $catId
+     * @return WP_Post[]
+     */
+    public function getPostsByCatId(int $catId): array
+    {
+        $args = [
+            'cat' => $catId,
+            'numberposts' => 5000,
+            'orderby' => 'post_title',
+            'order' => 'ASC',
+            'post_status' => 'publish',
+        ];
+
+        $querynews = new WP_Query($args);
+        $posts = [];
+        while ($querynews->have_posts()) {
+            $post = $querynews->next_post();
+            $post->excerpt = $post->post_excerpt;
+            $post->permalink = get_permalink($post->ID);
+            $post->thumbnail_url = $this->getPostThumbnail($post->ID);
+            $posts[] = $post;
+        }
+
+        return $posts;
+    }
+
+    public function getPostThumbnail(int $id): string
+    {
+        if (has_post_thumbnail($id)) {
+            $attachment_id = get_post_thumbnail_id($id);
+            $images = wp_get_attachment_image_src($attachment_id, 'original');
+            $post_thumbnail_url = $images[0];
+        } else {
+            $post_thumbnail_url = get_template_directory_uri().'/assets/images/404.jpg';
+        }
+
+        return $post_thumbnail_url;
+    }
+
+    /**
+     * @param int $currentCategoryId
+     * @param Offre[] $offers
+     * @param WP_Post[] $posts
+     * @return  CommonItem[]
+     */
+    private function treatment(int $currentCategoryId, array $offers, array $posts): array
+    {
+        $language = LocaleHelper::getSelectedLanguage();
+
+        $category_order = get_term_meta($currentCategoryId, CategoryMetaBox::KEY_NAME_ORDER, true);
+        if ('manual' === $category_order) {
+            $posts = AcSort::getSortedItems($currentCategoryId, $posts);
+        }
+
+        //fusion offres et articles
+        $postUtils = new PostUtils();
+        $posts = $postUtils->convertPostsToArray($posts);
+        $offres = $postUtils->convertOffresToArray($offers, $currentCategoryId, $language);
+
+        $data = PostUtils::removeDoublon([...$posts, ...$offres]);
+        RouterPivot::setLinkOnCommonItems($data, $currentCategoryId, $language);
+
+        return PostUtils::sortOffresByName($data);
     }
 
     public function categoryImage(WP_Term $category): string
@@ -398,6 +435,48 @@ class WpRepository
 
             return $recommandations;
         });
+    }
+
+    public function getSamePosts(int $postId): array
+    {
+        $cacheKey = Cache::generateKey('sampepost'.$postId);
+        $cache = Cache::instance('visit-wp');
+
+        return $cache->get($cacheKey, function (ItemInterface $item) use ($postId) {
+            $item->expiresAfter(CacheUtils::DURATION);
+            $item->tag(CacheUtils::TAG);
+            $categories = get_the_category($postId);
+            $args = [
+                'category__in' => array_map(
+                    fn($category) => $category->cat_ID,
+                    $categories
+                ),
+                'post__not_in' => [$postId],
+                'orderby' => 'title',
+                'order' => 'ASC',
+            ];
+            $query = new \WP_Query($args);
+            $recommandations = [];
+            foreach ($query->posts as $post) {
+                $image = null;
+                if (has_post_thumbnail($post)) {
+                    $images = wp_get_attachment_image_src(get_post_thumbnail_id($post), 'original');
+                    if ($images) {
+                        $image = $images[0];
+                    }
+                }
+                $recommandations[] = [
+                    'name' => $post->post_title,
+                    'excerpt' => $post->post_excerpt,
+                    'url' => get_permalink($post->ID),
+                    'image' => $image,
+                    'tags' => PostUtils::tagsPost($post),
+                ];
+            }
+
+            return $recommandations;
+        });
+
     }
 
     public function recommandationsByOffre(Offre $offerRefer, WP_Term $category, string $language): array
@@ -498,82 +577,6 @@ class WpRepository
     }
 
     /**
-     * @param TypeOffre[] $filters
-     * @return Offre[]
-     * @throws InvalidArgumentException
-     */
-    public function findOffresByTypesOffre(array $filters): array
-    {
-        $pivotRepository = PivotContainer::getPivotRepository(WP_DEBUG);
-
-        return $pivotRepository->fetchOffres($filters);
-    }
-
-    /**
-     * @param string[] $codesCgt
-     * @return \stdClass[]
-     */
-    public function findOffersShortByCodesCgt(array $codesCgt): array
-    {
-        $cacheKey = Cache::generateKey('OffersShortByCodesCgt-'.json_encode($codesCgt));
-        $cache = Cache::instance('visit-wp');
-
-        return $cache->get($cacheKey, function (ItemInterface $item) use ($codesCgt) {
-            $item->expiresAfter(CacheUtils::DURATION);
-            $item->tag(CacheUtils::TAG);
-            $offers = [];
-            try {
-                $offersShort = $this->getAllOffresShorts();
-                foreach ($codesCgt as $codeCgt) {
-                    foreach ($offersShort as $offerShort) {
-                        if ($offerShort->codeCgt === $codeCgt) {
-                            $offers[] = $offerShort;
-                            break;
-                        }
-                    }
-                }
-
-            } catch (InvalidArgumentException $e) {
-                return [];
-            }
-
-            return $offers;
-        });
-    }
-
-    /**
-     * @return \stdClass{codeCgt: string, name: string, type: string}[]
-     * @throws InvalidArgumentException
-     */
-    public function getAllOffresShorts(): array
-    {
-        $cacheKey = Cache::generateKey('alloffershort-');
-        $cache = Cache::instance('visit-wp');
-
-        return $cache->get($cacheKey, function (ItemInterface $item) {
-            $item->expiresAfter(CacheUtils::DURATION);
-            $item->tag(CacheUtils::TAG);
-
-            $offres = [];
-            $pivotRepository = PivotContainer::getPivotRepository(WP_DEBUG);
-            $responseJson = $pivotRepository->getAllDataFromRemote(true, QueryDetailEnum::QUERY_DETAIL_LVL_RESUME);
-
-            $tmp = json_decode($responseJson)->offre;
-
-            foreach ($tmp as $offre) {
-                $std = new \stdClass();
-                $std->codeCgt = $offre->codeCgt;
-                $std->name = $offre->nom;
-                $std->type = $offre->typeOffre->label[0]->value;
-                $offres[] = $std;
-            }
-
-            return PostUtils::sortOffresByName($offres);
-        });
-
-    }
-
-    /**
      * @throws InvalidArgumentException
      */
     public function getOffreByCgtAndParse(string $codeCgt): ?Offre
@@ -645,6 +648,8 @@ class WpRepository
             }
         }
 
+        $offers[] = $this->addFamenneWalk($gpxViewer);
+
         return array_values($offers);
     }
 
@@ -659,5 +664,38 @@ class WpRepository
         }
 
         return Theme::CATEGORY_FOOT;
+    }
+
+    private function addFamenneWalk(GpxViewer $gpxViewer): array
+    {
+        $address = new Adresse();
+        $label = new Label();
+        $label->value = 'Marche-en-Famenne';
+        $label->lang = 'fr';
+        $address->localite = [$label];
+        $address->rue = "Rue du Luxembourg";
+        $address->latitude = 50.2223474;
+        $address->longitude = 5.34569;
+        $locations = [];
+        $gpx = new Gpx();
+        $gpx->data_raw = file_get_contents(get_template_directory().'/assets/gpx/TRANSFAMENNE.gpx');
+        foreach ($gpxViewer->getLocations($gpx) as $location) {
+            $locations[] = [$location['latitude'], $location['longitude']];
+        }
+
+        return [
+            'codeCgt' => 'transfamenne',
+            'nom' => 'Transfamenne',
+            'url' => '/fr/balades/transfamenne/',
+            'images' => ['/wp-content/uploads/2024/02/trees-3294681_960_720-1.jpg'],
+            'image' => '/wp-content/uploads/2024/02/trees-3294681_960_720-1.jpg',
+            'address' => $address,
+            'localite' => 'Famenne',
+            'type' => Theme::CATEGORY_FOOT,
+            'locations' => $locations,
+            'gpx_duree' => '',
+            'gpx_difficulte' => 'Intermédiaire',
+            'gpx_distance' => 126,
+        ];
     }
 }
