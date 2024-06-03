@@ -1,13 +1,11 @@
-<div class="text-center mt-12 bg-pastel">
-    <div class="relative flex flex-col xl:flex-row px-4 flex-nowrap justify-evenly items-end xl:items-center mx-auto text-caractere">
-        <img class="relative bottom-0  w-[40%] xl:w-[16%] place-self-start self-start"
-             src="{{ template_uri() }}/assets/tartine/george2.png" alt="crieur"/>
-        <h2 class="text-lg xl:text-2xl font-montserrat-semi-bold ">
+<div class="text-center mt-8 md:mt-12 bg-pastel">
+    <div class="relative flex flex-col xl:flex-row p-4 justify-between items-start xl:items-center mx-auto text-caractere">
+        <h2 class="text-xl xl:text-2xl text-cta-dark font-montserrat-semi-bold mb-2">
             {{ 'newsletter.title'|trans }}
         </h2>
-        <div class="flex justify-end">
+        <div class="flex justify-end flex-col md:flex-row">
             <form class="w-full max-w-md" method="post">
-                <div class="flex gap-x-4">
+                <div class="flex flex-col md:flex-row gap-4">
                     <label for="email-address" class="sr-only">Adresse email</label>
                     <input id="email-address" name="email" type="email" autocomplete="email" required
                            class="min-w-0 flex-auto rounded-md border-1 bg-white/5 px-3.5 py-2 text-carto-main shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-white sm:text-sm sm:leading-6"
@@ -20,6 +18,7 @@
                 <p class="mt-4 text-sm leading-6 text-carto-main">
                     Nous prenons soin de vos données. Lisez notre
                     <a href="https://visit.marche.be/fr/politique-de-confidentialite"
+                       target="_blank"
                        class="font-semibold text-carto-green hover:text-carto-pink">
                         charte.
                     </a>
@@ -27,4 +26,6 @@
             </form>
         </div>
     </div>
+    <img class="relative bottom-0 w-32 xl:w-[16%] place-self-start self-start"
+         src="{{ template_uri() }}/assets/tartine/george2.png" alt="crieur"/>
 </div>
