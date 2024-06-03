@@ -87,6 +87,17 @@ module.exports = {
             backgroundPosition: "left",
           },
         },
+        leftjf: {
+          "0%": {
+            transform: "translateX(-4rem)",
+          },
+          "50%": {
+            transform: "translateX(-2rem)",
+          },
+          "100%": {
+            transform: "translateX(0)",
+          },
+        },
         bouncejf: {
           "0%": {
             transform: "translateY(-4rem)",
@@ -102,6 +113,7 @@ module.exports = {
       animation: {
         shimmer: "6s infinite shimmer ease-in-out",
         bouncejf: "bouncejf linear 2s",
+        leftjf: "leftjf linear 2s",
       },
     },
   },
