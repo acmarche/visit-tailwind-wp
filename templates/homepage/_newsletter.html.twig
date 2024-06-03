@@ -1,0 +1,30 @@
+<div class="text-center mt-12 bg-pastel">
+    <div class="relative flex flex-col xl:flex-row px-4 flex-nowrap justify-evenly items-end xl:items-center mx-auto text-caractere">
+        <img class="relative bottom-0  w-[40%] xl:w-[16%] place-self-start self-start shadow-xl shadow-inner"
+             src="{{ template_uri() }}/assets/tartine/george.png" alt="crieur"/>
+        <h2 class="text-lg xl:text-2xl font-montserrat-semi-bold ">
+            {{ 'newsletter.title'|trans }}
+        </h2>
+        <div class="flex justify-end">
+            <form class="w-full max-w-md" method="post">
+                <div class="flex gap-x-4">
+                    <label for="email-address" class="sr-only">Adresse email</label>
+                    <input id="email-address" name="email" type="email" autocomplete="email" required
+                           class="min-w-0 flex-auto rounded-md border-1 bg-white/5 px-3.5 py-2 text-carto-main shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-white sm:text-sm sm:leading-6"
+                           placeholder="Entrez votre adresse mail">
+                    <button type="submit"
+                            class="flex-none rounded-md bg-white px-3.5 py-2.5 text-sm font-semibold text-carto-main shadow-sm hover:bg-gray-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">
+                        Je m'abonne
+                    </button>
+                </div>
+                <p class="mt-4 text-sm leading-6 text-carto-main">
+                    Nous prenons soin de vos données. Lisez notre
+                    <a href="https://visit.marche.be/fr/politique-de-confidentialite"
+                       class="font-semibold text-carto-green hover:text-carto-pink">
+                        charte.
+                    </a>
+                </p>
+            </form>
+        </div>
+    </div>
+</div>

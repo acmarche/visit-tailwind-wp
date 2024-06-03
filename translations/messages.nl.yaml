@@ -74,3 +74,5 @@ until: 'tot'
 from: 'Van'
 ideas:
   home: 'ideeën voor verblijven'
+newsletter:
+  title: 'Onze nieuwsbrief'

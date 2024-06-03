@@ -4,7 +4,7 @@ ajour aussi dans le head prefetch de l'url d'img de fond
 -->
 <main>
     <div class="bg-home-img bg-no-repeat bg-cover bg-center h-[50rem]"
-    style="background-image: url('/wp-content/themes/visittail/assets/images/bg/{{ bgimg }}');">
+         style="background-image: url('/wp-content/themes/visittail/assets/images/bg/{{ bgimg }}');">
         <div class="relative bg-home-color pt-4 xl:py-24 h-full">
             <div class="flex flex-col justify-center items-center w-full pt-40">
                 {% include '@VisitTail/homepage/_search_home.html.twig' %}
@@ -22,10 +22,11 @@ ajour aussi dans le head prefetch de l'url d'img de fond
                 {% include '@VisitTail/homepage/_agenda.html.twig' %}
             </div>
             <div class="px-4 xl:col-span-2">
-               {% include '@VisitTail/homepage/_ideas.html.twig' %}
+                {% include '@VisitTail/homepage/_ideas.html.twig' %}
             </div>
         </section>
     </div>
     {% include '@VisitTail/homepage/_banner_party.html.twig' %}
+    {% include '@VisitTail/homepage/_newsletter.html.twig' %}
 </main>
 {% include '@VisitTail/homepage/_partenaires.html.twig' %}

@@ -74,3 +74,5 @@ until: 'until'
 from: 'From'
 ideas:
   home: 'Ideas for stays'
+newsletter:
+  title: 'Newsletter'

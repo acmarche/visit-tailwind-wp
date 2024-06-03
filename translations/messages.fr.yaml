@@ -74,3 +74,5 @@ until: 'jusqu''au'
 from: 'Du'
 ideas:
   home: 'Idées de séjours'
+newsletter:
+  title: 'Notre lettre d''informations'
