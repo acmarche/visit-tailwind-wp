@@ -763,7 +763,7 @@ class WpRepository
             'type' => Theme::CATEGORY_HORSE,
             'locations' => $locations,
             'gpx_duree' => '',
-            'gpx_difficulte' => 'Intermédiaire',
+            'gpx_difficulte' => 'Difficile',
             'gpx_distance' => 225,
         ];
     }
