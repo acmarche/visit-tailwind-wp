@@ -650,6 +650,8 @@ class WpRepository
         }
 
         $offers[] = $this->addFamenneWalk($gpxViewer);
+        $offers[] = $this->addGrp151Walk($gpxViewer);
+        $offers[] = $this->addMontArdenneWalk($gpxViewer);
 
         return array_values($offers);
     }
@@ -697,6 +699,72 @@ class WpRepository
             'gpx_duree' => '',
             'gpx_difficulte' => 'Intermédiaire',
             'gpx_distance' => 126,
+        ];
+    }
+
+    private function addGrp151Walk(GpxViewer $gpxViewer): array
+    {
+        $address = new Adresse();
+        $label = new Label();
+        $label->value = 'Marche-en-Famenne';
+        $label->lang = 'fr';
+        $address->localite = [$label];
+        $address->rue = "Place de l'Eglise";
+        $address->latitude = 50.2225223;
+        $address->longitude = 5.3432502;
+        $locations = [];
+        $gpx = new Gpx();
+        $gpx->data_raw = file_get_contents(get_template_directory().'/assets/gpx/GRP151.gpx');
+        foreach ($gpxViewer->getLocations($gpx) as $location) {
+            $locations[] = [$location['latitude'], $location['longitude']];
+        }
+
+        return [
+            'codeCgt' => 'grp151',
+            'nom' => 'GRP 151 - Sentiers de l\'Ardenne - Tour du Luxembourg belge',
+            'url' => '/fr/balades/gr-151-sentiers-de-lardenne-tour-du-luxembourg-belge/',
+            'images' => ['/wp-content/uploads/2024/02/forest-1868028_960_720.jpg'],
+            'image' => '/wp-content/uploads/2024/02/forest-1868028_960_720.jpg',
+            'address' => $address,
+            'localite' => 'Marche-en-Famenne',
+            'type' => Theme::CATEGORY_HORSE,
+            'locations' => $locations,
+            'gpx_duree' => '',
+            'gpx_difficulte' => 'Intermédiaire',
+            'gpx_distance' => 234,
+        ];
+    }
+
+    private function addMontArdenneWalk(GpxViewer $gpxViewer): array
+    {
+        $address = new Adresse();
+        $label = new Label();
+        $label->value = 'Marche-en-Famenne';
+        $label->lang = 'fr';
+        $address->localite = [$label];
+        $address->rue = "Rue du Luxembourg";
+        $address->latitude = 50.2223474;
+        $address->longitude = 5.34569;
+        $locations = [];
+        $gpx = new Gpx();
+        $gpx->data_raw = file_get_contents(get_template_directory().'/assets/gpx/mont_ardenne.gpx');
+        foreach ($gpxViewer->getLocations($gpx) as $location) {
+            $locations[] = [$location['latitude'], $location['longitude']];
+        }
+
+        return [
+            'codeCgt' => 'mont_ardenne',
+            'nom' => 'Le sentier des Monts d\'Ardenne',
+            'url' => '/fr/balades/le-sentier-des-monts-dardenne/',
+            'images' => ['/wp-content/uploads/2024/06/high-fens-2532335_1280.jpg'],
+            'image' => '/wp-content/uploads/2024/06/high-fens-2532335_1280.jpg',
+            'address' => $address,
+            'localite' => 'Marche-en-Famenne',
+            'type' => Theme::CATEGORY_HORSE,
+            'locations' => $locations,
+            'gpx_duree' => '',
+            'gpx_difficulte' => 'Intermédiaire',
+            'gpx_distance' => 225,
         ];
     }
 }
