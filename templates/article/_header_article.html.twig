@@ -1,8 +1,10 @@
-<div class="h-[37rem] grid grid-cols-1 grid-rows-3 w-full relative" id="sticky-parallax-header">
-    <div class="col-start-1 row-start-1 col-span-full row-span-full h-[37rem] w-full bg-gradient-to-r from-pink-300/50 via-purple-300/50 to-indigo-400/50"></div>
-    <div class="col-start-1 row-start-1 col-span-full row-span-full h-[37rem] w-full bg-cover bg-center mix-blend-overlay"
-         style="background-image: url('{{ image }}');"></div>
-    <div class="col-start-1 row-start-3 flex flex-col px-6 self-end absolute bottom-4">
+<div class="h-[37rem] grid grid-cols-1 grid-rows-3 w-full relative  bg-cover bg-center mix-blend-overlay"
+     style="background-image: url('{{ image }}');"
+     id="sticky-parallax-header">
+    <div class="col-start-1 row-start-1 col-span-full row-span-full h-full w-full bg-gradient-to-r from-pink-300/50 via-purple-300/50 to-indigo-400/50">
+
+    </div>
+    <div class="col-start-1 row-start-3 flex flex-col px-6 self-end relative bottom-4">
         <h2 class="text-white font-montserrat-semi-bold text-3xl mb-3">
             {{ categoryName ?? '' }}
         </h2>

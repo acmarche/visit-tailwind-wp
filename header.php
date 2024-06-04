@@ -24,6 +24,37 @@ $localeSf = LocaleHelper::getCurrentLanguageSf();
             ]
         );
         ?>
+        <script type="module">
+            import 'https://flackr.github.io/scroll-timeline/dist/scroll-timeline.js';
+
+            // if (typeof ScrollTimeline !== 'undefined') {
+            const $header = document.querySelector("#sticky-parallax-header");
+            const main = document.querySelector('main')
+            if ($header) {
+                // Fixate the header
+                // @note: We use `position: fixed` instead of `position: sticky` here (see infobox why)
+                $header.style.position = 'fixed';
+                $header.style.top = 0;
+                // Offset content
+                main.style.paddingTop = '64vh';
+                $header.animate({
+                        backgroundPosition: ["50% 0", "50% 100%"],
+                        //    backgroundColor: ['transparent', '#0b1584'],
+                        height: ['64vh', '15vh'],
+                        //      height: ['100rem', '10rem'],
+                        //     fontSize: ['calc(4vw + 1em)', 'calc(1vw + 1em)'],
+                    },
+                    {
+                        fill: "both",
+                        timeline: new ScrollTimeline({
+                            source: document.documentElement,
+                        }),
+                        rangeStart: '0',
+                        rangeEnd: '58vh',
+                    });
+            }
+            //}
+        </script>
     </head>
 
 <body <?php body_class(); ?> id="app" data-langwp="<?= $locale ?>" data-langsf="<?= $localeSf ?>">
