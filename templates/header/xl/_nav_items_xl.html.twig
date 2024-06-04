@@ -1,5 +1,5 @@
 <li class="hidden xl:list-item border-transparent pb-2 nav-top-xl">
-    <a href="/{{locale}}">{{ 'menu.home'|trans }}</a>
+    <a href="/{{ locale }}">{{ 'menu.home'|trans }}</a>
 </li>
 <li class="hidden xl:list-item border-transparent pb-2 nav-top-xl">
     <a href="{{ items.idees.url }}">{{ items.idees.name }}</a>
@@ -55,6 +55,9 @@
         </li>
         <li class="hover:text-cta-light py-2">
             <a href="{{ items.gourmandises.url }}" class="p-2">{{ items.gourmandises.name }}</a>
+        </li>
+        <li class="hover:text-cta-light py-2">
+            <a href="https://circuit-court.marche.be/" target="_blank" class="p-2">{{ 'local.products'|trans }}</a>
         </li>
         <li class="hover:text-cta-light py-2">
             <a href="{{ items.patrimoine.url }}" class="p-2">{{ items.patrimoine.name }}</a>
