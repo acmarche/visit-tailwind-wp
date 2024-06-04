@@ -19,9 +19,23 @@ class Cache
     public const FETCH_OFFRES = 'fetch_offres';
     public static ?CacheInterface $instanceObject = null;
 
-    public static function getPathCache(string $folder): string
+    public static function generateKey(string $cacheKey): string
     {
-        return ABSPATH.'../var/cache/'.$folder;
+        $keyUnicode = new UnicodeString($cacheKey);
+
+        return sanitize_title($keyUnicode->ascii()->toString());
+    }
+
+    public static function purgeCache(): void
+    {
+        try {
+            $cacheUtils = new CacheUtils();
+            $cache = $cacheUtils->instance();
+            $cache->invalidateTags(CacheUtils::TAG);
+        } catch (\Exception $e) {
+
+        }
+
     }
 
     public static function instance(string $folder): CacheInterface
@@ -51,11 +65,8 @@ class Cache
         return self::$instanceObject;
     }
 
-    public static function generateKey(string $cacheKey): string
+    public static function getPathCache(string $folder): string
     {
-        $keyUnicode = new UnicodeString($cacheKey);
-
-        return sanitize_title($keyUnicode->ascii()->toString());
+        return ABSPATH.'../var/cache/'.$folder;
     }
-
 }

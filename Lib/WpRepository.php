@@ -359,9 +359,6 @@ class WpRepository
         $language = LocaleHelper::getSelectedLanguage();
 
         $category_order = get_term_meta($currentCategoryId, CategoryMetaBox::KEY_NAME_ORDER, true);
-        if ('manual' === $category_order) {
-            $posts = AcSort::getSortedItems($currentCategoryId, $posts);
-        }
 
         //fusion offres et articles
         $postUtils = new PostUtils();
@@ -370,6 +367,10 @@ class WpRepository
 
         $data = PostUtils::removeDoublon([...$posts, ...$offres]);
         RouterPivot::setLinkOnCommonItems($data, $currentCategoryId, $language);
+
+        if ('manual' === $category_order) {
+            return AcSort::getSortedItems($currentCategoryId, $data);
+        }
 
         return PostUtils::sortOffresByName($data);
     }

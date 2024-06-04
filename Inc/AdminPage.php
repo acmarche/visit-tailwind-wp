@@ -4,6 +4,7 @@ namespace VisitMarche\ThemeTail\Inc;
 
 use AcMarche\Pivot\DependencyInjection\PivotContainer;
 use Psr\Cache\InvalidArgumentException;
+use VisitMarche\ThemeTail\Lib\Cache;
 use VisitMarche\ThemeTail\Lib\PivotCategoriesTable;
 use VisitMarche\ThemeTail\Lib\PostUtils;
 use VisitMarche\ThemeTail\Lib\RouterPivot;
@@ -59,6 +60,14 @@ class AdminPage
             'edit_posts',
             'category_offers',
             fn() => $this::categoryOffersRender(),
+        );
+        add_submenu_page(
+            'pivot_home',
+            'Cache',
+            'Cache',
+            'edit_posts',
+            'pivot_cache',
+            fn() => $this::cachePurge(),
         );
     }
 
@@ -192,6 +201,16 @@ class AdminPage
                 'category' => $category,
                 'categoryUrl' => $categoryUrl,
                 'catId' => $catID,
+            ]
+        );
+    }
+
+    private static function cachePurge()
+    {
+        Cache::purgeCache();
+        Twig::rendPage(
+            '@VisitTail/admin/cache_purge.html.twig',
+            [
             ]
         );
     }
