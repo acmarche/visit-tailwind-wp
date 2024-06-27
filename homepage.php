@@ -8,6 +8,7 @@ use Psr\Cache\InvalidArgumentException;
 use SortLink;
 use VisitMarche\ThemeTail\Inc\CategoryMetaBox;
 use VisitMarche\ThemeTail\Inc\Menu;
+use VisitMarche\ThemeTail\Lib\PostUtils;
 use VisitMarche\ThemeTail\Lib\RouterPivot;
 use VisitMarche\ThemeTail\Lib\Twig;
 use VisitMarche\ThemeTail\Lib\WpRepository;
@@ -25,6 +26,8 @@ try {
 $inspirationCat = get_category_by_slug('inspirations');
 $inspirations = $wpRepository->getPostsByCatId($inspirationCat->cat_ID);
 $category_order = get_term_meta($inspirationCat->cat_ID, CategoryMetaBox::KEY_NAME_ORDER, true);
+$postUtils = new PostUtils();
+$inspirations = $postUtils->convertPostsToArray($inspirations);
 if ('manual' === $category_order) {
     $inspirations = AcSort::getSortedItems($inspirationCat->cat_ID, $inspirations);
 }
@@ -74,7 +77,7 @@ $imgs = [
     '06.jpg',
     '07.jpg',
     '08.jpg',
-    ];
+];
 $img = array_rand($imgs);
 $bgImg = $imgs[$img];
 

@@ -29,6 +29,8 @@ $nameBack = $translator->trans('menu.home');
 $posts = $wpRepository->getPostsByCatId($cat_ID);
 
 $category_order = get_term_meta($cat_ID, CategoryMetaBox::KEY_NAME_ORDER, true);
+$postUtils = new PostUtils();
+$posts = $postUtils->convertPostsToArray($posts);
 if ('manual' === $category_order) {
     $posts = AcSort::getSortedItems($cat_ID, $posts);
 }
@@ -38,8 +40,6 @@ $image = $wpRepository->categoryImage($category);
 
 $children = $wpRepository->getChildrenOfCategory($category->cat_ID);
 
-$postUtils = new PostUtils();
-$posts = $postUtils->convertPostsToArray($posts);
 
 Twig::rendPage(
     '@VisitTail/pratique.html.twig',
