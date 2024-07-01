@@ -8,6 +8,7 @@ use Psr\Cache\InvalidArgumentException;
 use SortLink;
 use VisitMarche\ThemeTail\Inc\CategoryMetaBox;
 use VisitMarche\ThemeTail\Inc\Menu;
+use VisitMarche\ThemeTail\Lib\Mailer;
 use VisitMarche\ThemeTail\Lib\PostUtils;
 use VisitMarche\ThemeTail\Lib\RouterPivot;
 use VisitMarche\ThemeTail\Lib\Twig;
@@ -15,8 +16,17 @@ use VisitMarche\ThemeTail\Lib\WpRepository;
 
 get_header();
 
-$wpRepository = new WpRepository();
 
+$confirmNewsletter = false;
+if (isset($_POST['email'])) {
+    $email = $_POST['email'];
+    if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        Mailer::sendNewsletter($email);
+        $confirmNewsletter = true;
+    }
+}
+
+$wpRepository = new WpRepository();
 $intro = $wpRepository->getIntro();
 try {
     $ideas = $wpRepository->getIdeas();
@@ -93,6 +103,7 @@ Twig::rendPage(
         'ideas' => $ideas,
         'bgimg' => $bgImg,
         'sortLink' => $sortLink,
+        'confirmNewsletter' => $confirmNewsletter,
     ]
 );
 get_footer();
