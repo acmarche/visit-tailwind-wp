@@ -101,11 +101,10 @@ document.addEventListener("alpine:init", () => {
           },
         );
         marker.addEventListener("mouseover", () => {
+          this.removePolyline();
           this.drawPolyline(offer);
         });
-        marker.addEventListener("mouseout", () => {
-          this.removePolyline();
-        });
+        marker.addEventListener("mouseout", () => {});
         marker.addEventListener("click", () => {
           this.walkPreview(offer.codeCgt);
         });
