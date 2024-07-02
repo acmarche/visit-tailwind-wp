@@ -100,6 +100,14 @@ class AssetsLoad
             false,
             false
         );
+
+        /*  wp_enqueue_script(
+              'visit-animation-js',
+              'https://flackr.github.io/scroll-timeline/dist/scroll-timeline.js',
+              [],
+              false,
+              false
+          );*/
     }
 
     public function leaflet(): void
