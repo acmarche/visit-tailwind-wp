@@ -24,6 +24,7 @@ $localeSf = LocaleHelper::getCurrentLanguageSf();
             ]
         );
         ?>
+        <!--
         <script type="module">
             import 'https://flackr.github.io/scroll-timeline/dist/scroll-timeline.js';
 
@@ -55,6 +56,7 @@ $localeSf = LocaleHelper::getCurrentLanguageSf();
             }
             //}
         </script>
+        -->
     </head>
 
 <body <?php body_class(); ?> id="app" data-langwp="<?= $locale ?>" data-langsf="<?= $localeSf ?>">
