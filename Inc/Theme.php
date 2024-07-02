@@ -12,7 +12,7 @@ class Theme
     public const CATEGORY_BALADES = 11;
     public const CATEGORY_BIKE = 130;
     public const CATEGORY_FOOT = 131;
-    public const CATEGORY_HORSE = 132;
+    public const CATEGORY_HIKES = 132;
     public const CATEGORY_FETES = 12;
     public const CATEGORY_GOURMANDISES = 13;
     public const CATEGORY_PATRIMOINES = 9;
