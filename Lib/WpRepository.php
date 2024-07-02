@@ -662,8 +662,8 @@ class WpRepository
         if (in_array($codeCgt, $wpFilterRepository->getCodesCgtByCategoryId(Theme::CATEGORY_BIKE))) {
             return Theme::CATEGORY_BIKE;
         }
-        if (in_array($codeCgt, $wpFilterRepository->getCodesCgtByCategoryId(Theme::CATEGORY_HORSE))) {
-            return Theme::CATEGORY_HORSE;
+        if (in_array($codeCgt, $wpFilterRepository->getCodesCgtByCategoryId(Theme::CATEGORY_HIKES))) {
+            return Theme::CATEGORY_HIKES;
         }
 
         return Theme::CATEGORY_FOOT;
@@ -727,7 +727,7 @@ class WpRepository
             'image' => '/wp-content/uploads/2024/02/forest-1868028_960_720.jpg',
             'address' => $address,
             'localite' => 'Marche-en-Famenne',
-            'type' => Theme::CATEGORY_HORSE,
+            'type' => Theme::CATEGORY_HIKES,
             'locations' => $locations,
             'gpx_duree' => '',
             'gpx_difficulte' => 'Intermédiaire',
@@ -760,7 +760,7 @@ class WpRepository
             'image' => '/wp-content/uploads/2024/06/high-fens-2532335_1280.jpg',
             'address' => $address,
             'localite' => 'Marche-en-Famenne',
-            'type' => Theme::CATEGORY_HORSE,
+            'type' => Theme::CATEGORY_HIKES,
             'locations' => $locations,
             'gpx_duree' => '',
             'gpx_difficulte' => 'Difficile',
