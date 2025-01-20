@@ -59,11 +59,13 @@ export function addOfferRequest(categoryId, codeCgt) {
 
 function replaceAccents(name) {
     const translate = {
-        é: "e",
-        ê: "e",
-        è: "e",
-        à: "a",
-        ç: "c",
+        "é": "e",
+        "ê": "e",
+        "è": "e",
+        "à": "a",
+        "ç": "c",
+        "'": " ",
+        "\"": " "
     };
     const translateRe = /[éèàê]/g;
     return name.replace(translateRe, (match) => {
