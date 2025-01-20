@@ -3,6 +3,7 @@
 namespace VisitMarche\ThemeTail\Lib;
 
 use AcMarche\Pivot\Utils\CacheUtils;
+use Psr\Cache\InvalidArgumentException;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\String\UnicodeString;
@@ -32,10 +33,8 @@ class Cache
             $cacheUtils = new CacheUtils();
             $cache = $cacheUtils->instance();
             $cache->invalidateTags(CacheUtils::TAG);
-        } catch (\Exception $e) {
-
+        } catch (InvalidArgumentException|\Exception $e) {
         }
-
     }
 
     public static function instance(string $folder): CacheInterface
@@ -59,7 +58,7 @@ class Cache
             new FilesystemAdapter(
                 '_visit',
                 43200,
-                $_ENV['APP_CACHE_DIR'] ?? ABSPATH.self::getPathCache($folder)
+                $_ENV['APP_CACHE_DIR'] ?? ABSPATH.self::getPathCache($folder),
             );
 
         return self::$instanceObject;
