@@ -207,7 +207,7 @@ class AdminPage
 
     private static function cachePurge()
     {
-        Cache::purgeCache();
+        Cache::purgeCacheHard();
         Twig::rendPage(
             '@VisitTail/admin/cache_purge.html.twig',
             [

@@ -254,7 +254,7 @@ class WpRepository
         $cache = Cache::instance('visit-wp');
         if ($refreshCache) {
             try {
-                Cache::purgeCache();
+                Cache::purgeCacheHard();
                 $cache->delete($cacheKey);
             } catch (InvalidArgumentException $e) {
             }
