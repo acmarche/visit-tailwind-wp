@@ -165,7 +165,7 @@ class WpRepository
                 $posts = $this->getPostsByCatId($currentCategoryId);
 
                 return $this->treatment($currentCategoryId, $offres, $posts);
-            }
+            },
         );
     }
 
@@ -226,7 +226,7 @@ class WpRepository
                 $category->url = get_category_link($category->term_id);
                 $category->id = $category->term_id;
             },
-            $children
+            $children,
         );
 
         return $children;
@@ -252,11 +252,11 @@ class WpRepository
     {
         $cacheKey = Cache::generateKey('OffersShortByCodesCgt-'.json_encode($codesCgt));
         $cache = Cache::instance('visit-wp');
-        if($refreshCache) {
+        if ($refreshCache) {
             try {
+                Cache::purgeCache();
                 $cache->delete($cacheKey);
             } catch (InvalidArgumentException $e) {
-
             }
         }
 
@@ -274,7 +274,6 @@ class WpRepository
                         }
                     }
                 }
-
             } catch (InvalidArgumentException $e) {
                 return [];
             }
@@ -312,7 +311,6 @@ class WpRepository
 
             return PostUtils::sortOffresByName($offres);
         });
-
     }
 
     /**
@@ -457,7 +455,7 @@ class WpRepository
             $args = [
                 'category__in' => array_map(
                     fn($category) => $category->cat_ID,
-                    $categories
+                    $categories,
                 ),
                 'post__not_in' => [$postId],
                 'orderby' => 'title',
@@ -484,7 +482,6 @@ class WpRepository
 
             return $recommandations;
         });
-
     }
 
     public function recommandationsByOffre(Offre $offerRefer, WP_Term $category, string $language): array
@@ -581,7 +578,6 @@ class WpRepository
 
             return $data;
         });
-
     }
 
     /**

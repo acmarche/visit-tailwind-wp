@@ -48,20 +48,6 @@ class Cache
         self::$instanceObject = $cacheUtils->instance();
 
         return self::$instanceObject;
-
-        if (!isset($_ENV['APP_CACHE_DIR'])) {
-            (new Dotenv())
-                ->bootEnv(ABSPATH.'.env');
-        }
-
-        self::$instanceObject =
-            new FilesystemAdapter(
-                '_visit',
-                43200,
-                $_ENV['APP_CACHE_DIR'] ?? ABSPATH.self::getPathCache($folder),
-            );
-
-        return self::$instanceObject;
     }
 
     public static function getPathCache(string $folder): string
