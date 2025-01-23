@@ -122,7 +122,7 @@ class ApiData
         $codesCgt = $wpFilterRepository->getCodesCgtByCategoryId($categoryWpId);
 
         try {
-            $offers = $wpRepository->findOffersShortByCodesCgt($codesCgt);
+            $offers = $wpRepository->findOffersShortByCodesCgt($codesCgt,true);
         } catch (\Exception $e) {
             $offers = [];
         }

@@ -248,10 +248,17 @@ class WpRepository
      * @param string[] $codesCgt
      * @return \stdClass[]
      */
-    public function findOffersShortByCodesCgt(array $codesCgt): array
+    public function findOffersShortByCodesCgt(array $codesCgt, bool $refreshCache = false): array
     {
         $cacheKey = Cache::generateKey('OffersShortByCodesCgt-'.json_encode($codesCgt));
         $cache = Cache::instance('visit-wp');
+        if($refreshCache) {
+            try {
+                $cache->delete($cacheKey);
+            } catch (InvalidArgumentException $e) {
+
+            }
+        }
 
         return $cache->get($cacheKey, function (ItemInterface $item) use ($codesCgt) {
             $item->expiresAfter(CacheUtils::DURATION);
