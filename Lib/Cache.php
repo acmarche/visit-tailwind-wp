@@ -4,8 +4,8 @@ namespace VisitMarche\ThemeTail\Lib;
 
 use AcMarche\Pivot\Utils\CacheUtils;
 use Psr\Cache\InvalidArgumentException;
-use Symfony\Component\Cache\Adapter\FilesystemAdapter;
-use Symfony\Component\Dotenv\Dotenv;
+use Redis;
+use RedisException;
 use Symfony\Component\String\UnicodeString;
 use Symfony\Contracts\Cache\CacheInterface;
 
@@ -34,6 +34,24 @@ class Cache
             $cache = $cacheUtils->instance();
             $cache->invalidateTags(CacheUtils::TAG);
         } catch (InvalidArgumentException|\Exception $e) {
+        }
+    }
+
+    public static function purgeCacheHard(): void
+    {
+        $redis = new Redis();
+        try {
+            $redis->connect('127.0.0.1', 6379);
+
+            // Authenticate if needed
+            // $redis->auth('yourpassword');
+            // Option 1: Flush the entire Redis server (all databases)
+            $redis->flushAll();
+            // Option 2: Flush only the current database
+            // $redis->flushDB();
+
+        } catch (RedisException $e) {
+            dump("Failed to connect to Redis: ".$e->getMessage());
         }
     }
 
