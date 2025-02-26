@@ -88,7 +88,7 @@ class PostUtils
                 if ($offre->typeOffre->idTypeOffre == UrnTypeList::evenement()->typeId) {
                     $item->shortCutDateEvent = $offre->shortCutDateEvent;//ajax
                     if ($offre->firstDate()) {
-                        $item->isPeriod = count($offre->datesEvent) > 0;
+                        $item->isPeriod = $offre->isEventOnPeriod();
                     }
                     if (!$offre->firstImage()) {
                         $item->image = get_template_directory_uri().'/assets/tartine/bg_events.png';

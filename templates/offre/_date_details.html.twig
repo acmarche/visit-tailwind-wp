@@ -1,0 +1,12 @@
+{% if(dateEvent.ouvertureHeure1 or dateEvent.ouvertureDetails) %}
+
+        <span class="font-montserrat-semi-bold text-cta-light">Heure(s)</span>
+        {% if dateEvent.ouvertureHeure1 %} {{ dateEvent.ouvertureHeure1 }}h         {% endif %}
+        {% if dateEvent.fermetureHeure1 %} - {{ dateEvent.fermetureHeure1 }}h         {% endif %}
+
+        {% if dateEvent.ouvertureHeure2 %}<br/> {{ dateEvent.ouvertureHeure2 }}h         {% endif %}
+        {% if dateEvent.fermetureHeure2 %} - {{ dateEvent.fermetureHeure2 }}h         {% endif %}
+
+        {% if dateEvent.ouvertureDetails %} {{ dateEvent.ouvertureDetails|raw }}         {% endif %}
+
+{% endif %}
