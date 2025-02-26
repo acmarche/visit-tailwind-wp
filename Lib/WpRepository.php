@@ -564,10 +564,10 @@ class WpRepository
             foreach ($events as $event) {
                 if ($event->visibiliteUrn->urn !== EventEnum::CONVENTION->value) {
                     $event->locality = $event->getAdresse()->localite[0]->get('fr');
-                    $event->dateEvent = [
-                        'year' => $event->dateEnd->format('Y'),
-                        'month' => $event->dateEnd->format('m'),
-                        'day' => $event->dateEnd->format('d'),
+                    $event->shortCutDateEvent = [
+                        'year' => $event->firstDate()?->format('Y'),
+                        'month' => $event->firstDate()?->format('m'),
+                        'day' => $event->firstDate()?->format('d'),
                     ];
                     if (count($event->images) == 0) {
                         $event->images = [get_template_directory_uri().'/assets/tartine/bg_events.png'];

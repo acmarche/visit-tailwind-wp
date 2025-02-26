@@ -9,11 +9,11 @@
                 <div class="grid grid-cols-[6rem,1fr] xl:grid-cols-[8rem,1fr] my-2">
                     <div class="flex flex-col items-center justify-center border-x transition-all duration-700 group-hover:bg-cta-light group-hover:text-white">
                             <span class="font-montserrat-semi-bold text-xl"
-                                  x-text="item.isPeriod === true ? ' > ' + item.dateEvent.day : '' + item.dateEvent.day">
+                                  x-text="item.isPeriod === true ? ' > ' + item.shortCutDateEvent.day : '' + item.shortCutDateEvent.day">
 
                             </span>
-                        <span class="" x-text="item.dateEvent.month"></span>
-                        <span class="" x-text="item.dateEvent.year"></span>
+                        <span class="" x-text="item.shortCutDateEvent.month"></span>
+                        <span class="" x-text="item.shortCutDateEvent.year"></span>
                     </div>
                     <div class="flex flex-col items-start justify-center px-8">
                         <span x-text="item.name"></span>

@@ -40,7 +40,7 @@ if (!$offre) {
 
     return;
 }
-if (count($offre->dates) > 0) {
+if (count($offre->datesEvent) > 0) {
     if ($eventOk = EventUtils::isEventObsolete($offre)) {
         $offre = $eventOk;
     }

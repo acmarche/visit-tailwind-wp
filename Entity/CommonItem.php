@@ -13,14 +13,19 @@ class CommonItem
     public ?string $description = null;
     public ?string $image = null;
     /**
-     * @var array|Tag[]
+     * @var array<int,Tag>|Tag[]
      */
     public array $tags = [];
 
     public ?string $locality = null;
-    public array $dateEvent = [];
-    //for event
-    public bool $isPeriod = false;
+    /**
+     * @var array<int, string> $shortCutDateEvent
+     */
+    public array $shortCutDateEvent = [];
+    /**
+     * multiple dates ?
+     */
+    public false $isPeriod =false;
 
     public function __construct(
         string $type,

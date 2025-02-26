@@ -17,14 +17,14 @@
                             <div class="flex flex-col items-center justify-center border-x transition-all duration-700 group-hover:bg-cta-light group-hover:text-white">
                             <span class="font-montserrat-semi-bold text-xl">
                                 {% if item.firstDate %}
-                                    {% if item.firstDate.isPeriod %}
+                                    {% if item.isPeriod %}
                                         >
                                     {% endif %}
                                 {% endif %}
-                                {{ item.dateEvent["day"] }}
+                                {{ item.shortCutDateEvent["day"] }}
                             </span>
-                                <span class="">{{ item.dateEvent["month"] }}</span>
-                                <span class="">{{ item.dateEvent["year"] }}</span>
+                                <span class="">{{ item.shortCutDateEvent["month"] }}</span>
+                                <span class="">{{ item.shortCutDateEvent["year"] }}</span>
                             </div>
                             <div class="flex flex-col items-start justify-center px-8">
                                 <span>{{ item.name }}</span>

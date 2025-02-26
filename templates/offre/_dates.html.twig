@@ -3,15 +3,10 @@
         {{ 'Date(s)'|trans }}
     </h3>
     <div class="flex flex-col gap-2 mb-6">
-        {% for date in offre.dates %}
+        {% for date in offre.datesEvent %}
             <span class="font-montserrat-semi-bold text-cta-dark">
-                {% if dates %}
-                    {% if date.isPeriod %}
-                        {{ 'from'|trans }} {{ date.date_begin|format_date('full') }} {{ 'until'|trans }} {{ date.date_end|format_date('full') }}
-                    {% else %}
-                        {{ date.date_begin|format_date('full') }}
-                    {% endif %}
-                {% endif %}
+                {{ date|format_date('full')|title }}
+                {{ dump(date) }}
             </span>
         {% endfor %}
     </div>
