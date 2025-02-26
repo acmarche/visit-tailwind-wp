@@ -6,7 +6,7 @@
         {% for dateEvent in offre.datesEvent %}
             <span class="font-montserrat-semi-bold text-cta-dark">
                 {% if dateEvent.isSameDate %}
-                    {{ dateEvent|format_date('full')|title }}
+                    {{ dateEvent.dateBegin|format_date('full')|title }}
                 {% else %}
                     {{ 'from'|trans }} {{ dateEvent.dateBegin|format_date('full') }} {{ 'until'|trans }} {{ dateEvent.dateEnd|format_date('full') }}
                 {% endif %}
