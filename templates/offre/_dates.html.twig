@@ -12,5 +12,20 @@
                 et d'autres dates...
             {% endif %}
         {% endfor %}
+
+        {% if offre.datesDetails|length > 0 %}
+            <div class="my-2">
+                <h4 class="font-montserrat-semi-bold text-cta-light">Heures</h4>
+                {% for details in offre.datesDetails %}
+                    {% if details.ouvertureHeure1 %} {{ details.ouvertureHeure1 }}h         {% endif %}
+                    {% if details.fermetureHeure1 %} - {{ details.fermetureHeure1 }}h         {% endif %}
+                    <br/>
+                    {% if details.ouvertureHeure2 %} {{ details.ouvertureHeure2 }}h         {% endif %}
+                    {% if details.fermetureHeure2 %} - {{ details.fermetureHeure2 }}h         {% endif %}
+                    {% if details.ouvertureDetails %}<br/> {{ details.ouvertureDetails }}         {% endif %}
+                    <br/>
+                {% endfor %}
+            </div>
+        {% endif %}
     </div>
 {% endif %}
