@@ -25,7 +25,7 @@ class CommonItem
     /**
      * multiple dates ?
      */
-    public false $isPeriod =false;
+    public bool $isPeriod = false;
 
     public function __construct(
         string $type,
