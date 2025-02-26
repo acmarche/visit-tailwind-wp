@@ -2,6 +2,7 @@
 
 namespace VisitMarche\ThemeTail\Inc;
 
+use AcMarche\Pivot\Entities\Specification\SpecData;
 use VisitMarche\ThemeTail\Lib\LocaleHelper;
 use VisitMarche\ThemeTail\Lib\PostUtils;
 use VisitMarche\ThemeTail\Lib\RouterPivot;
@@ -119,16 +120,16 @@ class Seo
             $description = implode(
                 ',',
                 array_map(
-                    fn($description) => $description->value,
-                    $offre->descriptionsByLanguage($language)
-                )
+                    fn($description) => $description instanceof SpecData ? $description->value : $description['value'],
+                    $offre->descriptionsByLanguage($language),
+                ),
             );
             if ($description) {
                 self::$metas['description'] = self::cleanString($description);
             }
             $keywords = array_map(
                 fn($tag) => $tag->labelByLanguage($language),
-                $offre->tags
+                $offre->tags,
             );
             self::$metas['keywords'] = implode(',', $keywords);
             self::$metas['image'] = $offre->firstImage();
@@ -169,8 +170,8 @@ class Seo
             ',',
             array_map(
                 fn($tag) => $tag->name,
-                $tags
-            )
+                $tags,
+            ),
         );
         $image = PostUtils::getImage($post);
         self::$metas['image'] = $image;
