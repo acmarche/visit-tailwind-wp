@@ -8,7 +8,7 @@
                 {% if dateEvent.isSameDate %}
                     {{ dateEvent.dateBegin|format_date('full')|title }}
                 {% else %}
-                    {{ 'from'|trans }} {{ dateEvent.dateBegin|format_date('full') }} {{ 'until'|trans }} {{ dateEvent.dateEnd|format_date('full') }}
+                    {{ 'from'|trans }} {{ dateEvent.dateRealBegin|format_date('full') }} {{ 'until'|trans }} {{ dateEvent.dateEnd|format_date('full') }}
                 {% endif %}
                 {% if dateEvent.dateRange %}
                     <br> {{ dateEvent.dateRange }}
