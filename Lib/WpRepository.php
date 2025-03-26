@@ -596,7 +596,7 @@ class WpRepository
         $cacheKey = Cache::generateKey('offrecgt-'.$codeCgt);
         $cache = Cache::instance('visit-wp');
 
-        return $cache->get($cacheKey.time(), function (ItemInterface $item) use ($codeCgt) {
+        return $cache->get($cacheKey, function (ItemInterface $item) use ($codeCgt) {
             $item->expiresAfter(CacheUtils::DURATION);
             $item->tag(CacheUtils::TAG);
             $pivotRepository = PivotContainer::getPivotRepository(WP_DEBUG);
