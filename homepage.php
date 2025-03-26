@@ -45,7 +45,7 @@ $categoryAgenda = get_category_by_slug('agenda');
 $urlAgenda = '/';
 $urlInspiration = get_category_link($inspirationCat);
 try {
-    $events = $wpRepository->getEvents();
+    $events = $wpRepository->getEvents(removeOlder: true);
     if ($categoryAgenda) {
         $urlAgenda = get_category_link($categoryAgenda);
         array_map(

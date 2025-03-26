@@ -12,6 +12,7 @@ use AcMarche\Pivot\Entity\TypeOffre;
 use AcMarche\Pivot\Event\EventEnum;
 use AcMarche\Pivot\Utils\CacheUtils;
 use AcSort;
+use Carbon\Carbon;
 use Doctrine\ORM\NonUniqueResultException;
 use Psr\Cache\InvalidArgumentException;
 use Symfony\Contracts\Cache\ItemInterface;
@@ -534,17 +535,18 @@ class WpRepository
      * @throws InvalidArgumentException
      * @throws NonUniqueResultException
      */
-    public function getEvents(?int $filterSelected = null): array
+    public function getEvents(?int $filterSelected = null, bool $removeOlder = false): array
     {
-        $cacheKey = Cache::generateKey('events-');
+        $cacheKey = Cache::generateKey('events-'.$removeOlder);
         if ($filterSelected) {
             $cacheKey .= $filterSelected;
         }
         $cache = Cache::instance('visit-wp');
 
-        return $cache->get($cacheKey, function (ItemInterface $item) use ($filterSelected) {
+        return $cache->get($cacheKey, function (ItemInterface $item) use ($filterSelected, $removeOlder) {
             $item->expiresAfter(CacheUtils::DURATION);
             $item->tag(CacheUtils::TAG);
+            $today = new \DateTime();
             $pivotRepository = PivotContainer::getPivotRepository(WP_DEBUG);
             $args = [];
             if ($filterSelected) {
@@ -572,7 +574,13 @@ class WpRepository
                     if (count($event->images) == 0) {
                         $event->images = [get_template_directory_uri().'/assets/tartine/bg_events.png'];
                     }
-                    $data[] = $event;
+                    if ($removeOlder) {
+                        if (Carbon::parse($event->firstRealDate())->diffInMonths($today) < 1) {
+                            $data[] = $event;
+                        }
+                    } else {
+                        $data[] = $event;
+                    }
                 }
             }
 
@@ -588,7 +596,7 @@ class WpRepository
         $cacheKey = Cache::generateKey('offrecgt-'.$codeCgt);
         $cache = Cache::instance('visit-wp');
 
-        return $cache->get($cacheKey, function (ItemInterface $item) use ($codeCgt) {
+        return $cache->get($cacheKey.time(), function (ItemInterface $item) use ($codeCgt) {
             $item->expiresAfter(CacheUtils::DURATION);
             $item->tag(CacheUtils::TAG);
             $pivotRepository = PivotContainer::getPivotRepository(WP_DEBUG);
