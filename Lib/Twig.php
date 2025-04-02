@@ -280,7 +280,7 @@ class Twig
             function (SpecData $specData): ?string {
 
                 $value = match ($specData->type) {
-                    SpecTypeEnum::BOOLEAN->value => '',
+                    SpecTypeEnum::BOOLEAN->value => SpecTypeEnum::BOOLEAN->value == true ? 'Oui' :'Non',
                     SpecTypeEnum::TEXTML->value => $specData->value,
                     SpecTypeEnum::STRINGML->value => $specData->value,
                     SpecTypeEnum::CURRENCY->value => $specData->value.' €',
