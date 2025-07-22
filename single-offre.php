@@ -44,6 +44,12 @@ if (count($offre->datesEvent) > 0) {
     if ($eventOk = EventUtils::isEventObsolete($offre)) {
         $offre = $eventOk;
     }
+} else {
+    get_header();
+    Twig::rend404Page();
+    get_footer();
+
+    return;
 }
 
 $latitude = $offre->getAdresse()->latitude ?? null;
