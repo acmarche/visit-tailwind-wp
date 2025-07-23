@@ -12,8 +12,9 @@ use VisitMarche\ThemeTail\Lib\WpRepository;
 global $post;
 $cacheUtils = new CacheUtils();
 $cache = $cacheUtils->instance();
+$key = $cacheUtils->generateKey('list_walks');
 
-$dataString = $cache->get('list_walks', function () use ($post) {
+$dataString = $cache->get($key, function () use ($post) {
     $wpRepository = new WpRepository();
 
     return json_encode($wpRepository->getAllWalks());
