@@ -655,6 +655,12 @@ class WpRepository
                     'gpx_difficulte' => $offre->gpx_difficulte,
                     'gpx_distance' => $offre->gpx_distance,
                 ];
+                $walks = [];
+                foreach ($offre->gpxs as $gpx) {
+                    unset($gpx->data_raw);
+                    $walks[] = $gpx;
+                }
+                $offers[$offre->codeCgt]['walks'] = $walks;
             } catch (\Exception $e) {
                 return [];
             }

@@ -30,7 +30,6 @@
                 {{ include('@VisitTail/balade/_headerPreview.html.twig') }}
                 <div class="flex flex-col flex-auto gap-2 p-3">
                     <h3 class="lg roboto-bold">DETAILS DU PARCOURS</h3>
-
                     <h4 class="montserrat-semi-bold text-cta-dark">Point de départ</h4>
                     <address class="flex flex-row items-center gap-2">
                         <img src="{{ template_uri() }}/assets/images/map/navigation.svg" alt="icon">
@@ -68,6 +67,11 @@
                             <img src="{{ template_uri() }}/assets/images/map/walk.svg" alt="icon">
                         </span>
                     </div>
+
+                    <h4 class="montserrat-semi-bold text-cta-dark">Télécharger (Gpx):</h4>
+                    <template x-for="(walk,index) in offerSelected?.walks" :key="index" class="flex flex-col">
+                        <a class="text-base" :href="walk.url" target="_blank" x-text="walk.codeCgt"></a>
+                    </template>
 
                     <a :href="offerSelected?.url"
                        target="_blank"
