@@ -41,7 +41,7 @@ if (!$offre) {
     return;
 }
 if (str_contains($codeCgt, "EVT-")) {
-    if (count($offre->datesEvent) > 0) {
+    if (count($offre->datesEvent) === 0) {
         get_header();
         Twig::rend404Page();
         get_footer();
