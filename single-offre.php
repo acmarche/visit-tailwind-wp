@@ -40,16 +40,17 @@ if (!$offre) {
 
     return;
 }
-if (str_contains($codeCgt, "EVT-") && count($offre->datesEvent) > 0) {
+if (str_contains($codeCgt, "EVT-")) {
+    if (count($offre->datesEvent) > 0) {
+        get_header();
+        Twig::rend404Page();
+        get_footer();
+
+        return;
+    }
     if ($eventOk = EventUtils::isEventObsolete($offre)) {
         $offre = $eventOk;
     }
-} else {
-    get_header();
-    Twig::rend404Page();
-    get_footer();
-
-    return;
 }
 
 $latitude = $offre->getAdresse()->latitude ?? null;
