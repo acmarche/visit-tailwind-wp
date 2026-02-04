@@ -17,6 +17,7 @@
     "require": {
         "php": ">=5.6"
     },
+  "version": "1.0",
     "require-dev": {
         "dealerdirect/phpcodesniffer-composer-installer": "^0.7.0",
         "wptrt/wpthemereview": "^0.2.1",
